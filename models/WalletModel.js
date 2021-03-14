@@ -2,9 +2,17 @@ import mongoose from 'mongoose';
 import Double from '@mongoosejs/double';
 
 const WalletSchema = new mongoose.Schema({
-  user: {
+  client_id: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Client',
+  },
+  totalRewards: {
+    type: Double,
+    default: 0.0,
+  },
+  totalWithdraw: {
+    type: Double,
+    default: 0.0,
   },
   wallet_balance: {
     type: Double,

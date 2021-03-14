@@ -2,25 +2,25 @@ import mongoose from 'mongoose';
 import Double from '@mongoosejs/double';
 
 const ClientHotspotSchema = new mongoose.Schema({
-  user: {
+  client_id: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Client',
   },
-  hotspot: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Hotspot',
-  },
-  relationship_type: {
+  hotspot_address: {
     type: String,
+    required: true,
   },
-  totalEarnings: {
-    type: Double,
+  relation_type: {
+    type: String,
+    required: true,
   },
   percentage: {
-    type: Number,
-  },
-  available_balance: {
     type: Double,
+    required: true,
+  },
+  startDate: {
+    type: Date,
+    required: true,
   },
 });
 
