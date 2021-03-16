@@ -7,15 +7,15 @@ const WalletSchema = new mongoose.Schema({
     ref: 'Client',
   },
   totalRewards: {
-    type: Double,
+    type: Number,
     default: 0.0,
   },
   totalWithdraw: {
-    type: Double,
+    type: Number,
     default: 0.0,
   },
   wallet_balance: {
-    type: Double,
+    type: Number,
     default: 0.0,
   },
 });
