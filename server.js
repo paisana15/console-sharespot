@@ -7,14 +7,14 @@ import { errorHandler, notFound } from './middleware/errorMiddleware.js';
 import clientRoutes from './routes/ClientRoutes.js';
 import ClientHotspot from './models/ClientHotspotModel.js';
 import axios from 'axios';
+import cors from 'cors';
 dotenv.config();
 
 // db connect
 connectDB();
 
 const app = express();
-const server = http.createServer(app);
-
+app.use(cors());
 app.use(express.json());
 
 if (process.env.NODE_ENV === 'development') {

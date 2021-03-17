@@ -22,6 +22,19 @@ const addClient = asyncHandler(async (req, res) => {
     throw new Error('Client registered failed!');
   }
 });
+// desc: get all client list with name
+// routes: api/clients/getAllClients
+// access: public
+// method: get
+const getAllClients = asyncHandler(async (req, res) => {
+  const clients = await Client.find({}).select('-password');
+  if (clients) {
+    res.status(200).json(clients);
+  } else {
+    res.status(400);
+    throw new Error('Client fethch failed!');
+  }
+});
 // desc: client login
 // routes: api/clients/login
 // access: public
@@ -193,7 +206,7 @@ const getHotspotReward = asyncHandler(async (req, res) => {
 
   client_assigned_hotspot.map((data) => {
     const minDate = moment(data?.startDate).format('YYYY-MM-DD');
-    console.log(minDate)
+    console.log(minDate);
     axios
       .get(
         `https://api.helium.io/v1/hotspots/${data?.hotspot_address}/rewards/sum?max_time=2030-08-27&min_time=${minDate}`
@@ -266,4 +279,10 @@ const getHotspotReward = asyncHandler(async (req, res) => {
 //     });
 // };
 
-export { addClient, clientLogin, addHotspotToClient, getHotspotReward };
+export {
+  addClient,
+  clientLogin,
+  addHotspotToClient,
+  getHotspotReward,
+  getAllClients,
+};
