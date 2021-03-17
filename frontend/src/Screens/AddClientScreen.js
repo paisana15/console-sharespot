@@ -1,7 +1,5 @@
 import React from 'react';
 import { Box, Heading } from '@chakra-ui/layout';
-import { FormControl, FormLabel } from '@chakra-ui/form-control';
-import { Input } from '@chakra-ui/input';
 import { Button } from '@chakra-ui/button';
 import { Formik } from 'formik';
 import * as yup from 'yup';
@@ -13,13 +11,13 @@ const AddClientScreen = () => {
       .string()
       .max(10, 'Max 10 Character!')
       .min(1, 'Min 1 Character!')
-      .required('Firstname required!'),
+      .required('First name required!'),
     lastname: yup
       .string()
       .max(10, 'Max 10 Character!')
       .min(1, 'Min 1 Character!')
-      .required('Lastname required!'),
-    email: yup.string().email().required(),
+      .required('Last name required!'),
+    email: yup.string().email().required('Email required!'),
     username: yup
       .string()
       .max(15, 'Max 15 Character!')

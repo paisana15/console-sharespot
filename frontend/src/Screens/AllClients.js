@@ -22,7 +22,7 @@ const AllClients = () => {
         <Spacer />
         <Box>
           <Link to={`${path}/add-new-client`}>
-            <Button variant='solid' colorScheme='green'>
+            <Button variant='solid' size='sm' colorScheme='purple'>
               <i className='fas fa-user-plus' style={{ marginRight: 5 }}></i>{' '}
               Add New Client
             </Button>

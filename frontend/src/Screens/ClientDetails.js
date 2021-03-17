@@ -27,21 +27,42 @@ const ClientDetails = () => {
         </Flex>
       </Box>
       <Flex color='white' mt='3'>
-        <Box boxShadow="base" textAlign='center' p='4' borderRadius='lg' bg='red.400' w='30%'>
+        <Box
+          boxShadow='base'
+          textAlign='center'
+          p='4'
+          borderRadius='lg'
+          bg='red.400'
+          w='30%'
+        >
           <Heading size='md'>Total Withdrawn</Heading>
           <Text style={{ fontWeight: 'bold' }} fontSize='3xl'>
             $54
           </Text>
         </Box>
         <Spacer />
-        <Box  boxShadow="base" textAlign='center' p='4' borderRadius='lg' bg='green.400' w='30%'>
+        <Box
+          boxShadow='base'
+          textAlign='center'
+          p='4'
+          borderRadius='lg'
+          bg='green.400'
+          w='30%'
+        >
           <Heading size='md'>Total Rewards</Heading>
           <Text style={{ fontWeight: 'bold' }} fontSize='3xl'>
             $454
           </Text>
         </Box>
         <Spacer />
-        <Box  boxShadow="base" textAlign='center' p='4' borderRadius='lg' bg='blue.400' w='30%'>
+        <Box
+          boxShadow='base'
+          textAlign='center'
+          p='4'
+          borderRadius='lg'
+          bg='blue.400'
+          w='30%'
+        >
           <Heading size='md'>Balance</Heading>
           <Text style={{ fontWeight: 'bold' }} fontSize='3xl'>
             $400
@@ -55,49 +76,14 @@ const ClientDetails = () => {
             <Box>
               <Heading size='sm'>Main Tiger Snake</Heading>
               <Flex mt='2'>
-                <Text fontSize='xs'>Percentage 20%</Text>
+                <Text fontSize='xs' mr='1'>
+                  Percentage
+                </Text>
+                <Badge colorScheme={'green'}>
+                  <Text fontSize='xs'>20%</Text>
+                </Badge>
                 <Badge ml='10px' colorScheme='purple'>
                   <Text fontSize='xs'>Host</Text>
-                </Badge>
-              </Flex>
-            </Box>
-            <Spacer />
-            <Box textAlign='right'>
-              <Text fontSize='sm' color='grey'>
-                Total Earned
-              </Text>
-              <Text fontWeight='bold' color='grey' fontSize='sm'>
-                $89
-              </Text>
-            </Box>
-          </Flex>
-          <Flex p='4' borderRadius='lg' mb='3' boxShadow='base'>
-            <Box>
-              <Heading size='sm'>Main Tiger Snake</Heading>
-              <Flex mt='2'>
-                <Text fontSize='xs'>Percentage 20%</Text>
-                <Badge ml='10px' colorScheme='purple'>
-                  <Text fontSize='xs'>Host</Text>
-                </Badge>
-              </Flex>
-            </Box>
-            <Spacer />
-            <Box textAlign='right'>
-              <Text fontSize='sm' color='grey'>
-                Total Earned
-              </Text>
-              <Text fontWeight='bold' color='grey' fontSize='sm'>
-                $89
-              </Text>
-            </Box>
-          </Flex>
-          <Flex p='4' borderRadius='lg' mb='3' boxShadow='base'>
-            <Box>
-              <Heading size='sm'>Main Tiger Snake</Heading>
-              <Flex mt='2'>
-                <Text fontSize='xs'>Percentage 20%</Text>
-                <Badge ml='10px' colorScheme='blue'>
-                  <Text fontSize='xs'>Referrer</Text>
                 </Badge>
               </Flex>
             </Box>
