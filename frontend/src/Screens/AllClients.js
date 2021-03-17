@@ -13,7 +13,7 @@ import { Spacer, Button } from '@chakra-ui/react';
 import { Link, useRouteMatch } from 'react-router-dom';
 
 const AllClients = () => {
-  const { url } = useRouteMatch();
+  const { url, path } = useRouteMatch();
 
   return (
     <Box p='4'>
@@ -21,10 +21,12 @@ const AllClients = () => {
         <Heading size='lg'>All Cients</Heading>
         <Spacer />
         <Box>
-          <Button variant='solid' colorScheme='green'>
-            <i className='fas fa-user-plus' style={{ marginRight: 5 }}></i> Add
-            New Client
-          </Button>
+          <Link to={`${path}/add-new-client`}>
+            <Button variant='solid' colorScheme='green'>
+              <i className='fas fa-user-plus' style={{ marginRight: 5 }}></i>{' '}
+              Add New Client
+            </Button>
+          </Link>
         </Box>
       </Flex>
       <Box>
@@ -38,9 +40,9 @@ const AllClients = () => {
           </Thead>
           <Tbody>
             <Tr>
-              <Link to={`${url}/clients/:clientId`}>
-                <Td>John</Td>
-              </Link>
+              <Td>
+                <Link to={`${url}/clients/:clientId`}>John</Link>
+              </Td>
               <Td isNumeric>4</Td>
             </Tr>
             <Tr>

@@ -27,7 +27,11 @@ const ClientSchema = new mongoose.Schema({
   phone_number: {
     type: String,
     required: true,
-  }
+  },
+  wallet_address: {
+    type: String,
+    required: true,
+  },
 });
 
 ClientSchema.methods.verifyPassword = async function (enteredPassword) {

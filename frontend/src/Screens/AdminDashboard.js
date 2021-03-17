@@ -10,9 +10,11 @@ import AllClients from './AllClients';
 import { ChevronRightIcon } from '@chakra-ui/icons';
 import { Link } from 'react-router-dom';
 import ClientDetails from './ClientDetails';
+import AddClientScreen from './AddClientScreen';
+import AddHotspotScreen from './AddHotspotScreen';
 
 const Dashboard = () => {
-  const { url, path } = useRouteMatch();
+  const { path } = useRouteMatch();
   return (
     <Box
       w='100%'
@@ -24,7 +26,7 @@ const Dashboard = () => {
     >
       <Breadcrumb
         style={{ fontSize: 14 }}
-        mb='5'
+        mb=''
         separator={<ChevronRightIcon color='gray.500' />}
         spacing='4'
         p='3'
@@ -38,7 +40,9 @@ const Dashboard = () => {
         </BreadcrumbItem>
         <BreadcrumbItem>
           <BreadcrumbLink>
-            <i className='fas fa-wifi'></i> Add Hotspot
+            <Link to={`${path}/add-hotspot`}>
+              <i className='fas fa-wifi'></i> Add Hotspot
+            </Link>
           </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbItem>
@@ -54,7 +58,9 @@ const Dashboard = () => {
       </Breadcrumb>
       <Switch>
         <Route exact path={path} component={AllClients} />
-        <Route path={`${url}/clients/:clientId`} component={ClientDetails} />
+        <Route path={`${path}/clients/:clientId`} component={ClientDetails} />
+        <Route path={`${path}/add-hotspot`} component={AddHotspotScreen} />
+        <Route path={`${path}/add-new-client`} component={AddClientScreen} />
       </Switch>
     </Box>
   );

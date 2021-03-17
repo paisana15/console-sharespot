@@ -5,7 +5,7 @@ import Header from './components/Header';
 import { Route } from 'react-router';
 import WelcomeScreen from './Screens/WelcomeScreen';
 import AdminLogin from './Screens/AdminLogin';
-import Dashboard from './Screens/Dashboard';
+import Dashboard from './Screens/AdminDashboard';
 
 function App() {
   return (

@@ -1,29 +1,47 @@
 import React from 'react';
 import { Box, Text, Flex, Heading, Spacer, Badge } from '@chakra-ui/react';
+
 const ClientDetails = () => {
   return (
     <Box p='4'>
-      <Flex>
+      <Box>
         <Heading size='lg'>John Doe</Heading>
-        <Spacer />
-        {/* <Button colorScheme='telegram'>More</Button> */}
-      </Flex>
+        <Flex>
+          <Text color='gray.500' fontSize='sm'>
+            <i className='fas fa-user'></i> Username : john
+          </Text>
+          <Spacer />
+          <Text color='gray.500' fontSize='sm'>
+            <i className='fas fa-at'></i> Email : johyn@gmail.com
+          </Text>
+        </Flex>
+        <Flex>
+          <Text color='gray.500' fontSize='sm'>
+            <i className='fas fa-phone-alt'></i> Phone : +362200000
+          </Text>
+          <Spacer />
+          <Text color='gray.500' fontSize='sm'>
+            <i className='fas fa-wallet'></i> Wallet Address :
+            ijkilajsfg6hufyukiloaposas54d3fg
+          </Text>
+        </Flex>
+      </Box>
       <Flex color='white' mt='3'>
-        <Box textAlign='center' p='4' borderRadius='lg' bg='red.400' w='30%'>
+        <Box boxShadow="base" textAlign='center' p='4' borderRadius='lg' bg='red.400' w='30%'>
           <Heading size='md'>Total Withdrawn</Heading>
           <Text style={{ fontWeight: 'bold' }} fontSize='3xl'>
             $54
           </Text>
         </Box>
         <Spacer />
-        <Box textAlign='center' p='4' borderRadius='lg' bg='green.400' w='30%'>
+        <Box  boxShadow="base" textAlign='center' p='4' borderRadius='lg' bg='green.400' w='30%'>
           <Heading size='md'>Total Rewards</Heading>
           <Text style={{ fontWeight: 'bold' }} fontSize='3xl'>
             $454
           </Text>
         </Box>
         <Spacer />
-        <Box textAlign='center' p='4' borderRadius='lg' bg='blue.400' w='30%'>
+        <Box  boxShadow="base" textAlign='center' p='4' borderRadius='lg' bg='blue.400' w='30%'>
           <Heading size='md'>Balance</Heading>
           <Text style={{ fontWeight: 'bold' }} fontSize='3xl'>
             $400
