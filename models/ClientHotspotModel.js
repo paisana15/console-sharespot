@@ -10,7 +10,7 @@ const ClientHotspotSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  role: {
+  relation_type: {
     type: String,
     required: true,
   },
