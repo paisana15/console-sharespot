@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Heading } from '@chakra-ui/layout';
+import { Box, Text } from '@chakra-ui/layout';
 import { FormControl, FormLabel } from '@chakra-ui/form-control';
 import { Select } from '@chakra-ui/select';
 import { Input } from '@chakra-ui/input';
@@ -15,7 +15,7 @@ const AddHotspotScreen = () => {
   useEffect(() => {
     const request =
       'https://api.helium.io/v1/accounts/13ESLoXiie3eXoyitxryNQNamGAnJjKt2WkiB4gNq95knxAiGEp/hotspots';
-    const request2 = 'http://localhost:5001/api/clients/getAllClients';
+    const request2 = 'http://localhost:5001/api/admin/getAllClients';
 
     function fetchData() {
       axios
@@ -46,7 +46,9 @@ const AddHotspotScreen = () => {
 
   return (
     <Box p='4'>
-      <Heading size='lg'>Add Hotspot</Heading>
+      <Text display='inline-block' fontSize='2xl' className='adminPageHeader'>
+        Add Hotspot
+      </Text>
       <Box mt='3'>
         <Formik
           initialValues={{

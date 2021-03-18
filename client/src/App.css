@@ -1,0 +1,15 @@
+.admin_navlink {
+  margin-left: 8px;
+  color: rgb(150 150 150);
+}
+.admin_navlink:hover {
+  color: rgb(202, 202, 202);
+  transition: all 0.3s ease;
+}
+.adminPageHeader {
+  font-weight: 400;
+  border-bottom: 4px solid rgb(34, 158, 110);
+  padding-bottom: 2px;
+  margin-bottom: 8px;
+  padding-right: 30px;
+}

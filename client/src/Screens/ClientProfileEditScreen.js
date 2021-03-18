@@ -1,11 +1,10 @@
 import React from 'react';
-import { Box, Text } from '@chakra-ui/layout';
-import { Button } from '@chakra-ui/button';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 import MyTextField from '../components/MyTextField';
+import { Box, Button, Text } from '@chakra-ui/react';
 
-const AddClientScreen = () => {
+const ClientProfileEditScreen = () => {
   const fieldValidationSchema = yup.object({
     firstname: yup
       .string()
@@ -23,11 +22,6 @@ const AddClientScreen = () => {
       .max(15, 'Max 15 Character!')
       .min(5, 'Min 5 Character!')
       .required('Username required!'),
-    password: yup
-      .string()
-      .max(12, 'Max 12 Character!')
-      .min(6, 'Min 6 Character!')
-      .required('Password required!'),
     phone_number: yup
       .string()
       .max(15, 'Max 15 Character!')
@@ -38,7 +32,7 @@ const AddClientScreen = () => {
   return (
     <Box p='4'>
       <Text fontSize='2xl' display='inline-block' className='adminPageHeader'>
-        Add New Client
+        Edit Client
       </Text>
       <Box mt='3'>
         <Formik
@@ -47,7 +41,6 @@ const AddClientScreen = () => {
             lastname: '',
             email: '',
             username: '',
-            password: '',
             phone_number: '',
             wallet_address: '',
           }}
@@ -60,46 +53,40 @@ const AddClientScreen = () => {
           {({ handleSubmit, isSubmitting }) => (
             <form onSubmit={handleSubmit}>
               <MyTextField
-                type='text'
                 placeholder='Client first name'
+                type='text'
                 label='First Name'
                 name='firstname'
               />
               <MyTextField
-                type='text'
                 placeholder='Client last name'
+                type='text'
                 label='Last name'
                 name='lastname'
               />
               <MyTextField
+                placeholder='Client email'
                 type='email'
-                placeholder='Client email address'
                 label='Email'
                 name='email'
               />
               <MyTextField
+                placeholder='Choose a username'
                 type='text'
-                placeholder='Choose a username for client'
                 label='Username'
                 name='username'
               />
               <MyTextField
-                type='password'
-                label='Password'
-                placeholder='Choose a password'
-                name='password'
-              />
-              <MyTextField
-                placeholder='Client phone number'
                 type='text'
                 label='Phone Number'
                 name='phone_number'
+                placeholder='Client phone number'
               />
               <MyTextField
                 type='text'
-                placeholder='Client wallet address'
                 label='Wallet Address'
                 name='wallet_address'
+                placeholder='Choose wallet address'
               />
 
               <Button
@@ -118,4 +105,4 @@ const AddClientScreen = () => {
   );
 };
 
-export default AddClientScreen;
+export default ClientProfileEditScreen;

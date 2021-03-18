@@ -1,21 +1,39 @@
 import React from 'react';
 import './App.css';
-import { Container } from '@chakra-ui/layout';
-import Header from './components/Header';
-import { Route } from 'react-router';
+import { Redirect, Route } from 'react-router';
 import WelcomeScreen from './Screens/WelcomeScreen';
 import AdminLogin from './Screens/AdminLogin';
-import Dashboard from './Screens/AdminDashboard';
+import AdminDashboard from './Screens/AdminDashboard';
+import { useSelector } from 'react-redux';
+
+const PrivateRoute = ({ component: Component, ...rest }) => {
+  const loginAdmin = useSelector((state) => state.loginAdmin);
+  const { isAuthenticated } = loginAdmin;
+  return (
+    <Route
+      {...rest}
+      render={(props) =>
+        isAuthenticated ? (
+          <Component {...props} />
+        ) : (
+          <Redirect
+            to={{
+              pathname: '/admin',
+              state: { from: props.location },
+            }}
+          />
+        )
+      }
+    />
+  );
+};
 
 function App() {
   return (
     <div>
-      <Header />
-      <Container maxW='container.lg'>
-        <Route exact path='/' component={WelcomeScreen} />
-        <Route path='/admin' component={AdminLogin} />
-        <Route path='/h' component={Dashboard} />
-      </Container>
+      <Route exact path='/' component={WelcomeScreen} />
+      <Route path='/admin' component={AdminLogin} />
+      <PrivateRoute path='/h' component={AdminDashboard} />
     </div>
   );
 }
