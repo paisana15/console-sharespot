@@ -7,6 +7,7 @@ import {
   adminLogin,
   getClientsHotspot,
   getSingleClientHotspots,
+  editSingleClient,
 } from '../controller/AdminController.js';
 import { verifyAdmin } from '../middleware/authMiddleware.js';
 
@@ -21,5 +22,6 @@ router
 router.route('/getAllClients').get(verifyAdmin, getAllClients);
 router.route('/addHotspot').post(verifyAdmin, addHotspotToClient);
 router.route('/getRewards/:clientId').put(getHotspotReward);
+router.route('/editClientProfile/:clientId').put(verifyAdmin, editSingleClient);
 
 export default router;
