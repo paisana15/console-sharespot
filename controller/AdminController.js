@@ -142,6 +142,38 @@ const addHotspotToClient = asyncHandler(async (req, res) => {
     throw new Error('Client not found!');
   }
 });
+// desc: admin edit client hotspot
+// routes: api/admin/addHotspotToClient
+// access: private
+// method: post
+const editHotspotToClient = asyncHandler(async (req, res) => {
+  const hotspotId = req.params.hotspotId;
+  const hotspot = await ClientHotspot.findById(hotspotId);
+  if (hotspot) {
+    const client = await Client.findById({ _id: hotspot.client_id });
+    if (client) {
+      const update = await ClientHotspot.findOneAndUpdate(
+        { _id: hotspotId },
+        { $set: req.body },
+        { new: true }
+      );
+
+      if (update) {
+        res.status(200);
+        res.json(update);
+      } else {
+        res.status(500);
+        throw new Error('Hotspot upload failed!');
+      }
+    } else {
+      res.status(404);
+      throw new Error('Client not found!');
+    }
+  } else {
+    res.status(404);
+    throw new Error('Hotspot not found!');
+  }
+});
 // desc: get clients assigned hotspot
 // routes: api/admin/getClientsHotspot
 // access: private
@@ -394,4 +426,5 @@ export {
   getClientsHotspot,
   getSingleClientHotspots,
   editSingleClient,
+  editHotspotToClient,
 };
