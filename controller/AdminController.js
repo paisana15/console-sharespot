@@ -51,8 +51,8 @@ const addClient = asyncHandler(async (req, res) => {
       );
       res.status(200).json(client);
     } else {
-      res.status(400);
-      throw new Error('Client registered failed!');
+      res.status(500);
+      throw new Error('Client registration failed!');
     }
   }
 });
@@ -65,11 +65,10 @@ const getAllClients = asyncHandler(async (req, res) => {
   if (clients) {
     res.status(200).json(clients);
   } else {
-    res.status(400);
+    res.status(404);
     throw new Error('Client fethch failed!');
   }
 });
-
 // desc: admin add hotspot to client
 // routes: api/admin/addHotspotToClient
 // access: private
@@ -143,6 +142,42 @@ const addHotspotToClient = asyncHandler(async (req, res) => {
     throw new Error('Client not found!');
   }
 });
+// desc: get clients assigned hotspot
+// routes: api/admin/getClientsHotspot
+// access: private
+// method: get
+const getClientsHotspot = asyncHandler(async (req, res) => {
+  const clients = await ClientHotspot.find({}).populate('client_id');
+  if (clients) {
+    res.status(200).json(clients);
+  } else {
+    res.status(404);
+    throw new Error('Clients fetch failed!');
+  }
+});
+// desc: get single client with hotspot
+// routes: api/admin/getSingleClient
+// access: private
+// method: get
+const getSingleClientHotspots = asyncHandler(async (req, res) => {
+  const clientId = req.params.clientId;
+  const client = await ClientHotspot.find({ client_id: clientId }).populate(
+    'client_id'
+  );
+  if (client) {
+    const clientWallet = await Wallet.findOne({ client_id: clientId });
+    if (clientWallet) {
+      res.status(200).json({ client, clientWallet });
+    } else {
+      res.status(404);
+      throw new Error('Wallet not found!');
+    }
+  } else {
+    res.status(404);
+    throw new Error('No hotspot assigned to this client!');
+  }
+});
+
 // desc: get hotspot reward
 // routes: api/admin/getRewards
 // access: private
@@ -301,4 +336,6 @@ export {
   addHotspotToClient,
   getHotspotReward,
   getAllClients,
+  getClientsHotspot,
+  getSingleClientHotspots,
 };
