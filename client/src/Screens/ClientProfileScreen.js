@@ -8,10 +8,12 @@ import {
   Badge,
   Tooltip,
   useColorMode,
+  Button,
 } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import { useRouteMatch } from 'react-router';
 import AlertMessage from '../components/Alert';
+import { DeleteIcon } from '@chakra-ui/icons';
 
 const ClientProfileScreen = ({ client_details }) => {
   const { url } = useRouteMatch();
@@ -150,6 +152,14 @@ const ClientProfileScreen = ({ client_details }) => {
             <AlertMessage status='error' error='No hotspot assigned yet!' />
           )}
         </Box>
+        <Button
+          variant='outline'
+          colorScheme='red'
+          mt='4'
+          leftIcon={<DeleteIcon />}
+        >
+          Delete Client
+        </Button>
       </Box>
     </>
   );

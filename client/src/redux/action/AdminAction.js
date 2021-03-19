@@ -2,6 +2,10 @@ import axios from 'axios';
 import { baseURL } from '../../baseURL';
 
 import {
+  ADD_NEW_CLIENT_FAILED,
+  ADD_NEW_CLIENT_REQUEST,
+  ADD_NEW_CLIENT_RESET,
+  ADD_NEW_CLIENT_SUCCESS,
   ADMIN_LOGIN_FAILED,
   ADMIN_LOGIN_REQUEST,
   ADMIN_LOGIN_SUCCESS,
@@ -115,6 +119,44 @@ export const getSingleClient = (clientId) => async (dispatch, getState) => {
   } catch (error) {
     dispatch({
       type: GET_SINGLE_CLIENT_FAILED,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const addNewClient = (client) => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: ADD_NEW_CLIENT_REQUEST,
+    });
+
+    const {
+      loginAdmin: { aInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${aInfo._atoken}`,
+      },
+    };
+    const { data } = await axios.post(
+      `${baseURL}/api/admin/addNewClient`,
+      client,
+      config
+    );
+    dispatch({
+      type: ADD_NEW_CLIENT_SUCCESS,
+      payload: data,
+    });
+    dispatch({
+      type: ADD_NEW_CLIENT_RESET,
+    });
+  } catch (error) {
+    dispatch({
+      type: ADD_NEW_CLIENT_FAILED,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

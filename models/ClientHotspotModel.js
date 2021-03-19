@@ -7,6 +7,10 @@ const ClientHotspotSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Client',
     },
+    hotspot_name: {
+      type: String,
+      required: true,
+    },
     hotspot_address: {
       type: String,
       required: true,

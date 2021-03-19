@@ -1,4 +1,8 @@
 import {
+  ADD_NEW_CLIENT_FAILED,
+  ADD_NEW_CLIENT_REQUEST,
+  ADD_NEW_CLIENT_RESET,
+  ADD_NEW_CLIENT_SUCCESS,
   ADMIN_LOGIN_FAILED,
   ADMIN_LOGIN_REQUEST,
   ADMIN_LOGIN_SUCCESS,
@@ -47,7 +51,20 @@ export const GetSingleClientReducer = (state = { client: {} }, action) => {
       return { loading: false, client: action.payload };
     case GET_SINGLE_CLIENT_FAILED:
       return { loading: false, error: action.payload };
-
+    default:
+      return state;
+  }
+};
+export const AddNewClientReducer = (state = {}, action) => {
+  switch (action.type) {
+    case ADD_NEW_CLIENT_REQUEST:
+      return { loading: true };
+    case ADD_NEW_CLIENT_SUCCESS:
+      return { loading: false, success: true };
+    case ADD_NEW_CLIENT_FAILED:
+      return { loading: false, error: action.payload };
+    case ADD_NEW_CLIENT_RESET:
+      return {};
     default:
       return state;
   }

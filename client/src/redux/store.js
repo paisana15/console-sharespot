@@ -2,6 +2,7 @@ import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import thunk from 'redux-thunk';
 import {
+  AddNewClientReducer,
   AdminLoginReducer,
   GetAllClientsReducer,
   GetSingleClientReducer,
@@ -12,8 +13,9 @@ const reducer = combineReducers({
   loginAdmin: AdminLoginReducer,
   allClientsGet: GetAllClientsReducer,
   singleClientsGet: GetSingleClientReducer,
+  newClientAdd: AddNewClientReducer,
 });
-
+ 
 const initialState = {
   loginAdmin: {
     isAuthenticated: localStorage.getItem('aInfo')

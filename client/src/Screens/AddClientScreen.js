@@ -1,11 +1,42 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Box, Text } from '@chakra-ui/layout';
 import { Button } from '@chakra-ui/button';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 import MyTextField from '../components/MyTextField';
+import { addNewClient } from '../redux/action/AdminAction';
+import { useDispatch, useSelector } from 'react-redux';
+import { useToast } from '@chakra-ui/toast';
 
-const AddClientScreen = () => {
+const AddClientScreen = ({ history }) => {
+  const dispatch = useDispatch();
+  const toast = useToast();
+
+  const newClientAdd = useSelector((state) => state.newClientAdd);
+  const { loading, success, error } = newClientAdd;
+
+  useEffect(() => {
+    if (success) {
+      toast({
+        title: 'Success!',
+        status: 'success',
+        description: 'New Client Added!',
+        duration: 5000,
+        isClosable: true,
+      });
+      history.push('/h/clients');
+    }
+    if (error) {
+      toast({
+        title: 'Failed!',
+        status: 'error',
+        description: error,
+        duration: 5000,
+        isClosable: true,
+      });
+    }
+  }, [error, history, success, toast]);
+
   const fieldValidationSchema = yup.object({
     firstname: yup
       .string()
@@ -52,12 +83,14 @@ const AddClientScreen = () => {
             wallet_address: '',
           }}
           validationSchema={fieldValidationSchema}
-          onSubmit={(data, { setSubmitting }) => {
-            console.log(data);
-            setSubmitting(false);
+          onSubmit={(data, { resetForm }) => {
+            dispatch(addNewClient(data));
+            if (success) {
+              resetForm();
+            }
           }}
         >
-          {({ handleSubmit, isSubmitting }) => (
+          {({ handleSubmit }) => (
             <form onSubmit={handleSubmit}>
               <MyTextField
                 type='text'
@@ -103,9 +136,9 @@ const AddClientScreen = () => {
               />
 
               <Button
+                isLoading={loading}
                 mt='2'
                 type='submit'
-                disabled={isSubmitting}
                 colorScheme='facebook'
               >
                 Add Client

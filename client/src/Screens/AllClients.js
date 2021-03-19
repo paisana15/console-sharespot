@@ -46,7 +46,7 @@ const AllClients = () => {
         {loading ? (
           <Loader />
         ) : error ? (
-          <AlertMessage />
+          <AlertMessage status='error' error={error} />
         ) : clients && clients?.length > 0 ? (
           <Table shadow='lg' size='sm' variant='striped'>
             <TableCaption>
