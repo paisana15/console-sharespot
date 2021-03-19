@@ -6,6 +6,9 @@ import {
   GET_ALL_CLIENTS_FAILED,
   GET_ALL_CLIENTS_REQUEST,
   GET_ALL_CLIENTS_SUCCESS,
+  GET_SINGLE_CLIENT_FAILED,
+  GET_SINGLE_CLIENT_REQUEST,
+  GET_SINGLE_CLIENT_SUCCESS,
 } from '../actionTypes';
 
 export const AdminLoginReducer = (state = {}, action) => {
@@ -30,6 +33,19 @@ export const GetAllClientsReducer = (state = { clients: [] }, action) => {
     case GET_ALL_CLIENTS_SUCCESS:
       return { loading: false, clients: action.payload };
     case GET_ALL_CLIENTS_FAILED:
+      return { loading: false, error: action.payload };
+
+    default:
+      return state;
+  }
+};
+export const GetSingleClientReducer = (state = { client: {} }, action) => {
+  switch (action.type) {
+    case GET_SINGLE_CLIENT_REQUEST:
+      return { loading: true };
+    case GET_SINGLE_CLIENT_SUCCESS:
+      return { loading: false, client: action.payload };
+    case GET_SINGLE_CLIENT_FAILED:
       return { loading: false, error: action.payload };
 
     default:

@@ -9,6 +9,9 @@ import {
   GET_ALL_CLIENTS_FAILED,
   GET_ALL_CLIENTS_REQUEST,
   GET_ALL_CLIENTS_SUCCESS,
+  GET_SINGLE_CLIENT_FAILED,
+  GET_SINGLE_CLIENT_REQUEST,
+  GET_SINGLE_CLIENT_SUCCESS,
 } from '../actionTypes';
 
 export const adminLogin = (credentials) => async (dispatch) => {
@@ -42,6 +45,7 @@ export const adminLogin = (credentials) => async (dispatch) => {
     });
   }
 };
+
 export const adminLogout = () => async (dispatch) => {
   try {
     localStorage.removeItem('aInfo');
@@ -50,6 +54,7 @@ export const adminLogout = () => async (dispatch) => {
     console.log(err);
   }
 };
+
 export const getAllClients = () => async (dispatch, getState) => {
   try {
     dispatch({
@@ -76,6 +81,40 @@ export const getAllClients = () => async (dispatch, getState) => {
   } catch (error) {
     dispatch({
       type: GET_ALL_CLIENTS_FAILED,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const getSingleClient = (clientId) => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: GET_SINGLE_CLIENT_REQUEST,
+    });
+
+    const {
+      loginAdmin: { aInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${aInfo._atoken}`,
+      },
+    };
+    const { data } = await axios.get(
+      `${baseURL}/api/admin/getSingleClientHotspots/${clientId}`,
+      config
+    );
+    dispatch({
+      type: GET_SINGLE_CLIENT_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: GET_SINGLE_CLIENT_FAILED,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

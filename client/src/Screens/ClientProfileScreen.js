@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Box,
   Text,
@@ -11,10 +11,21 @@ import {
 } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import { useRouteMatch } from 'react-router';
+import AlertMessage from '../components/Alert';
 
-const ClientProfileScreen = () => {
+const ClientProfileScreen = ({ client_details }) => {
   const { url } = useRouteMatch();
   const { colorMode } = useColorMode();
+  const [client, setClient] = useState({});
+  const [client_hotspot, setClientHotspot] = useState([]);
+  const [client_wallet, setClientWallet] = useState({});
+
+  useEffect(() => {
+    setClient(client_details?.client);
+    setClientHotspot(client_details?.client_hotspot);
+    setClientWallet(client_details?.clientWallet);
+  }, [client_details]);
+
   return (
     <>
       <Box>
@@ -23,7 +34,7 @@ const ClientProfileScreen = () => {
             textColor={`${colorMode === 'light' ? 'gray.600' : '#b3bfd4'}`}
             size='lg'
           >
-            John Doe
+            {client?.firstname + ' ' + client?.lastname}
           </Heading>
           <Tooltip hasArrow label='Edit Profile' bg='gray.300' color='black'>
             <span
@@ -37,21 +48,21 @@ const ClientProfileScreen = () => {
         </Flex>
         <Flex>
           <Text color='gray.500' fontSize='sm'>
-            <i className='fas fa-user'></i> Username : john
+            <i className='fas fa-user'></i> Username : {client?.username}
           </Text>
           <Spacer />
           <Text color='gray.500' fontSize='sm'>
-            <i className='fas fa-at'></i> Email : johyn@gmail.com
+            <i className='fas fa-at'></i> Email : {client?.email}
           </Text>
         </Flex>
         <Flex>
           <Text color='gray.500' fontSize='sm'>
-            <i className='fas fa-phone-alt'></i> Phone : +362200000
+            <i className='fas fa-phone-alt'></i> Phone : {client?.phone_number}
           </Text>
           <Spacer />
           <Text color='gray.500' fontSize='sm'>
             <i className='fas fa-wallet'></i> Wallet Address :
-            ijkilajsfg6hufyukiloaposas54d3fg
+            {client?.wallet_address}
           </Text>
         </Flex>
       </Box>
@@ -66,7 +77,7 @@ const ClientProfileScreen = () => {
         >
           <Heading size='md'>Total Withdrawn</Heading>
           <Text style={{ fontWeight: 'bold' }} fontSize='3xl'>
-            $54
+            {`$ ${client_wallet ? client_wallet?.totalWithdraw : '0'}`}
           </Text>
         </Box>
         <Spacer />
@@ -80,7 +91,7 @@ const ClientProfileScreen = () => {
         >
           <Heading size='md'>Total Rewards</Heading>
           <Text style={{ fontWeight: 'bold' }} fontSize='3xl'>
-            $454
+            {`$ ${client_wallet ? client_wallet?.totalRewards : '0'}`}
           </Text>
         </Box>
         <Spacer />
@@ -94,38 +105,50 @@ const ClientProfileScreen = () => {
         >
           <Heading size='md'>Balance</Heading>
           <Text style={{ fontWeight: 'bold' }} fontSize='3xl'>
-            $400
+            {`$ ${client_wallet ? client_wallet?.wallet_balance : '0'}`}
           </Text>
         </Box>
       </Flex>
       <Box mt='4'>
         <Heading size='xs'>Assigned Hotspot</Heading>
         <Box mt='3'>
-          <Flex p='4' borderRadius='lg' mb='3' boxShadow='base'>
-            <Box>
-              <Heading size='sm'>Main Tiger Snake</Heading>
-              <Flex mt='2'>
-                <Text fontSize='xs' mr='1'>
-                  Percentage
-                </Text>
-                <Badge colorScheme={'green'}>
-                  <Text fontSize='xs'>20%</Text>
-                </Badge>
-                <Badge ml='10px' colorScheme='purple'>
-                  <Text fontSize='xs'>Host</Text>
-                </Badge>
+          {client_hotspot.length > 0 ? (
+            client_hotspot.map((hotspot) => (
+              <Flex
+                key={hotspot?._id}
+                p='4'
+                borderRadius='lg'
+                mb='3'
+                boxShadow='base'
+              >
+                <Box>
+                  <Heading size='sm'>{hotspot?.name}</Heading>
+                  <Flex mt='2'>
+                    <Text fontSize='xs' mr='1'>
+                      Percentage
+                    </Text>
+                    <Badge colorScheme={'green'}>
+                      <Text fontSize='xs'>{hotspot?.percentage}</Text>
+                    </Badge>
+                    <Badge ml='10px' colorScheme='purple'>
+                      <Text fontSize='xs'>{hotspot?.relation_type}</Text>
+                    </Badge>
+                  </Flex>
+                </Box>
+                <Spacer />
+                <Box textAlign='right'>
+                  <Text fontSize='sm' color='grey'>
+                    Total Earned
+                  </Text>
+                  <Text fontWeight='bold' color='grey' fontSize='sm'>
+                    $89
+                  </Text>
+                </Box>
               </Flex>
-            </Box>
-            <Spacer />
-            <Box textAlign='right'>
-              <Text fontSize='sm' color='grey'>
-                Total Earned
-              </Text>
-              <Text fontWeight='bold' color='grey' fontSize='sm'>
-                $89
-              </Text>
-            </Box>
-          </Flex>
+            ))
+          ) : (
+            <AlertMessage status='error' error='No hotspot assigned yet!' />
+          )}
         </Box>
       </Box>
     </>

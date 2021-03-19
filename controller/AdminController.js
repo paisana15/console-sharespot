@@ -193,16 +193,25 @@ const getClientsHotspot = asyncHandler(async (req, res) => {
 // method: get
 const getSingleClientHotspots = asyncHandler(async (req, res) => {
   const clientId = req.params.clientId;
-  const client = await ClientHotspot.find({ client_id: clientId }).populate(
-    'client_id'
-  );
+  const client = await Client.findById(clientId);
   if (client) {
+    const client_hotspot = await ClientHotspot.find({
+      client_id: clientId,
+    });
     const clientWallet = await Wallet.findOne({ client_id: clientId });
-    if (clientWallet) {
-      res.status(200).json({ client, clientWallet });
+
+    if (client_hotspot.length < 0) {
+      res.status(200).json({
+        client: client,
+        client_hotspot: [],
+        clientWallet: {},
+      });
     } else {
-      res.status(404);
-      throw new Error('Wallet not found!');
+      res.status(200).json({
+        client: client,
+        client_hotspot: client_hotspot,
+        clientWallet: clientWallet,
+      });
     }
   } else {
     res.status(404);

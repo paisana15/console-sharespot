@@ -62,7 +62,7 @@ const AllClients = () => {
               {clients?.map((client) => (
                 <Tr key={client?._id}>
                   <Td>
-                    <Link to={`/h/client/:clientId`}>
+                    <Link to={`/h/client/${client?._id}`}>
                       {client?.firstname + ' ' + client?.lastname}
                     </Link>
                   </Td>

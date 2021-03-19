@@ -4,12 +4,14 @@ import thunk from 'redux-thunk';
 import {
   AdminLoginReducer,
   GetAllClientsReducer,
+  GetSingleClientReducer,
 } from './reducer/AdminReducer';
 import jwt from 'jsonwebtoken';
 
 const reducer = combineReducers({
   loginAdmin: AdminLoginReducer,
   allClientsGet: GetAllClientsReducer,
+  singleClientsGet: GetSingleClientReducer,
 });
 
 const initialState = {
