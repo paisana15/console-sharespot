@@ -12,10 +12,10 @@ import moment from 'moment';
 // access: private
 // method: post
 const adminLogin = asyncHandler(async (req, res) => {
-  const { username, password } = req.body;
+  const { username, password } = req.body.credentials;
 
   const admin = await Admin.findOne({ username });
-  console.log(admin);
+
   if (admin && admin?.password.toString() === password.toString()) {
     res.status(200).json({
       _atoken: generateToken(admin._id),

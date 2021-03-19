@@ -1,11 +1,20 @@
 import { Box, Container, Spacer, Stack } from '@chakra-ui/layout';
 import React from 'react';
 import { Link, useRouteMatch } from 'react-router-dom';
+import { adminLogout } from '../redux/action/AdminAction';
+import { useDispatch } from 'react-redux';
 import Logo from './Logo';
+import { useColorMode } from '@chakra-ui/color-mode';
 
 const AdminNavbar = () => {
+  const dispatch = useDispatch();
   const { path } = useRouteMatch();
 
+  const { colorMode, toggleColorMode } = useColorMode();
+
+  const logoutHandler = () => {
+    dispatch(adminLogout());
+  };
   return (
     <Box color='white' overflow='hidden' bg='#2f2f2f' w='100%' p='4'>
       <Container maxW='container.xl'>
@@ -51,16 +60,6 @@ const AdminNavbar = () => {
             </Link>
           </Box>
 
-          {/* <Box
-            color='gray.500'
-            fontWeight='semibold'
-            letterSpacing='wide'
-            cursor='pointer'
-            fontSize='sm'
-          >
-            <i className='fas fa-sign-in-alt'></i> Sign in
-          </Box> */}
-
           <Box
             color='gray.500'
             fontWeight='semibold'
@@ -69,7 +68,26 @@ const AdminNavbar = () => {
             fontSize='sm'
           >
             <i className='fas fa-sign-out-alt'></i>
-            <span className='admin_navlink'>Sign out</span>
+            <span onClick={logoutHandler} className='admin_navlink'>
+              Sign out
+            </span>
+          </Box>
+          <Box
+            d='flex'
+            borderRadius='full'
+            fontWeight='semibold'
+            letterSpacing='wide'
+            bg='#505050'
+            cursor='pointer'
+            fontSize='sm'
+            w='30px'
+            h='30px'
+            alignItems='center'
+            justifyContent='center'
+            color={`${colorMode === 'light' ? 'yellow.300' : 'white'}`}
+            onClick={toggleColorMode}
+          >
+            <i className='fas fa-cloud-moon'></i>
           </Box>
         </Stack>
       </Container>

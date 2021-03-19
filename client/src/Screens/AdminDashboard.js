@@ -8,9 +8,11 @@ import ClientDetails from './ClientDetails';
 import AddClientScreen from './AddClientScreen';
 import AddHotspotScreen from './AddHotspotScreen';
 import AdminNavbar from '../components/AdminNavbar';
+import { useColorMode } from '@chakra-ui/color-mode';
 
 const AdminDashboard = () => {
   const { path } = useRouteMatch();
+  const { colorMode } = useColorMode();
 
   return (
     <>
@@ -23,6 +25,7 @@ const AdminDashboard = () => {
           mt='3'
           borderRadius='md'
           shadow='md'
+          bg={`${colorMode === 'dark' ? '#2a2f38' : '#ffffff'}`}
         >
           <Switch>
             <Route path={`${path}/clients`} component={AllClients} />

@@ -5,9 +5,10 @@ import {
   ADMIN_LOGIN_FAILED,
   ADMIN_LOGIN_REQUEST,
   ADMIN_LOGIN_SUCCESS,
+  ADMIN_LOGOUT,
 } from '../actionTypes';
 
-export const adminLogin = (username, password) => async (dispatch) => {
+export const adminLogin = (credentials) => async (dispatch) => {
   try {
     dispatch({
       type: ADMIN_LOGIN_REQUEST,
@@ -20,7 +21,7 @@ export const adminLogin = (username, password) => async (dispatch) => {
     };
     const { data } = await axios.post(
       `${baseURL}/api/admin/login`,
-      { username, password },
+      { credentials },
       config
     );
     localStorage.setItem('aInfo', JSON.stringify(data));
@@ -36,6 +37,14 @@ export const adminLogin = (username, password) => async (dispatch) => {
           ? error.response.data.message
           : error.message,
     });
+  }
+};
+export const adminLogout = () => async (dispatch) => {
+  try {
+    localStorage.removeItem('aInfo');
+    dispatch({ type: ADMIN_LOGOUT });
+  } catch (err) {
+    console.log(err);
   }
 };
 export const getAllArticles = () => async (dispatch, getState) => {

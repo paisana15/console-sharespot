@@ -7,17 +7,22 @@ import {
   Spacer,
   Badge,
   Tooltip,
+  useColorMode,
 } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import { useRouteMatch } from 'react-router';
 
 const ClientProfileScreen = () => {
   const { url } = useRouteMatch();
+  const { colorMode } = useColorMode();
   return (
     <>
       <Box>
         <Flex align='center'>
-          <Heading textColor='gray.600' size='lg'>
+          <Heading
+            textColor={`${colorMode === 'light' ? 'gray.600' : '#b3bfd4'}`}
+            size='lg'
+          >
             John Doe
           </Heading>
           <Tooltip hasArrow label='Edit Profile' bg='gray.300' color='black'>
