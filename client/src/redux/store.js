@@ -1,11 +1,15 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import thunk from 'redux-thunk';
-import { AdminLoginReducer } from './reducer/AdminReducer';
+import {
+  AdminLoginReducer,
+  GetAllClientsReducer,
+} from './reducer/AdminReducer';
 import jwt from 'jsonwebtoken';
 
 const reducer = combineReducers({
   loginAdmin: AdminLoginReducer,
+  allClientsGet: GetAllClientsReducer,
 });
 
 const initialState = {

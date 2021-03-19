@@ -7,24 +7,25 @@ import { Button } from '@chakra-ui/button';
 import { Field, Formik } from 'formik';
 import * as yup from 'yup';
 import axios from 'axios';
+import { useSelector } from 'react-redux';
 
 const AddHotspotScreen = () => {
   const [apiData, setApiData] = useState([]);
-  const [clients, setClients] = useState([]);
+
+  const allClientsGet = useSelector((state) => state.allClientsGet);
+  const { clients } = allClientsGet;
 
   useEffect(() => {
     const request =
       'https://api.helium.io/v1/accounts/13ESLoXiie3eXoyitxryNQNamGAnJjKt2WkiB4gNq95knxAiGEp/hotspots';
-    const request2 = 'http://localhost:5001/api/admin/getAllClients';
 
     function fetchData() {
       axios
-        .all([axios.get(request), axios.get(request2)])
+        .all([axios.get(request)])
         .then(
           axios.spread((...res) => {
             if (res) {
               setApiData(res[0].data.data);
-              setClients(res[1].data);
             } else {
               throw new Error('Fetch to fail data!');
             }
@@ -84,7 +85,7 @@ const AddHotspotScreen = () => {
                   onBlur={handleBlur}
                 >
                   <option> --- </option>
-                  {clients.map((data, idx) => (
+                  {clients?.map((data, idx) => (
                     <option key={idx} value={data?._id}>
                       {data?.firstname} {data?.lastname}
                     </option>

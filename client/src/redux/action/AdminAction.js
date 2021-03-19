@@ -6,6 +6,9 @@ import {
   ADMIN_LOGIN_REQUEST,
   ADMIN_LOGIN_SUCCESS,
   ADMIN_LOGOUT,
+  GET_ALL_CLIENTS_FAILED,
+  GET_ALL_CLIENTS_REQUEST,
+  GET_ALL_CLIENTS_SUCCESS,
 } from '../actionTypes';
 
 export const adminLogin = (credentials) => async (dispatch) => {
@@ -47,7 +50,36 @@ export const adminLogout = () => async (dispatch) => {
     console.log(err);
   }
 };
-export const getAllArticles = () => async (dispatch, getState) => {
+export const getAllClients = () => async (dispatch, getState) => {
   try {
-  } catch (error) {}
+    dispatch({
+      type: GET_ALL_CLIENTS_REQUEST,
+    });
+
+    const {
+      loginAdmin: { aInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${aInfo._atoken}`,
+      },
+    };
+    const { data } = await axios.get(
+      `${baseURL}/api/admin/getAllClients`,
+      config
+    );
+    dispatch({
+      type: GET_ALL_CLIENTS_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: GET_ALL_CLIENTS_FAILED,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
 };

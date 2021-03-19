@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Box, Flex, Text } from '@chakra-ui/layout';
 import {
   Table,
@@ -11,8 +11,21 @@ import {
 } from '@chakra-ui/table';
 import { Spacer, Button } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { getAllClients } from '../redux/action/AdminAction';
+import Loader from '../components/Loader';
+import AlertMessage from '../components/Alert';
 
 const AllClients = () => {
+  const dispatch = useDispatch();
+
+  const allClientsGet = useSelector((state) => state.allClientsGet);
+  const { loading, clients, error } = allClientsGet;
+
+  useEffect(() => {
+    dispatch(getAllClients());
+  }, [dispatch]);
+
   return (
     <Box p='4'>
       <Flex mb='3'>
@@ -30,55 +43,37 @@ const AllClients = () => {
         </Box>
       </Flex>
       <Box>
-        <Table shadow='md' size='sm' borderWidth='1px' variant='striped'>
-          <TableCaption>All client list with their total hotspot.</TableCaption>
-          <Thead>
-            <Tr>
-              <Th>Client</Th>
-              <Th isNumeric>Total Hotspot</Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            <Tr>
-              <Td>
-                <Link to={`/h/client/:clientId`}>John</Link>
-              </Td>
-              <Td isNumeric>4</Td>
-            </Tr>
-            <Tr>
-              <Td>Jane</Td>
-              <Td isNumeric>1</Td>
-            </Tr>
-            <Tr>
-              <Td>Max Ty</Td>
-              <Td isNumeric>2</Td>
-            </Tr>
-            <Tr>
-              <Td>John</Td>
-              <Td isNumeric>4</Td>
-            </Tr>
-            <Tr>
-              <Td>Jane</Td>
-              <Td isNumeric>1</Td>
-            </Tr>
-            <Tr>
-              <Td>Max Ty</Td>
-              <Td isNumeric>2</Td>
-            </Tr>
-            <Tr>
-              <Td>John</Td>
-              <Td isNumeric>4</Td>
-            </Tr>
-            <Tr>
-              <Td>Jane</Td>
-              <Td isNumeric>1</Td>
-            </Tr>
-            <Tr>
-              <Td>Max Ty</Td>
-              <Td isNumeric>2</Td>
-            </Tr>
-          </Tbody>
-        </Table>
+        {loading ? (
+          <Loader />
+        ) : error ? (
+          <AlertMessage />
+        ) : clients && clients?.length > 0 ? (
+          <Table shadow='lg' size='sm' variant='striped'>
+            <TableCaption>
+              All client list with their total hotspot.
+            </TableCaption>
+            <Thead>
+              <Tr>
+                <Th>Client Name</Th>
+                <Th isNumeric>Total Hotspot</Th>
+              </Tr>
+            </Thead>
+            <Tbody>
+              {clients?.map((client) => (
+                <Tr key={client?._id}>
+                  <Td>
+                    <Link to={`/h/client/:clientId`}>
+                      {client?.firstname + ' ' + client?.lastname}
+                    </Link>
+                  </Td>
+                  <Td isNumeric>4</Td>
+                </Tr>
+              ))}
+            </Tbody>
+          </Table>
+        ) : (
+          <AlertMessage status='error' error='No clients found!' />
+        )}
       </Box>
     </Box>
   );

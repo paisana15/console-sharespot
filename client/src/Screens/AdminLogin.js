@@ -2,17 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { FormControl } from '@chakra-ui/form-control';
 import { Input } from '@chakra-ui/input';
 import { FormLabel } from '@chakra-ui/form-control';
-import {
-  Alert,
-  AlertIcon,
-  Box,
-  Button,
-  Heading,
-  useColorMode,
-  useToast,
-} from '@chakra-ui/react';
+import { Box, Button, Heading, useColorMode, useToast } from '@chakra-ui/react';
 import { useDispatch, useSelector } from 'react-redux';
 import { adminLogin } from '../redux/action/AdminAction';
+import AlertMessage from '../components/Alert';
 
 const AdminLogin = ({ history }) => {
   const dispatch = useDispatch();
@@ -91,12 +84,7 @@ const AdminLogin = ({ history }) => {
           </Button>
         </form>
         <Box mt='3'>
-          {error && (
-            <Alert status='error'>
-              <AlertIcon />
-              {error}
-            </Alert>
-          )}
+          {error && <AlertMessage status='error' error={error} />}
         </Box>
       </Box>
     </div>
