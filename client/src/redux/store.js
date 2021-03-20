@@ -4,6 +4,7 @@ import thunk from 'redux-thunk';
 import {
   AddNewClientReducer,
   AdminLoginReducer,
+  DelSingleClientReducer,
   GetAllClientsReducer,
   GetSingleClientReducer,
 } from './reducer/AdminReducer';
@@ -14,8 +15,9 @@ const reducer = combineReducers({
   allClientsGet: GetAllClientsReducer,
   singleClientsGet: GetSingleClientReducer,
   newClientAdd: AddNewClientReducer,
+  singleClientDel: DelSingleClientReducer,
 });
- 
+
 const initialState = {
   loginAdmin: {
     isAuthenticated: localStorage.getItem('aInfo')

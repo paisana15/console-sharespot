@@ -10,6 +10,10 @@ import {
   ADMIN_LOGIN_REQUEST,
   ADMIN_LOGIN_SUCCESS,
   ADMIN_LOGOUT,
+  DELETE_SINGLE_CLIENT_FAILED,
+  DELETE_SINGLE_CLIENT_REQUEST,
+  DELETE_SINGLE_CLIENT_RESET,
+  DELETE_SINGLE_CLIENT_SUCCESS,
   GET_ALL_CLIENTS_FAILED,
   GET_ALL_CLIENTS_REQUEST,
   GET_ALL_CLIENTS_SUCCESS,
@@ -157,6 +161,45 @@ export const addNewClient = (client) => async (dispatch, getState) => {
   } catch (error) {
     dispatch({
       type: ADD_NEW_CLIENT_FAILED,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const deleteClient = (clientId) => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: DELETE_SINGLE_CLIENT_REQUEST,
+    });
+
+    const {
+      loginAdmin: { aInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${aInfo._atoken}`,
+      },
+    };
+    const { data } = await axios.delete(
+      `${baseURL}/api/admin/deleteClient/${clientId}`,
+      config
+    );
+    dispatch({
+      type: DELETE_SINGLE_CLIENT_SUCCESS,
+      payload: data,
+    });
+    setTimeout(() => {
+      dispatch({
+        type: DELETE_SINGLE_CLIENT_RESET,
+      });
+    }, 5000);
+  } catch (error) {
+    dispatch({
+      type: DELETE_SINGLE_CLIENT_FAILED,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

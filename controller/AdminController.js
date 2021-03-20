@@ -56,6 +56,43 @@ const addClient = asyncHandler(async (req, res) => {
     }
   }
 });
+// desc: admin delete a client
+// routes: api/admin/deleteClient/:clientId
+// access: private
+// method: del
+const deleteClient = asyncHandler(async (req, res) => {
+  const clientId = req.params.clientId;
+  const client = await Client.findById(clientId);
+  if (client) {
+    const del = await client.remove();
+    const clientHotspots = await ClientHotspot.find({ client_id: client._id });
+    const clientWallets = await Wallet.findOne({ client_id: client._id });
+    if (clientHotspots !== null) {
+      await ClientHotspot.deleteMany(
+        { client_id: clientId },
+        (error, result) => {
+          if (error) {
+            console.log(error);
+          }
+        }
+      );
+    }
+    if (clientWallets) {
+      await Wallet.deleteOne({ client_id: client._id });
+    }
+    if (del) {
+      res.status(200).json({
+        message: 'Client deleted successfully!',
+      });
+    } else {
+      res.status(500);
+      throw new Error();
+    }
+  } else {
+    res.status(404);
+    throw new Error('Clinet not found!');
+  }
+});
 // desc: get all client list with name
 // routes: api/admin/getAllClients
 // access: public
@@ -215,7 +252,7 @@ const getSingleClientHotspots = asyncHandler(async (req, res) => {
     }
   } else {
     res.status(404);
-    throw new Error('No hotspot assigned to this client!');
+    throw new Error('Client not found!');
   }
 });
 // desc: admin edit client profile
@@ -436,4 +473,5 @@ export {
   getSingleClientHotspots,
   editSingleClient,
   editHotspotToClient,
+  deleteClient,
 };

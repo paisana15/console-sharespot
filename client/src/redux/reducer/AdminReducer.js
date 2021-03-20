@@ -7,6 +7,10 @@ import {
   ADMIN_LOGIN_REQUEST,
   ADMIN_LOGIN_SUCCESS,
   ADMIN_LOGOUT,
+  DELETE_SINGLE_CLIENT_FAILED,
+  DELETE_SINGLE_CLIENT_REQUEST,
+  DELETE_SINGLE_CLIENT_RESET,
+  DELETE_SINGLE_CLIENT_SUCCESS,
   GET_ALL_CLIENTS_FAILED,
   GET_ALL_CLIENTS_REQUEST,
   GET_ALL_CLIENTS_SUCCESS,
@@ -64,6 +68,20 @@ export const AddNewClientReducer = (state = {}, action) => {
     case ADD_NEW_CLIENT_FAILED:
       return { loading: false, error: action.payload };
     case ADD_NEW_CLIENT_RESET:
+      return {};
+    default:
+      return state;
+  }
+};
+export const DelSingleClientReducer = (state = {}, action) => {
+  switch (action.type) {
+    case DELETE_SINGLE_CLIENT_REQUEST:
+      return { loading: true };
+    case DELETE_SINGLE_CLIENT_SUCCESS:
+      return { loading: false, success: true };
+    case DELETE_SINGLE_CLIENT_FAILED:
+      return { loading: false, error: action.payload };
+    case DELETE_SINGLE_CLIENT_RESET:
       return {};
     default:
       return state;

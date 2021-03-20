@@ -9,11 +9,22 @@ import {
   Tooltip,
   useColorMode,
   Button,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  useDisclosure,
 } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
-import { useRouteMatch } from 'react-router';
+import { useHistory, useRouteMatch } from 'react-router';
 import AlertMessage from '../components/Alert';
 import { DeleteIcon } from '@chakra-ui/icons';
+import { useDispatch, useSelector } from 'react-redux';
+import { deleteClient } from '../redux/action/AdminAction';
+import Loader from '../components/Loader';
 
 const ClientProfileScreen = ({ client_details }) => {
   const { url } = useRouteMatch();
@@ -21,12 +32,26 @@ const ClientProfileScreen = ({ client_details }) => {
   const [client, setClient] = useState({});
   const [client_hotspot, setClientHotspot] = useState([]);
   const [client_wallet, setClientWallet] = useState({});
+  const dispatch = useDispatch();
+  const history = useHistory();
+
+  const { onOpen, isOpen, onClose } = useDisclosure();
+
+  const singleClientDel = useSelector((state) => state.singleClientDel);
+  const { loading, success, error } = singleClientDel;
 
   useEffect(() => {
     setClient(client_details?.client);
     setClientHotspot(client_details?.client_hotspot);
     setClientWallet(client_details?.clientWallet);
-  }, [client_details]);
+    if (success) {
+      history.push('/h/clients');
+    }
+  }, [client_details, success, history]);
+
+  const clientDelteHandler = () => {
+    dispatch(deleteClient(client?._id));
+  };
 
   return (
     <>
@@ -157,9 +182,43 @@ const ClientProfileScreen = ({ client_details }) => {
           colorScheme='red'
           mt='4'
           leftIcon={<DeleteIcon />}
+          onClick={onOpen}
         >
           Delete Client
         </Button>
+        {loading ? (
+          <Loader />
+        ) : (
+          error && <AlertMessage status='error' error={error} />
+        )}
+        <Modal isOpen={isOpen} onClose={onClose}>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>Confirm Delete</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <Text>{'Are you sure you want to remove this client?'}</Text>
+            </ModalBody>
+
+            <ModalFooter>
+              <Button
+                variant='outline'
+                colorScheme='blue'
+                mr={3}
+                onClick={onClose}
+              >
+                Close
+              </Button>
+              <Button
+                onClick={clientDelteHandler}
+                colorScheme='red'
+                variant='outline'
+              >
+                Yes, Confirm
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
       </Box>
     </>
   );
