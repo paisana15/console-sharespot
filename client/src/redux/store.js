@@ -2,6 +2,7 @@ import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import thunk from 'redux-thunk';
 import {
+  AddHotspotClientReducer,
   AddNewClientReducer,
   AdminLoginReducer,
   DelSingleClientReducer,
@@ -16,6 +17,7 @@ const reducer = combineReducers({
   singleClientsGet: GetSingleClientReducer,
   newClientAdd: AddNewClientReducer,
   singleClientDel: DelSingleClientReducer,
+  hotspotClientAdd: AddHotspotClientReducer,
 });
 
 const initialState = {

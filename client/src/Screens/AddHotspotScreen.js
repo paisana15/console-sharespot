@@ -7,13 +7,22 @@ import { Button } from '@chakra-ui/button';
 import { Field, Formik } from 'formik';
 import * as yup from 'yup';
 import axios from 'axios';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { useToast } from '@chakra-ui/toast';
+import { addHotspotToClient } from '../redux/action/AdminAction';
 
 const AddHotspotScreen = () => {
+  const toast = useToast();
+  const dispatch = useDispatch();
+
   const [apiData, setApiData] = useState([]);
+  const [clients, setClientss] = useState([]);
+
+  const hotspotClientAdd = useSelector((state) => state.hotspotClientAdd);
+  const { loading, success, error } = hotspotClientAdd;
 
   const allClientsGet = useSelector((state) => state.allClientsGet);
-  const { clients } = allClientsGet;
+  const { clients: getClients } = allClientsGet;
 
   useEffect(() => {
     const request =
@@ -36,11 +45,30 @@ const AddHotspotScreen = () => {
         });
     }
     fetchData();
-  }, []);
+    setClientss(getClients);
+    if (success) {
+      toast({
+        status: 'success',
+        title: 'Success!',
+        description: 'Hotspot Added!',
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+    if (error) {
+      toast({
+        status: 'error',
+        title: 'Failed!',
+        description: error,
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+  }, [success, error, toast, getClients]);
   const fieldValidationSchema = yup.object({
     client_id: yup.string().required('Client id required!'),
-    hotspot_address: yup.string().required('Hotspot required!'),
-    role: yup.string().required('Role required!'),
+    hotspot_address: yup.string().required('Hotspot address required!'),
+    relation_type: yup.string().required('Role required!'),
     percentage: yup.number().required('Percentage required!'),
     startDate: yup.string().required('Start date required!'),
   });
@@ -55,19 +83,17 @@ const AddHotspotScreen = () => {
           initialValues={{
             client_id: '',
             hotspot_address: '',
-            role: '',
+            relation_type: '',
             percentage: '',
             startDate: '',
           }}
           validationSchema={fieldValidationSchema}
-          onSubmit={(data, { setSubmitting }) => {
-            console.log(data);
-            setSubmitting(false);
+          onSubmit={(data) => {
+            dispatch(addHotspotToClient(data));
           }}
         >
           {({
             handleSubmit,
-            isSubmitting,
             handleChange,
             handleBlur,
             values,
@@ -109,7 +135,7 @@ const AddHotspotScreen = () => {
                 >
                   <option> --- </option>
                   {apiData.map((data, idx) => (
-                    <option key={idx} value={data?.address}>
+                    <option key={idx} value={data?.name + ' ' + data?.address}>
                       {data?.name}
                     </option>
                   ))}
@@ -125,17 +151,18 @@ const AddHotspotScreen = () => {
                 <FormLabel>Role</FormLabel>
                 <Field
                   as={Select}
-                  name='role'
-                  value={values.role}
+                  name='relation_type'
+                  value={values.relation_type}
                   onChange={handleChange}
                   onBlur={handleBlur}
                 >
+                  <option value=''> --- </option>
                   <option value='host'>Host</option>
                   <option value='referrer'>Referrer</option>
                 </Field>
-                {errors.role && touched.role && (
+                {errors.relation_type && touched.relation_type && (
                   <div style={{ color: 'red', fontSize: 13 }}>
-                    {errors.role}
+                    {errors.relation_type}
                   </div>
                 )}
               </FormControl>
@@ -171,8 +198,9 @@ const AddHotspotScreen = () => {
               </FormControl>
               <Button
                 type='submit'
-                disabled={isSubmitting}
-                mt='2'
+                mt='3'
+                isLoading={loading}
+                loadingText='Creating...'
                 colorScheme='purple'
               >
                 Create Agreement

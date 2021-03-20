@@ -1,4 +1,8 @@
 import {
+  ADD_HOTSPOT_TO_CLIENT_FAILED,
+  ADD_HOTSPOT_TO_CLIENT_REQUEST,
+  ADD_HOTSPOT_TO_CLIENT_RESET,
+  ADD_HOTSPOT_TO_CLIENT_SUCCESS,
   ADD_NEW_CLIENT_FAILED,
   ADD_NEW_CLIENT_REQUEST,
   ADD_NEW_CLIENT_RESET,
@@ -82,6 +86,20 @@ export const DelSingleClientReducer = (state = {}, action) => {
     case DELETE_SINGLE_CLIENT_FAILED:
       return { loading: false, error: action.payload };
     case DELETE_SINGLE_CLIENT_RESET:
+      return {};
+    default:
+      return state;
+  }
+};
+export const AddHotspotClientReducer = (state = {}, action) => {
+  switch (action.type) {
+    case ADD_HOTSPOT_TO_CLIENT_REQUEST:
+      return { loading: true };
+    case ADD_HOTSPOT_TO_CLIENT_SUCCESS:
+      return { loading: false, success: true };
+    case ADD_HOTSPOT_TO_CLIENT_FAILED:
+      return { loading: false, error: action.payload };
+    case ADD_HOTSPOT_TO_CLIENT_RESET:
       return {};
     default:
       return state;

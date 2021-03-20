@@ -135,7 +135,17 @@ const addHotspotToClient = asyncHandler(async (req, res) => {
             "This hotspot already assigned as host, can't be assign!"
           );
         } else {
-          const newConnection = await ClientHotspot.create(req.body);
+          const h_name = req.body.hotspot_address.split(' ')[0];
+          const h_address = req.body.hotspot_address.split(' ')[1];
+          console.log(h_address);
+          const newConnection = await ClientHotspot.create({
+            hotspot_name: h_name,
+            hotspot_address: h_address,
+            client_id: req.body.client_id,
+            relation_type: req.body.relation_type,
+            percentage: req.body.percentage,
+            startDate: req.body.startDate,
+          });
           if (newConnection) {
             const client_has_wallet = await Wallet.findOne({
               client_id: client_id,
@@ -394,7 +404,7 @@ const getHotspotReward = asyncHandler(async (req, res) => {
           const val = (res?.data?.data?.total * data?.percentage) / 100;
           clientHotspots.push({
             total: val,
-          });        
+          });
           data.total_earned = val;
           data.save();
         } else {

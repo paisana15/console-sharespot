@@ -2,6 +2,10 @@ import axios from 'axios';
 import { baseURL } from '../../baseURL';
 
 import {
+  ADD_HOTSPOT_TO_CLIENT_FAILED,
+  ADD_HOTSPOT_TO_CLIENT_REQUEST,
+  ADD_HOTSPOT_TO_CLIENT_RESET,
+  ADD_HOTSPOT_TO_CLIENT_SUCCESS,
   ADD_NEW_CLIENT_FAILED,
   ADD_NEW_CLIENT_REQUEST,
   ADD_NEW_CLIENT_RESET,
@@ -200,6 +204,46 @@ export const deleteClient = (clientId) => async (dispatch, getState) => {
   } catch (error) {
     dispatch({
       type: DELETE_SINGLE_CLIENT_FAILED,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const addHotspotToClient = (datas) => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: ADD_HOTSPOT_TO_CLIENT_REQUEST,
+    });
+
+    const {
+      loginAdmin: { aInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${aInfo._atoken}`,
+      },
+    };
+    const { data } = await axios.post(
+      `${baseURL}/api/admin/addHotspot`,
+      datas,
+      config
+    );
+    dispatch({
+      type: ADD_HOTSPOT_TO_CLIENT_SUCCESS,
+      payload: data,
+    });
+    setTimeout(() => {
+      dispatch({
+        type: ADD_HOTSPOT_TO_CLIENT_RESET,
+      });
+    }, 3000);
+  } catch (error) {
+    dispatch({
+      type: ADD_HOTSPOT_TO_CLIENT_FAILED,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message
