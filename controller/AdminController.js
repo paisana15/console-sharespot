@@ -400,6 +400,7 @@ const updateWalletBalance = async (client_id, balance, deleteHotspot) => {
     console.log(error);
   }
 };
+
 const getHotspotReward = asyncHandler(async (req, res) => {
   const client_id = req.params.clientId;
   let clientHotspots = [];
@@ -429,17 +430,21 @@ const getHotspotReward = asyncHandler(async (req, res) => {
         console.log(error);
       });
   });
-  setTimeout(() => {
-    const total = clientHotspots
-      .map((data) => data.total)
-      .reduce((acc, curr) => {
-        return acc + curr;
-      }, 0);
-    const totalEarn = total.toFixed(2);
-    updateWalletBalance(client_id, totalEarn, false);
+  setTimeout(async () => {
+    if (clientHotspots.length > 0) {
+      const total = clientHotspots
+        .map((data) => data.total)
+        .reduce((acc, curr) => {
+          return acc + curr;
+        }, 0);
+      const totalEarn = total.toFixed(2);
+      await updateWalletBalance(client_id, totalEarn, false);
+      res.status(200).json({ message: 'Reward added!' });
+    } else {
+      res.status(500);
+      throw new Error();
+    }
   }, 3000);
-
-  res.status({ message: 'Reward added!' });
 });
 const deleteHotspot = asyncHandler(async (req, res) => {
   const hotspotId = req.params.hotspotId;
