@@ -21,6 +21,7 @@ import {
   GET_SINGLE_CLIENT_FAILED,
   GET_SINGLE_CLIENT_REQUEST,
   GET_SINGLE_CLIENT_SUCCESS,
+  HOTSPOT_DELETE,
 } from '../actionTypes';
 
 export const AdminLoginReducer = (state = {}, action) => {
@@ -51,11 +52,16 @@ export const GetAllClientsReducer = (state = { clients: [] }, action) => {
       return state;
   }
 };
-export const GetSingleClientReducer = (state = { client: {} }, action) => {
+export const GetSingleClientReducer = (
+  state = { client: { client_hotspot: [] } },
+  action
+) => {
   switch (action.type) {
     case GET_SINGLE_CLIENT_REQUEST:
       return { loading: true };
     case GET_SINGLE_CLIENT_SUCCESS:
+      return { loading: false, client: action.payload };
+    case HOTSPOT_DELETE:
       return { loading: false, client: action.payload };
     case GET_SINGLE_CLIENT_FAILED:
       return { loading: false, error: action.payload };

@@ -10,6 +10,7 @@ import {
   editSingleClient,
   editHotspotToClient,
   deleteClient,
+  deleteHotspot,
 } from '../controller/AdminController.js';
 import { verifyAdmin } from '../middleware/authMiddleware.js';
 
@@ -27,5 +28,8 @@ router.route('/getRewards/:clientId').put(getHotspotReward);
 router.route('/editClientProfile/:clientId').put(verifyAdmin, editSingleClient);
 router.route('/editHotspot/:hotspotId').put(verifyAdmin, editHotspotToClient);
 router.route('/deleteClient/:clientId').delete(verifyAdmin, deleteClient);
+router
+  .route('/deleteHotspot/:hotspotId/:clientId')
+  .delete(verifyAdmin, deleteHotspot);
 
 export default router;

@@ -116,7 +116,7 @@ const addHotspotToClient = asyncHandler(async (req, res) => {
   const client = await Client.findById(client_id);
   const client_has_current_hostpot = await ClientHotspot.find({
     client_id: client_id,
-    hotspot_address: hotspot_address,
+    hotspot_address: hotspot_address.split(' ')[1],
   });
   if (client) {
     if (client_has_current_hostpot.length > 0) {
@@ -126,26 +126,25 @@ const addHotspotToClient = asyncHandler(async (req, res) => {
       const h_name = req.body.hotspot_address.split(' ')[0];
       const h_address = req.body.hotspot_address.split(' ')[1];
 
-      const newConnection = await ClientHotspot.create({
-        hotspot_name: h_name,
-        hotspot_address: h_address,
-        client_id: req.body.client_id,
-        relation_type: req.body.relation_type,
-        percentage: req.body.percentage,
-        startDate: req.body.startDate,
-      });
       if (relation_type === 'host') {
         const hotspot_has_host = await ClientHotspot.find({
-          hotspot_address: hotspot_address,
+          hotspot_address: h_address,
           relation_type: 'host',
         });
-
         if (hotspot_has_host.length > 0) {
           res.status(400);
           throw new Error(
             "This hotspot already assigned as host, can't be assign!"
           );
         } else {
+          const newConnection = await ClientHotspot.create({
+            hotspot_name: h_name,
+            hotspot_address: h_address,
+            client_id: req.body.client_id,
+            relation_type: req.body.relation_type,
+            percentage: req.body.percentage,
+            startDate: req.body.startDate,
+          });
           if (newConnection) {
             client.total_hotspot = parseInt(client.total_hotspot) + 1;
             await client.save();
@@ -166,6 +165,14 @@ const addHotspotToClient = asyncHandler(async (req, res) => {
           }
         }
       } else {
+        const newConnection = await ClientHotspot.create({
+          hotspot_name: h_name,
+          hotspot_address: h_address,
+          client_id: req.body.client_id,
+          relation_type: req.body.relation_type,
+          percentage: req.body.percentage,
+          startDate: req.body.startDate,
+        });
         if (newConnection) {
           client.total_hotspot = parseInt(client.total_hotspot) + 1;
           await client.save();
@@ -363,13 +370,19 @@ const editSingleClient = asyncHandler(async (req, res) => {
 //     })
 //     .catch((err) => console.log(err));
 // };
-const updateWalletBalance = async (client_id, balance) => {
+const updateWalletBalance = async (client_id, balance, deleteHotspot) => {
   try {
     const client_wallet = await Wallet.findOne({ client_id: client_id });
     if (client_wallet) {
       console.log(client_wallet.totalRewards + ', ' + 'new reward ' + balance);
 
-      client_wallet.totalRewards = parseFloat(balance);
+      if (deleteHotspot) {
+        client_wallet.totalRewards =
+          parseFloat(client_wallet.totalRewards) -
+          parseFloat(balance?.toFixed(2));
+      } else {
+        client_wallet.totalRewards = parseFloat(balance);
+      }
 
       client_wallet.wallet_balance =
         parseFloat(client_wallet.totalRewards) -
@@ -423,10 +436,47 @@ const getHotspotReward = asyncHandler(async (req, res) => {
         return acc + curr;
       }, 0);
     const totalEarn = total.toFixed(2);
-    updateWalletBalance(client_id, totalEarn);
+    updateWalletBalance(client_id, totalEarn, false);
   }, 3000);
 
   res.status({ message: 'Reward added!' });
+});
+const deleteHotspot = asyncHandler(async (req, res) => {
+  const hotspotId = req.params.hotspotId;
+  const clientId = req.params.clientId;
+  const hotspot = await ClientHotspot.findById(hotspotId);
+  if (hotspot) {
+    const client = await Client.findById(clientId);
+    client.total_hotspot = parseInt(client.total_hotspot) - 1;
+    if ((await hotspot.remove()) && (await client.save())) {
+      const client_hotspot = await ClientHotspot.find({
+        client_id: clientId,
+      });
+
+      await updateWalletBalance(clientId, hotspot.total_earned, true);
+      const clientWallet = await Wallet.findOne({ client_id: clientId });
+
+      if (client_hotspot.length < 0) {
+        res.status(200).json({
+          client: client,
+          client_hotspot: [],
+          clientWallet: {},
+        });
+      } else {
+        res.status(200).json({
+          client: client,
+          client_hotspot: client_hotspot,
+          clientWallet: clientWallet,
+        });
+      }
+    } else {
+      res.status(500);
+      throw new Error('Error hotspot deleting!');
+    }
+  } else {
+    res.status(404);
+    throw new Error('Hotspot not found!');
+  }
 });
 // const getHotspotReward = (req, res) => {
 //   const client_id = req.params.clientId;
@@ -484,4 +534,5 @@ export {
   editSingleClient,
   editHotspotToClient,
   deleteClient,
+  deleteHotspot,
 };

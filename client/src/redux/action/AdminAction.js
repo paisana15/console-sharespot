@@ -24,6 +24,7 @@ import {
   GET_SINGLE_CLIENT_FAILED,
   GET_SINGLE_CLIENT_REQUEST,
   GET_SINGLE_CLIENT_SUCCESS,
+  HOTSPOT_DELETE,
 } from '../actionTypes';
 
 export const adminLogin = (credentials) => async (dispatch) => {
@@ -241,6 +242,39 @@ export const addHotspotToClient = (datas) => async (dispatch, getState) => {
         type: ADD_HOTSPOT_TO_CLIENT_RESET,
       });
     }, 3000);
+  } catch (error) {
+    dispatch({
+      type: ADD_HOTSPOT_TO_CLIENT_FAILED,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const deleteHotspot = (hotspotId, clientId) => async (
+  dispatch,
+  getState
+) => {
+  try {
+    const {
+      loginAdmin: { aInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${aInfo._atoken}`,
+      },
+    };
+    const { data } = await axios.delete(
+      `${baseURL}/api/admin/deleteHotspot/${hotspotId}/${clientId}`,
+      config
+    );
+    dispatch({
+      type: HOTSPOT_DELETE,
+      payload: data,
+    });
   } catch (error) {
     dispatch({
       type: ADD_HOTSPOT_TO_CLIENT_FAILED,

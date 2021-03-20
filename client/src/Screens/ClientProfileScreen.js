@@ -21,9 +21,9 @@ import {
 import { Link } from 'react-router-dom';
 import { useHistory, useRouteMatch } from 'react-router';
 import AlertMessage from '../components/Alert';
-import { DeleteIcon } from '@chakra-ui/icons';
+import { DeleteIcon, EditIcon } from '@chakra-ui/icons';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteClient } from '../redux/action/AdminAction';
+import { deleteHotspot, deleteClient } from '../redux/action/AdminAction';
 import Loader from '../components/Loader';
 
 const ClientProfileScreen = ({ client_details }) => {
@@ -104,7 +104,9 @@ const ClientProfileScreen = ({ client_details }) => {
         >
           <Heading size='md'>Total Withdrawn</Heading>
           <Text style={{ fontWeight: 'bold' }} fontSize='3xl'>
-            {`$ ${client_wallet ? client_wallet?.totalWithdraw : '0'}`}
+            {`$ ${
+              client_wallet ? client_wallet?.totalWithdraw?.toFixed(2) : '0'
+            }`}
           </Text>
         </Box>
         <Spacer />
@@ -118,7 +120,9 @@ const ClientProfileScreen = ({ client_details }) => {
         >
           <Heading size='md'>Total Rewards</Heading>
           <Text style={{ fontWeight: 'bold' }} fontSize='3xl'>
-            {`$ ${client_wallet ? client_wallet?.totalRewards : '0'}`}
+            {`$ ${
+              client_wallet ? client_wallet?.totalRewards?.toFixed(2) : '0'
+            }`}
           </Text>
         </Box>
         <Spacer />
@@ -132,14 +136,16 @@ const ClientProfileScreen = ({ client_details }) => {
         >
           <Heading size='md'>Balance</Heading>
           <Text style={{ fontWeight: 'bold' }} fontSize='3xl'>
-            {`$ ${client_wallet ? client_wallet?.wallet_balance : '0'}`}
+            {`$ ${
+              client_wallet ? client_wallet?.wallet_balance?.toFixed(2) : '0'
+            }`}
           </Text>
         </Box>
       </Flex>
       <Box mt='4'>
         <Heading size='xs'>Assigned Hotspot</Heading>
         <Box mt='3'>
-          {client_hotspot.length > 0 ? (
+          {client_hotspot?.length > 0 ? (
             client_hotspot.map((hotspot) => (
               <Flex
                 key={hotspot?._id}
@@ -163,14 +169,40 @@ const ClientProfileScreen = ({ client_details }) => {
                   </Flex>
                 </Box>
                 <Spacer />
-                <Box textAlign='right'>
-                  <Text fontSize='sm' color='grey'>
-                    Total Earned
-                  </Text>
-                  <Text fontWeight='bold' color='grey' fontSize='sm'>
-                    ${hotspot?.total_earned.toFixed(2)}
-                  </Text>
-                </Box>
+                <Flex textAlign='right' alignItems='center'>
+                  <Box mr='2'>
+                    <Text fontSize='sm' color='grey'>
+                      Total Earned
+                    </Text>
+                    <Text fontWeight='bold' color='grey' fontSize='sm'>
+                      ${hotspot?.total_earned.toFixed(2)}
+                    </Text>
+                  </Box>
+                  <Flex>
+                    <Button
+                      size='sm'
+                      colorScheme='teal'
+                      variant='outline'
+                      borderColor='teal'
+                      mr='2'
+                      color='gray.500'
+                    >
+                      <EditIcon color='teal.300' />
+                    </Button>
+                    <Button
+                      size='sm'
+                      variant='outline'
+                      colorScheme='red'
+                      borderColor='red.400'
+                      color='gray.500'
+                      onClick={() => {
+                        dispatch(deleteHotspot(hotspot?._id, client?._id));
+                      }}
+                    >
+                      <DeleteIcon color='red.300' />
+                    </Button>
+                  </Flex>
+                </Flex>
               </Flex>
             ))
           ) : (
