@@ -5,6 +5,7 @@ import {
   AddHotspotClientReducer,
   AddNewClientReducer,
   AdminLoginReducer,
+  ClientUpdateReducer,
   DelSingleClientReducer,
   GetAllClientsReducer,
   GetSingleClientReducer,
@@ -18,6 +19,7 @@ const reducer = combineReducers({
   newClientAdd: AddNewClientReducer,
   singleClientDel: DelSingleClientReducer,
   hotspotClientAdd: AddHotspotClientReducer,
+  clientUpdate: ClientUpdateReducer,
 });
 
 const initialState = {

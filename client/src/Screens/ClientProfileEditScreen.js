@@ -1,10 +1,41 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 import MyTextField from '../components/MyTextField';
-import { Box, Button, Text } from '@chakra-ui/react';
+import { Box, Button, Text, useToast } from '@chakra-ui/react';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateClient } from '../redux/action/AdminAction';
+import { useHistory } from 'react-router';
 
-const ClientProfileEditScreen = () => {
+const ClientProfileEditScreen = ({ client_details }) => {
+  const dispatch = useDispatch();
+  const toast = useToast();
+  const history = useHistory();
+  const clientUpdate = useSelector((state) => state.clientUpdate);
+  const { loading, success, error } = clientUpdate;
+
+  useEffect(() => {
+    if (success) {
+      toast({
+        title: 'Success!',
+        status: 'success',
+        description: 'Profile Updated!',
+        duration: 5000,
+        isClosable: true,
+      });
+      // history.push(`/h/client/${client_details?.client?._id}`);
+    }
+    if (error) {
+      toast({
+        title: 'Failed!',
+        status: 'error',
+        description: error,
+        duration: 5000,
+        isClosable: true,
+      });
+    }
+  }, [history, toast, success, error, client_details]);
+
   const fieldValidationSchema = yup.object({
     firstname: yup
       .string()
@@ -37,20 +68,19 @@ const ClientProfileEditScreen = () => {
       <Box mt='3'>
         <Formik
           initialValues={{
-            firstname: '',
-            lastname: '',
-            email: '',
-            username: '',
-            phone_number: '',
-            wallet_address: '',
+            firstname: client_details?.client?.firstname,
+            lastname: client_details?.client?.lastname,
+            email: client_details?.client?.email,
+            username: client_details?.client?.username,
+            phone_number: client_details?.client?.phone_number,
+            wallet_address: client_details?.client?.wallet_address,
           }}
           validationSchema={fieldValidationSchema}
-          onSubmit={(data, { setSubmitting }) => {
-            console.log(data);
-            setSubmitting(false);
+          onSubmit={(data) => {
+            dispatch(updateClient(client_details?.client?._id, data));
           }}
         >
-          {({ handleSubmit, isSubmitting }) => (
+          {({ handleSubmit }) => (
             <form onSubmit={handleSubmit}>
               <MyTextField
                 placeholder='Client first name'
@@ -92,10 +122,11 @@ const ClientProfileEditScreen = () => {
               <Button
                 mt='2'
                 type='submit'
-                disabled={isSubmitting}
+                isLoading={loading}
+                loadingText='Updating...'
                 colorScheme='facebook'
               >
-                Add Client
+                Update
               </Button>
             </form>
           )}

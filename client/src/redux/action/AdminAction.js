@@ -14,6 +14,10 @@ import {
   ADMIN_LOGIN_REQUEST,
   ADMIN_LOGIN_SUCCESS,
   ADMIN_LOGOUT,
+  CLIENT_UPDATE_FAILED,
+  CLIENT_UPDATE_REQUEST,
+  CLIENT_UPDATE_RESET,
+  CLIENT_UPDATE_SUCCESS,
   DELETE_SINGLE_CLIENT_FAILED,
   DELETE_SINGLE_CLIENT_REQUEST,
   DELETE_SINGLE_CLIENT_RESET,
@@ -166,6 +170,48 @@ export const addNewClient = (client) => async (dispatch, getState) => {
   } catch (error) {
     dispatch({
       type: ADD_NEW_CLIENT_FAILED,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+export const updateClient = (clientId, client) => async (
+  dispatch,
+  getState
+) => {
+  try {
+    dispatch({
+      type: CLIENT_UPDATE_REQUEST,
+    });
+
+    const {
+      loginAdmin: { aInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${aInfo._atoken}`,
+      },
+    };
+    const { data } = await axios.put(
+      `${baseURL}/api/admin/editClientProfile/${clientId}`,
+      client,
+      config
+    );
+    dispatch({
+      type: CLIENT_UPDATE_SUCCESS,
+      payload: data,
+    });
+    setTimeout(() => {
+      dispatch({
+        type: CLIENT_UPDATE_RESET,
+      });
+    }, 2000);
+  } catch (error) {
+    dispatch({
+      type: CLIENT_UPDATE_FAILED,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

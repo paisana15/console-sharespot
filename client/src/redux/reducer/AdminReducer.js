@@ -11,6 +11,10 @@ import {
   ADMIN_LOGIN_REQUEST,
   ADMIN_LOGIN_SUCCESS,
   ADMIN_LOGOUT,
+  CLIENT_UPDATE_FAILED,
+  CLIENT_UPDATE_REQUEST,
+  CLIENT_UPDATE_RESET,
+  CLIENT_UPDATE_SUCCESS,
   DELETE_SINGLE_CLIENT_FAILED,
   DELETE_SINGLE_CLIENT_REQUEST,
   DELETE_SINGLE_CLIENT_RESET,
@@ -106,6 +110,20 @@ export const AddHotspotClientReducer = (state = {}, action) => {
     case ADD_HOTSPOT_TO_CLIENT_FAILED:
       return { loading: false, error: action.payload };
     case ADD_HOTSPOT_TO_CLIENT_RESET:
+      return {};
+    default:
+      return state;
+  }
+};
+export const ClientUpdateReducer = (state = {}, action) => {
+  switch (action.type) {
+    case CLIENT_UPDATE_REQUEST:
+      return { loading: true };
+    case CLIENT_UPDATE_SUCCESS:
+      return { loading: false, success: true };
+    case CLIENT_UPDATE_FAILED:
+      return { loading: false, error: action.payload };
+    case CLIENT_UPDATE_RESET:
       return {};
     default:
       return state;
