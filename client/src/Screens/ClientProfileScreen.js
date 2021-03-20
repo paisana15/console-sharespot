@@ -149,7 +149,7 @@ const ClientProfileScreen = ({ client_details }) => {
                 boxShadow='base'
               >
                 <Box>
-                  <Heading size='sm'>{hotspot?.name}</Heading>
+                  <Heading size='sm'>{hotspot?.hotspot_name}</Heading>
                   <Flex mt='2'>
                     <Text fontSize='xs' mr='1'>
                       Percentage
@@ -168,7 +168,7 @@ const ClientProfileScreen = ({ client_details }) => {
                     Total Earned
                   </Text>
                   <Text fontWeight='bold' color='grey' fontSize='sm'>
-                    $89
+                    ${hotspot?.total_earned.toFixed(2)}
                   </Text>
                 </Box>
               </Flex>

@@ -23,6 +23,10 @@ const ClientHotspotSchema = new mongoose.Schema(
       type: Double,
       required: true,
     },
+    total_earned: {
+      type: Number,
+      default: 0.0,
+    },
     startDate: {
       type: Date,
       required: true,
