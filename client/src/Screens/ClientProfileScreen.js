@@ -60,6 +60,7 @@ const ClientProfileScreen = ({ client_details }) => {
           <Heading
             textColor={`${colorMode === 'light' ? 'gray.600' : '#b3bfd4'}`}
             size='lg'
+            mb='1'
           >
             {client?.firstname + ' ' + client?.lastname}
           </Heading>
@@ -88,7 +89,7 @@ const ClientProfileScreen = ({ client_details }) => {
           </Text>
           <Spacer />
           <Text color='gray.500' fontSize='sm'>
-            <i className='fas fa-wallet'></i> Wallet Address :
+            <i className='fas fa-wallet'></i> Wallet Address :{' '}
             {client?.wallet_address}
           </Text>
         </Flex>
@@ -104,7 +105,7 @@ const ClientProfileScreen = ({ client_details }) => {
         >
           <Heading size='md'>Total Withdrawn</Heading>
           <Text style={{ fontWeight: 'bold' }} fontSize='3xl'>
-            {`$ ${
+            {`HNT ${
               client_wallet ? client_wallet?.totalWithdraw?.toFixed(2) : '0'
             }`}
           </Text>
@@ -120,7 +121,7 @@ const ClientProfileScreen = ({ client_details }) => {
         >
           <Heading size='md'>Total Rewards</Heading>
           <Text style={{ fontWeight: 'bold' }} fontSize='3xl'>
-            {`$ ${
+            {`HNT ${
               client_wallet ? client_wallet?.totalRewards?.toFixed(2) : '0'
             }`}
           </Text>
@@ -136,7 +137,7 @@ const ClientProfileScreen = ({ client_details }) => {
         >
           <Heading size='md'>Balance</Heading>
           <Text style={{ fontWeight: 'bold' }} fontSize='3xl'>
-            {`$ ${
+            {`HNT ${
               client_wallet ? client_wallet?.wallet_balance?.toFixed(2) : '0'
             }`}
           </Text>
@@ -144,7 +145,13 @@ const ClientProfileScreen = ({ client_details }) => {
       </Flex>
       <Box mt='4'>
         <Heading size='xs'>Assigned Hotspot</Heading>
-        <Box mt='3'>
+        <Box
+          mt='3'
+          boxShadow='md'
+          borderRadius='md'
+          p='5'
+          className='assigned_hotspot_wrapper'
+        >
           {client_hotspot?.length > 0 ? (
             client_hotspot.map((hotspot) => (
               <Flex
@@ -153,6 +160,7 @@ const ClientProfileScreen = ({ client_details }) => {
                 borderRadius='lg'
                 mb='3'
                 boxShadow='base'
+                bg={colorMode === 'light' ? '#f4f5f7' : '#303744'}
               >
                 <Box>
                   <Heading size='sm'>{hotspot?.hotspot_name}</Heading>
@@ -174,8 +182,12 @@ const ClientProfileScreen = ({ client_details }) => {
                     <Text fontSize='sm' color='grey'>
                       Total Earned
                     </Text>
-                    <Text fontWeight='bold' color='grey' fontSize='sm'>
-                      ${hotspot?.total_earned.toFixed(2)}
+                    <Text
+                      fontWeight='bold'
+                      color={colorMode === 'light' ? 'grey' : 'orange.200'}
+                      fontSize='sm'
+                    >
+                      HNT {hotspot?.total_earned.toFixed(2)}
                     </Text>
                   </Box>
                   <Flex>
