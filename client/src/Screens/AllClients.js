@@ -66,7 +66,7 @@ const AllClients = () => {
                       {client?.firstname + ' ' + client?.lastname}
                     </Link>
                   </Td>
-                  <Td isNumeric>4</Td>
+                  <Td isNumeric>{client?.total_hotspot}</Td>
                 </Tr>
               ))}
             </Tbody>

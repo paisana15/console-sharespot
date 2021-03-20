@@ -34,6 +34,10 @@ const ClientSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    total_hotspot: {
+      type: Number,
+      default: 0,
+    },
   },
   {
     timestamps: true,

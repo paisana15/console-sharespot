@@ -156,6 +156,8 @@ const addHotspotToClient = asyncHandler(async (req, res) => {
       } else {
         const newConnection = await ClientHotspot.create(req.body);
         if (newConnection) {
+          client.total_hotspot = parseInt(client.total_hotspot) + 1;
+          await client.save();
           const client_has_wallet = await Wallet.findOne({
             client_id: client_id,
           });
