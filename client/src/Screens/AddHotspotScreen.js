@@ -159,6 +159,7 @@ const AddHotspotScreen = () => {
                   <option value=''> --- </option>
                   <option value='host'>Host</option>
                   <option value='referrer'>Referrer</option>
+                  <option value='partner'>Partner</option>
                 </Field>
                 {errors.relation_type && touched.relation_type && (
                   <div style={{ color: 'red', fontSize: 13 }}>

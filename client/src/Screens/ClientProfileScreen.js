@@ -175,7 +175,11 @@ const ClientProfileScreen = ({ client_details, disableDeleteBtn }) => {
                     <Badge
                       ml='10px'
                       colorScheme={
-                        hotspot?.relation_type === 'host' ? 'purple' : 'red'
+                        hotspot?.relation_type === 'host'
+                          ? 'purple'
+                          : hotspot?.relation_type === 'referrer'
+                          ? 'red'
+                          : 'pink'
                       }
                     >
                       <Text fontSize='xs'>{hotspot?.relation_type}</Text>
