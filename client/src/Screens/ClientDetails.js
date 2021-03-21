@@ -5,10 +5,11 @@ import { Switch, Route, useRouteMatch, useParams } from 'react-router';
 import ClientProfileScreen from './ClientProfileScreen';
 import ClientProfileEditScreen from './ClientProfileEditScreen';
 import { useDispatch, useSelector } from 'react-redux';
-import { getSingleClient } from '../redux/action/AdminAction';
+import { getClientProfileByClient } from '../redux/action/ClientAction';
 import Loader from '../components/Loader';
 import AlertMessage from '../components/Alert';
 import HotspotEditScreen from './HotspotEditScreen';
+import { getSingleClient } from '../redux/action/AdminAction';
 
 const ClientDetails = ({ routeFromClient }) => {
   const { path } = useRouteMatch();
@@ -16,16 +17,15 @@ const ClientDetails = ({ routeFromClient }) => {
 
   const dispatch = useDispatch();
 
-  const singleClientsGet = useSelector((state) => state.singleClientsGet);
-  const { loading, client, error } = singleClientsGet;
+  const getClientByC = useSelector((state) => state.getClientByC);
+  const { loading, clientData, error } = getClientByC;
 
   const loginClient = useSelector((state) => state.loginClient);
   const { cInfo } = loginClient;
 
   useEffect(() => {
     if (routeFromClient) {
-      console.log('client');
-      dispatch(getSingleClient(cInfo?._id));
+      dispatch(getClientProfileByClient(cInfo?._id));
     } else {
       dispatch(getSingleClient(clientId));
     }
@@ -42,18 +42,20 @@ const ClientDetails = ({ routeFromClient }) => {
           <Route
             exact
             path={path}
-            component={() => <ClientProfileScreen client_details={client} />}
+            component={() => (
+              <ClientProfileScreen client_details={clientData} />
+            )}
           />
           <Route
             path={`${path}/edit`}
             component={() => (
-              <ClientProfileEditScreen client_details={client} />
+              <ClientProfileEditScreen client_details={clientData} />
             )}
           />
           <Route
             path={`${path}/hotspot/:hotspotId/edit`}
             component={() => (
-              <HotspotEditScreen hotspots={client?.client_hotspot} />
+              <HotspotEditScreen hotspots={clientData?.client_hotspot} />
             )}
           />
         </Switch>

@@ -6,6 +6,9 @@ import {
   CLIENT_LOGIN_SUCCESS,
   CLIENT_LOGIN_FAILED,
   CLIENT_LOGOUT,
+  GET_CLIENT_PROFILE_BYC_REQUEST,
+  GET_CLIENT_PROFILE_BYC_SUCCESS,
+  GET_CLIENT_PROFILE_BYC_FAILED,
 } from '../actionTypes';
 
 export const clientLogin = (credentials) => async (dispatch) => {
@@ -46,5 +49,41 @@ export const clientLogout = () => async (dispatch) => {
     dispatch({ type: CLIENT_LOGOUT });
   } catch (err) {
     console.log(err);
+  }
+};
+
+export const getClientProfileByClient = (clientId) => async (
+  dispatch,
+  getState
+) => {
+  try {
+    dispatch({
+      type: GET_CLIENT_PROFILE_BYC_REQUEST,
+    });
+    const {
+      loginClient: { cInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${cInfo._ctoken}`,
+      },
+    };
+    const { data } = await axios.get(
+      `${baseURL}/api/client/getClientProfileByClient/${clientId}`,
+      config
+    );
+    dispatch({
+      type: GET_CLIENT_PROFILE_BYC_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: GET_CLIENT_PROFILE_BYC_FAILED,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
   }
 };

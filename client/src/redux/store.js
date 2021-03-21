@@ -12,7 +12,10 @@ import {
   HotspotUpdateReducer,
 } from './reducer/AdminReducer';
 import jwt from 'jsonwebtoken';
-import { ClientLoginReducer } from './reducer/ClientReducer';
+import {
+  ClientLoginReducer,
+  GetClientProfileByCReducer,
+} from './reducer/ClientReducer';
 
 const reducer = combineReducers({
   loginAdmin: AdminLoginReducer,
@@ -24,6 +27,7 @@ const reducer = combineReducers({
   clientUpdate: ClientUpdateReducer,
   hotspotUpdate: HotspotUpdateReducer,
   loginClient: ClientLoginReducer,
+  getClientByC: GetClientProfileByCReducer,
 });
 
 const initialState = {

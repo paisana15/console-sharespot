@@ -11,9 +11,15 @@ const protect = asyncHandler(async (req, res, next) => {
   ) {
     try {
       token = req.headers.authorization.split(' ')[1];
-      const decoded = await jwt.verify(token, process.env.JWT_SECRET);
-      req.user = await Client.findById(decoded.id).select('-password');
-      next();
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      const client = await Client.findById(decoded.id).select('-password');
+      if (client) {
+        req.user = await Client.findById(decoded.id).select('-password');
+        next();
+      } else {
+        res.status(401);
+        throw new Error('Not authirized! Token failed');
+      }
     } catch (error) {
       console.error(error);
       res.status(401);
@@ -34,13 +40,19 @@ const verifyAdmin = asyncHandler(async (req, res, next) => {
   ) {
     try {
       token = req.headers.authorization.split(' ')[1];
-      const decoded = await jwt.verify(token, process.env.JWT_SECRET);
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
       const user = await Admin.findById(decoded.id).select('-password');
-      if (user.admin) {
-        req.user = user;
+      if (user) {
+        if (user.admin) {
+          req.user = user;
+        } else {
+          throw new Error('You are not admin yet!');
+        }
       } else {
-        throw new Error('You are not admin yet!');
+        res.status(401);
+        throw new Error('Not authorized! Token failed');
       }
+
       next();
     } catch (error) {
       res.status(401);
