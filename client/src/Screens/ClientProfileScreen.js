@@ -170,15 +170,20 @@ const ClientProfileScreen = ({ client_details }) => {
                       Percentage
                     </Text>
                     <Badge colorScheme={'green'}>
-                      <Text fontSize='xs'>{hotspot?.percentage}</Text>
+                      <Text fontSize='xs'>{hotspot?.percentage + '%'}</Text>
                     </Badge>
-                    <Badge ml='10px' colorScheme='purple'>
+                    <Badge
+                      ml='10px'
+                      colorScheme={
+                        hotspot?.relation_type === 'host' ? 'purple' : 'red'
+                      }
+                    >
                       <Text fontSize='xs'>{hotspot?.relation_type}</Text>
                     </Badge>
-                    <Text fontSize='xs' ml="2" mr='1'>
+                    <Text fontSize='xs' ml='2' mr='1'>
                       From
                     </Text>
-                    <Badge colorScheme="yellow">
+                    <Badge colorScheme='blue'>
                       <Text fontSize='xs'>
                         {moment(hotspot?.startDate).format('YYYY-MM-DD')}
                       </Text>

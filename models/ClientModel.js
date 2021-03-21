@@ -1,6 +1,5 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
-import Double from '@mongoosejs/double';
 
 const ClientSchema = new mongoose.Schema(
   {
@@ -12,7 +11,7 @@ const ClientSchema = new mongoose.Schema(
     password: {
       type: String,
       required: true,
-      select: false,
+      
     },
     firstname: {
       type: String,

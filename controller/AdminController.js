@@ -254,7 +254,7 @@ const getClientsHotspot = asyncHandler(async (req, res) => {
 // method: get
 const getSingleClientHotspots = asyncHandler(async (req, res) => {
   const clientId = req.params.clientId;
-  const client = await Client.findById(clientId);
+  const client = await Client.findById(clientId).select('-password');
   if (client) {
     const client_hotspot = await ClientHotspot.find({
       client_id: clientId,

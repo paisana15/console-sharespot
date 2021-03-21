@@ -10,7 +10,7 @@ import Loader from '../components/Loader';
 import AlertMessage from '../components/Alert';
 import HotspotEditScreen from './HotspotEditScreen';
 
-const ClientDetails = () => {
+const ClientDetails = ({ routeFromClient }) => {
   const { path } = useRouteMatch();
   const { clientId } = useParams();
 
@@ -19,9 +19,17 @@ const ClientDetails = () => {
   const singleClientsGet = useSelector((state) => state.singleClientsGet);
   const { loading, client, error } = singleClientsGet;
 
+  const loginClient = useSelector((state) => state.loginClient);
+  const { cInfo } = loginClient;
+
   useEffect(() => {
-    dispatch(getSingleClient(clientId));
-  }, [dispatch, clientId]);
+    if (routeFromClient) {
+      console.log('client');
+      dispatch(getSingleClient(cInfo?._id));
+    } else {
+      dispatch(getSingleClient(clientId));
+    }
+  }, [dispatch, clientId, cInfo, routeFromClient]);
 
   return (
     <Box p='4'>

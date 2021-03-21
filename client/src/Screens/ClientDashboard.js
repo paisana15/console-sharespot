@@ -1,20 +1,18 @@
 import React from 'react';
 import { Box, Container } from '@chakra-ui/layout';
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router';
-import AllClients from './AllClients';
 import ClientDetails from './ClientDetails';
-import AddClientScreen from './AddClientScreen';
-import AddHotspotScreen from './AddHotspotScreen';
-import AdminNavbar from '../components/AdminNavbar';
 import { useColorMode } from '@chakra-ui/color-mode';
+import ClientNavbar from '../components/ClientNavbar';
+import WithDrawScreen from './WithDrawScreen';
 
-const AdminDashboard = () => {
+const ClientDashboard = () => {
   const { path } = useRouteMatch();
   const { colorMode } = useColorMode();
 
   return (
     <>
-      <AdminNavbar />
+      <ClientNavbar />
       <Container maxW='container.xl'>
         <Box
           w='100%'
@@ -26,17 +24,15 @@ const AdminDashboard = () => {
           bg={`${colorMode === 'dark' ? '#2a2f38' : '#ffffff'}`}
         >
           <Switch>
-            <Route path={`${path}/clients`} component={AllClients} />
             <Route
-              path={`${path}/client/:clientId`}
-              component={ClientDetails}
+              path={`${path}/my-hotspots`}
+              component={() => <ClientDetails routeFromClient />}
             />
-            <Route path={`${path}/add-hotspot`} component={AddHotspotScreen} />
             <Route
-              path={`${path}/add-new-client`}
-              component={AddClientScreen}
+              path={`${path}/withdraw`}
+              component={() => <WithDrawScreen />}
             />
-            <Redirect to={`${path}/clients`} />
+            <Redirect to={`${path}/my-hotspots`} />
           </Switch>
         </Box>
       </Container>
@@ -44,4 +40,4 @@ const AdminDashboard = () => {
   );
 };
 
-export default AdminDashboard;
+export default ClientDashboard;

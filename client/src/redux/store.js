@@ -12,6 +12,7 @@ import {
   HotspotUpdateReducer,
 } from './reducer/AdminReducer';
 import jwt from 'jsonwebtoken';
+import { ClientLoginReducer } from './reducer/ClientReducer';
 
 const reducer = combineReducers({
   loginAdmin: AdminLoginReducer,
@@ -22,6 +23,7 @@ const reducer = combineReducers({
   hotspotClientAdd: AddHotspotClientReducer,
   clientUpdate: ClientUpdateReducer,
   hotspotUpdate: HotspotUpdateReducer,
+  loginClient: ClientLoginReducer,
 });
 
 const initialState = {
@@ -42,6 +44,25 @@ const initialState = {
       : false,
     aInfo: localStorage.getItem('aInfo')
       ? JSON.parse(localStorage.getItem('aInfo'))
+      : {},
+  },
+  loginClient: {
+    isAuthenticated: localStorage.getItem('cInfo')
+      ? jwt.verify(
+          JSON.parse(localStorage.getItem('cInfo'))._ctoken,
+          `9856gf#o0B*kjvgi8796vfcwe`, // will be hidden in prod mode
+          (err, dec) => {
+            if (err) {
+              localStorage.removeItem('cInfo');
+              return false;
+            } else {
+              return true;
+            }
+          }
+        )
+      : false,
+    cInfo: localStorage.getItem('cInfo')
+      ? JSON.parse(localStorage.getItem('cInfo'))
       : {},
   },
 };
