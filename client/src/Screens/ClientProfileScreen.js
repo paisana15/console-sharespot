@@ -27,7 +27,7 @@ import { deleteHotspot, deleteClient } from '../redux/action/AdminAction';
 import Loader from '../components/Loader';
 import moment from 'moment';
 
-const ClientProfileScreen = ({ client_details }) => {
+const ClientProfileScreen = ({ client_details, disableDeleteBtn }) => {
   const { url } = useRouteMatch();
   const { colorMode } = useColorMode();
   const [client, setClient] = useState({});
@@ -145,7 +145,7 @@ const ClientProfileScreen = ({ client_details }) => {
         </Box>
       </Flex>
       <Box mt='4'>
-        <Heading size='xs'>Assigned Hotspot</Heading>
+        <Heading size='xs'>Assigned Hotspot ({client?.total_hotspot})</Heading>
         <Box
           mt='3'
           boxShadow='md'
@@ -204,33 +204,35 @@ const ClientProfileScreen = ({ client_details }) => {
                       HNT {hotspot?.total_earned.toFixed(2)}
                     </Text>
                   </Box>
-                  <Flex>
-                    <Button
-                      size='sm'
-                      colorScheme='teal'
-                      variant='outline'
-                      borderColor='teal'
-                      mr='2'
-                      color='gray.500'
-                      onClick={() =>
-                        history.push(`${url}/hotspot/${hotspot?._id}/edit`)
-                      }
-                    >
-                      <EditIcon color='teal.300' />
-                    </Button>
-                    <Button
-                      size='sm'
-                      variant='outline'
-                      colorScheme='red'
-                      borderColor='red.400'
-                      color='gray.500'
-                      onClick={() => {
-                        dispatch(deleteHotspot(hotspot?._id, client?._id));
-                      }}
-                    >
-                      <DeleteIcon color='red.300' />
-                    </Button>
-                  </Flex>
+                  {!disableDeleteBtn && (
+                    <Flex>
+                      <Button
+                        size='sm'
+                        colorScheme='teal'
+                        variant='outline'
+                        borderColor='teal'
+                        mr='2'
+                        color='gray.500'
+                        onClick={() =>
+                          history.push(`${url}/hotspot/${hotspot?._id}/edit`)
+                        }
+                      >
+                        <EditIcon color='teal.300' />
+                      </Button>
+                      <Button
+                        size='sm'
+                        variant='outline'
+                        colorScheme='red'
+                        borderColor='red.400'
+                        color='gray.500'
+                        onClick={() => {
+                          dispatch(deleteHotspot(hotspot?._id, client?._id));
+                        }}
+                      >
+                        <DeleteIcon color='red.300' />
+                      </Button>
+                    </Flex>
+                  )}
                 </Flex>
               </Flex>
             ))
@@ -238,15 +240,17 @@ const ClientProfileScreen = ({ client_details }) => {
             <AlertMessage status='error' error='No hotspot assigned yet!' />
           )}
         </Box>
-        <Button
-          variant='outline'
-          colorScheme='red'
-          mt='4'
-          leftIcon={<DeleteIcon />}
-          onClick={onOpen}
-        >
-          Delete Client
-        </Button>
+        {!disableDeleteBtn && (
+          <Button
+            variant='outline'
+            colorScheme='red'
+            mt='4'
+            leftIcon={<DeleteIcon />}
+            onClick={onOpen}
+          >
+            Delete Client
+          </Button>
+        )}
         {loading ? (
           <Loader />
         ) : (

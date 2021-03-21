@@ -378,7 +378,7 @@ const updateWalletBalance = async (client_id, balance, deleteHotspot) => {
   try {
     const client_wallet = await Wallet.findOne({ client_id: client_id });
     if (client_wallet) {
-      console.log(client_wallet.totalRewards + ', ' + 'new reward ' + balance);
+      // console.log(client_wallet.totalRewards + ', ' + 'new reward ' + balance);
 
       if (deleteHotspot) {
         client_wallet.totalRewards =
@@ -395,7 +395,7 @@ const updateWalletBalance = async (client_id, balance, deleteHotspot) => {
       if (!update) {
         throw new Error('wallet update failed!');
       } else {
-        console.log('wallet update!');
+        // console.log('wallet update!');
       }
     } else {
       throw new Error('wallet not found!');

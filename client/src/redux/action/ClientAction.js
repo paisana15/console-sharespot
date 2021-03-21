@@ -9,6 +9,10 @@ import {
   GET_CLIENT_PROFILE_BYC_REQUEST,
   GET_CLIENT_PROFILE_BYC_SUCCESS,
   GET_CLIENT_PROFILE_BYC_FAILED,
+  CLIENT_UPDATE_BYC_REQUEST,
+  CLIENT_UPDATE_BYC_SUCCESS,
+  CLIENT_UPDATE_BYC_RESET,
+  CLIENT_UPDATE_BYC_FAILED,
 } from '../actionTypes';
 
 export const clientLogin = (credentials) => async (dispatch) => {
@@ -80,6 +84,48 @@ export const getClientProfileByClient = (clientId) => async (
   } catch (error) {
     dispatch({
       type: GET_CLIENT_PROFILE_BYC_FAILED,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+export const updateClientByClient = (clientId, client) => async (
+  dispatch,
+  getState
+) => {
+  try {
+    dispatch({
+      type: CLIENT_UPDATE_BYC_REQUEST,
+    });
+
+    const {
+      loginClient: { cInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${cInfo._ctoken}`,
+      },
+    };
+    const { data } = await axios.put(
+      `${baseURL}/api/client/editSingleClientByClient/${clientId}`,
+      client,
+      config
+    );
+    dispatch({
+      type: CLIENT_UPDATE_BYC_SUCCESS,
+      payload: data,
+    });
+    setTimeout(() => {
+      dispatch({
+        type: CLIENT_UPDATE_BYC_RESET,
+      });
+    }, 2000);
+  } catch (error) {
+    dispatch({
+      type: CLIENT_UPDATE_BYC_FAILED,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

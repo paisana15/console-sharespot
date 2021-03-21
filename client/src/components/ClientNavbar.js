@@ -29,7 +29,7 @@ const ClientNavbar = () => {
             fontSize='sm'
             cursor='pointer'
           >
-            <Link to={`${path}/my-hotspots`}>
+            <Link to={`${path}/profile`}>
               <i className='fas fa-wifi'></i>
               <span className='admin_navlink'>My Hotspot</span>
             </Link>

@@ -3,13 +3,11 @@ import { Box } from '@chakra-ui/react';
 
 import { Switch, Route, useRouteMatch, useParams } from 'react-router';
 import ClientProfileScreen from './ClientProfileScreen';
-import ClientProfileEditScreen from './ClientProfileEditScreen';
 import { useDispatch, useSelector } from 'react-redux';
 import { getClientProfileByClient } from '../redux/action/ClientAction';
 import Loader from '../components/Loader';
 import AlertMessage from '../components/Alert';
-import HotspotEditScreen from './HotspotEditScreen';
-import { getSingleClient } from '../redux/action/AdminAction';
+import ClientProfileEditByClient from './ClientProfileEditByClient';
 
 const ClientDetails = () => {
   const { path } = useRouteMatch();
@@ -39,19 +37,16 @@ const ClientDetails = () => {
             exact
             path={path}
             component={() => (
-              <ClientProfileScreen client_details={clientData} />
+              <ClientProfileScreen
+                disableDeleteBtn
+                client_details={clientData}
+              />
             )}
           />
           <Route
             path={`${path}/edit`}
             component={() => (
-              <ClientProfileEditScreen client_details={clientData} />
-            )}
-          />
-          <Route
-            path={`${path}/hotspot/:hotspotId/edit`}
-            component={() => (
-              <HotspotEditScreen hotspots={clientData?.client_hotspot} />
+              <ClientProfileEditByClient client_details={clientData} />
             )}
           />
         </Switch>
