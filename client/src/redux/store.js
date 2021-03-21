@@ -9,6 +9,7 @@ import {
   DelSingleClientReducer,
   GetAllClientsReducer,
   GetSingleClientReducer,
+  HotspotUpdateReducer,
 } from './reducer/AdminReducer';
 import jwt from 'jsonwebtoken';
 
@@ -20,6 +21,7 @@ const reducer = combineReducers({
   singleClientDel: DelSingleClientReducer,
   hotspotClientAdd: AddHotspotClientReducer,
   clientUpdate: ClientUpdateReducer,
+  hotspotUpdate: HotspotUpdateReducer,
 });
 
 const initialState = {

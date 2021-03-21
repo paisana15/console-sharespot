@@ -29,6 +29,10 @@ import {
   GET_SINGLE_CLIENT_REQUEST,
   GET_SINGLE_CLIENT_SUCCESS,
   HOTSPOT_DELETE,
+  HOTSPOT_UPDATE_FAILED,
+  HOTSPOT_UPDATE_REQUEST,
+  HOTSPOT_UPDATE_RESET,
+  HOTSPOT_UPDATE_SUCCESS,
 } from '../actionTypes';
 
 export const adminLogin = (credentials) => async (dispatch) => {
@@ -324,6 +328,47 @@ export const deleteHotspot = (hotspotId, clientId) => async (
   } catch (error) {
     dispatch({
       type: ADD_HOTSPOT_TO_CLIENT_FAILED,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const updateHotspot = (hotspotId, hotspot) => async (
+  dispatch,
+  getState
+) => {
+  try {
+    dispatch({
+      type: HOTSPOT_UPDATE_REQUEST,
+    });
+    const {
+      loginAdmin: { aInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${aInfo._atoken}`,
+      },
+    };
+    await axios.put(
+      `${baseURL}/api/admin/editHotspot/${hotspotId}`,
+      hotspot,
+      config
+    );
+    dispatch({
+      type: HOTSPOT_UPDATE_SUCCESS,
+    });
+    setTimeout(() => {
+      dispatch({
+        type: HOTSPOT_UPDATE_RESET,
+      });
+    }, 2000);
+  } catch (error) {
+    dispatch({
+      type: HOTSPOT_UPDATE_FAILED,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

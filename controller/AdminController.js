@@ -207,14 +207,18 @@ const editHotspotToClient = asyncHandler(async (req, res) => {
   const hotspotId = req.params.hotspotId;
   const hotspot = await ClientHotspot.findById(hotspotId);
   if (hotspot) {
+    const { hotspot_address } = req.body;
+    const h_name = hotspot_address.split(' ')[0];
+    const h_address = hotspot_address.split(' ')[1];
     const client = await Client.findById({ _id: hotspot.client_id });
     if (client) {
-      const update = await ClientHotspot.findOneAndUpdate(
-        { _id: hotspotId },
-        { $set: req.body },
-        { new: true }
-      );
-
+      hotspot.client_id = req.body.client_id || hotspot.client_id;
+      hotspot.hotspot_name = h_name || hotspot.hotspot_name;
+      hotspot.hotspot_address = h_address || hotspot.hotspot_address;
+      hotspot.percentage = req.body.percentage || hotspot.percentage;
+      hotspot.startDate = req.body.startDate || hotspot.startDate;
+      hotspot.relation_type = req.body.relation_type || hotspot.relation_type;
+      const update = await hotspot.save();
       if (update) {
         res.status(200);
         res.json(update);

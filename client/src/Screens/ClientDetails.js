@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getSingleClient } from '../redux/action/AdminAction';
 import Loader from '../components/Loader';
 import AlertMessage from '../components/Alert';
+import HotspotEditScreen from './HotspotEditScreen';
 
 const ClientDetails = () => {
   const { path } = useRouteMatch();
@@ -39,6 +40,12 @@ const ClientDetails = () => {
             path={`${path}/edit`}
             component={() => (
               <ClientProfileEditScreen client_details={client} />
+            )}
+          />
+          <Route
+            path={`${path}/hotspot/:hotspotId/edit`}
+            component={() => (
+              <HotspotEditScreen hotspots={client?.client_hotspot} />
             )}
           />
         </Switch>

@@ -26,6 +26,10 @@ import {
   GET_SINGLE_CLIENT_REQUEST,
   GET_SINGLE_CLIENT_SUCCESS,
   HOTSPOT_DELETE,
+  HOTSPOT_UPDATE_FAILED,
+  HOTSPOT_UPDATE_REQUEST,
+  HOTSPOT_UPDATE_RESET,
+  HOTSPOT_UPDATE_SUCCESS,
 } from '../actionTypes';
 
 export const AdminLoginReducer = (state = {}, action) => {
@@ -124,6 +128,20 @@ export const ClientUpdateReducer = (state = {}, action) => {
     case CLIENT_UPDATE_FAILED:
       return { loading: false, error: action.payload };
     case CLIENT_UPDATE_RESET:
+      return {};
+    default:
+      return state;
+  }
+};
+export const HotspotUpdateReducer = (state = {}, action) => {
+  switch (action.type) {
+    case HOTSPOT_UPDATE_REQUEST:
+      return { loading: true };
+    case HOTSPOT_UPDATE_SUCCESS:
+      return { loading: false, success: true };
+    case HOTSPOT_UPDATE_FAILED:
+      return { loading: false, error: action.payload };
+    case HOTSPOT_UPDATE_RESET:
       return {};
     default:
       return state;

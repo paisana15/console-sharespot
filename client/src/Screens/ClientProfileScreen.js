@@ -25,6 +25,7 @@ import { DeleteIcon, EditIcon } from '@chakra-ui/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteHotspot, deleteClient } from '../redux/action/AdminAction';
 import Loader from '../components/Loader';
+import moment from 'moment';
 
 const ClientProfileScreen = ({ client_details }) => {
   const { url } = useRouteMatch();
@@ -174,6 +175,14 @@ const ClientProfileScreen = ({ client_details }) => {
                     <Badge ml='10px' colorScheme='purple'>
                       <Text fontSize='xs'>{hotspot?.relation_type}</Text>
                     </Badge>
+                    <Text fontSize='xs' ml="2" mr='1'>
+                      From
+                    </Text>
+                    <Badge colorScheme="yellow">
+                      <Text fontSize='xs'>
+                        {moment(hotspot?.startDate).format('YYYY-MM-DD')}
+                      </Text>
+                    </Badge>
                   </Flex>
                 </Box>
                 <Spacer />
@@ -198,6 +207,9 @@ const ClientProfileScreen = ({ client_details }) => {
                       borderColor='teal'
                       mr='2'
                       color='gray.500'
+                      onClick={() =>
+                        history.push(`${url}/hotspot/${hotspot?._id}/edit`)
+                      }
                     >
                       <EditIcon color='teal.300' />
                     </Button>
