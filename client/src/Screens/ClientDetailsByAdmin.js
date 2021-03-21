@@ -1,30 +1,28 @@
 import React, { useEffect } from 'react';
 import { Box } from '@chakra-ui/react';
-
 import { Switch, Route, useRouteMatch, useParams } from 'react-router';
 import ClientProfileScreen from './ClientProfileScreen';
 import ClientProfileEditScreen from './ClientProfileEditScreen';
 import { useDispatch, useSelector } from 'react-redux';
-import { getClientProfileByClient } from '../redux/action/ClientAction';
 import Loader from '../components/Loader';
 import AlertMessage from '../components/Alert';
 import HotspotEditScreen from './HotspotEditScreen';
 import { getSingleClient } from '../redux/action/AdminAction';
 
-const ClientDetails = () => {
+const ClientDetailsByAdmin = () => {
   const { path } = useRouteMatch();
   const { clientId } = useParams();
 
   const dispatch = useDispatch();
 
-  const getClientByC = useSelector((state) => state.getClientByC);
-  const { loading, clientData, error } = getClientByC;
+  const singleClientsGet = useSelector((state) => state.singleClientsGet);
+  const { loading, client, error } = singleClientsGet;
 
   const loginClient = useSelector((state) => state.loginClient);
   const { cInfo } = loginClient;
 
   useEffect(() => {
-    dispatch(getClientProfileByClient(cInfo?._id));
+    dispatch(getSingleClient(clientId));
   }, [dispatch, clientId, cInfo]);
 
   return (
@@ -38,20 +36,18 @@ const ClientDetails = () => {
           <Route
             exact
             path={path}
-            component={() => (
-              <ClientProfileScreen client_details={clientData} />
-            )}
+            component={() => <ClientProfileScreen client_details={client} />}
           />
           <Route
             path={`${path}/edit`}
             component={() => (
-              <ClientProfileEditScreen client_details={clientData} />
+              <ClientProfileEditScreen client_details={client} />
             )}
           />
           <Route
             path={`${path}/hotspot/:hotspotId/edit`}
             component={() => (
-              <HotspotEditScreen hotspots={clientData?.client_hotspot} />
+              <HotspotEditScreen hotspots={client?.client_hotspot} />
             )}
           />
         </Switch>
@@ -60,4 +56,4 @@ const ClientDetails = () => {
   );
 };
 
-export default ClientDetails;
+export default ClientDetailsByAdmin;

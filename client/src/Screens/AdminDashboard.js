@@ -2,11 +2,11 @@ import React from 'react';
 import { Box, Container } from '@chakra-ui/layout';
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router';
 import AllClients from './AllClients';
-import ClientDetails from './ClientDetails';
 import AddClientScreen from './AddClientScreen';
 import AddHotspotScreen from './AddHotspotScreen';
 import AdminNavbar from '../components/AdminNavbar';
 import { useColorMode } from '@chakra-ui/color-mode';
+import ClientDetailsByAdmin from './ClientDetailsByAdmin';
 
 const AdminDashboard = () => {
   const { path } = useRouteMatch();
@@ -29,7 +29,7 @@ const AdminDashboard = () => {
             <Route path={`${path}/clients`} component={AllClients} />
             <Route
               path={`${path}/client/:clientId`}
-              component={ClientDetails}
+              component={ClientDetailsByAdmin}
             />
             <Route path={`${path}/add-hotspot`} component={AddHotspotScreen} />
             <Route

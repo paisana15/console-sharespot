@@ -24,14 +24,8 @@ const ClientDashboard = () => {
           bg={`${colorMode === 'dark' ? '#2a2f38' : '#ffffff'}`}
         >
           <Switch>
-            <Route
-              path={`${path}/my-hotspots`}
-              component={() => <ClientDetails routeFromClient />}
-            />
-            <Route
-              path={`${path}/withdraw`}
-              component={() => <WithDrawScreen />}
-            />
+            <Route path={`${path}/my-hotspots`} component={ClientDetails} />
+            <Route path={`${path}/withdraw`} component={WithDrawScreen} />
             <Redirect to={`${path}/my-hotspots`} />
           </Switch>
         </Box>
