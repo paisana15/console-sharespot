@@ -3,6 +3,10 @@ import {
   CLIENT_LOGIN_REQUEST,
   CLIENT_LOGIN_SUCCESS,
   CLIENT_LOGOUT,
+  CLIENT_PASSWORD_UPDATE_FAILED,
+  CLIENT_PASSWORD_UPDATE_REQUEST,
+  CLIENT_PASSWORD_UPDATE_RESET,
+  CLIENT_PASSWORD_UPDATE_SUCCESS,
   CLIENT_UPDATE_BYC_FAILED,
   CLIENT_UPDATE_BYC_REQUEST,
   CLIENT_UPDATE_BYC_RESET,
@@ -53,6 +57,21 @@ export const ClientUpdateByCReducer = (state = {}, action) => {
     case CLIENT_UPDATE_BYC_FAILED:
       return { loading: false, error: action.payload };
     case CLIENT_UPDATE_BYC_RESET:
+      return {};
+    default:
+      return state;
+  }
+};
+
+export const resetPasswordReducer = (state = {}, action) => {
+  switch (action.type) {
+    case CLIENT_PASSWORD_UPDATE_REQUEST:
+      return { loading: true };
+    case CLIENT_PASSWORD_UPDATE_SUCCESS:
+      return { loading: false, success: true };
+    case CLIENT_PASSWORD_UPDATE_FAILED:
+      return { loading: false, error: action.payload };
+    case CLIENT_PASSWORD_UPDATE_RESET:
       return {};
     default:
       return state;

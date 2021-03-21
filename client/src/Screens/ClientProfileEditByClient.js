@@ -6,6 +6,7 @@ import { Box, Button, Text, useToast } from '@chakra-ui/react';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateClientByClient } from '../redux/action/ClientAction';
 import { useHistory } from 'react-router';
+import { Link } from 'react-router-dom';
 
 const ClientProfileEditByClient = ({ client_details }) => {
   const dispatch = useDispatch();
@@ -127,16 +128,11 @@ const ClientProfileEditByClient = ({ client_details }) => {
               >
                 Update
               </Button>
-              <Button
-                mt='2'
-                ml='2'
-                variant='outline'
-                isLoading={loading}
-                loadingText='Updating...'
-                colorScheme='red'
-              >
-                Reset Password
-              </Button>
+              <Link to={`/c/reset-password`}>
+                <Button mt='2' ml='2' variant='outline' colorScheme='whatsapp'>
+                  Reset Password
+                </Button>
+              </Link>
             </form>
           )}
         </Formik>

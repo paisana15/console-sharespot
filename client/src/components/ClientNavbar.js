@@ -31,7 +31,7 @@ const ClientNavbar = () => {
           >
             <Link to={`${path}/profile`}>
               <i className='fas fa-wifi'></i>
-              <span className='admin_navlink'>My Hotspot</span>
+              <span className='admin_navlink'>My Account</span>
             </Link>
           </Box>
           <Box

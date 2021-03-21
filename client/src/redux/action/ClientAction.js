@@ -13,6 +13,10 @@ import {
   CLIENT_UPDATE_BYC_SUCCESS,
   CLIENT_UPDATE_BYC_RESET,
   CLIENT_UPDATE_BYC_FAILED,
+  CLIENT_PASSWORD_UPDATE_REQUEST,
+  CLIENT_PASSWORD_UPDATE_SUCCESS,
+  CLIENT_PASSWORD_UPDATE_RESET,
+  CLIENT_PASSWORD_UPDATE_FAILED,
 } from '../actionTypes';
 
 export const clientLogin = (credentials) => async (dispatch) => {
@@ -130,6 +134,54 @@ export const updateClientByClient = (clientId, client) => async (
         error.response && error.response.data.message
           ? error.response.data.message
           : error.message,
+    });
+    dispatch({
+      type: CLIENT_UPDATE_BYC_RESET,
+    });
+  }
+};
+export const passwordReset = (clientId, credentials) => async (
+  dispatch,
+  getState
+) => {
+  try {
+    dispatch({
+      type: CLIENT_PASSWORD_UPDATE_REQUEST,
+    });
+
+    const {
+      loginClient: { cInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${cInfo._ctoken}`,
+      },
+    };
+    const { data } = await axios.put(
+      `${baseURL}/api/client/resetPassword/${clientId}`,
+      credentials,
+      config
+    );
+    dispatch({
+      type: CLIENT_PASSWORD_UPDATE_SUCCESS,
+      payload: data,
+    });
+    setTimeout(() => {
+      dispatch({
+        type: CLIENT_PASSWORD_UPDATE_RESET,
+      });
+    }, 2000);
+  } catch (error) {
+    dispatch({
+      type: CLIENT_PASSWORD_UPDATE_FAILED,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+    dispatch({
+      type: CLIENT_PASSWORD_UPDATE_RESET,
     });
   }
 };

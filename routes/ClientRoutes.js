@@ -3,6 +3,7 @@ import {
   clientLogin,
   editSingleClientByClient,
   getClientProfileByClient,
+  resetPassword,
 } from '../controller/ClientController.js';
 import { protect } from '../middleware/authMiddleware.js';
 
@@ -14,5 +15,6 @@ router
 router
   .route('/editSingleClientByClient/:clientId')
   .put(protect, editSingleClientByClient);
+router.route('/resetPassword/:clientId').put(protect, resetPassword);
 
 export default router;

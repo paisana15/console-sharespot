@@ -60,7 +60,6 @@ const getClientProfileByClient = asyncHandler(async (req, res) => {
     throw new Error('Client not found!');
   }
 });
-
 // desc: admin edit client profile
 // routes: api/admin/editClientProfile/:clientId
 // access: private
@@ -126,4 +125,50 @@ const editSingleClientByClient = asyncHandler(async (req, res) => {
   }
 });
 
-export { clientLogin, getClientProfileByClient, editSingleClientByClient };
+// desc: get single client with hotspot by client
+// routes: api/client/getClientProfileByClient/:clientId
+// access: private
+// method: get
+const resetPassword = asyncHandler(async (req, res) => {
+  const clientId = req.params.clientId;
+  const client = await Client.findById(clientId);
+  if (client) {
+    const { preP, newP, conP } = req.body;
+    console.log(req.body);
+    if (client?._id.equals(req.user?._id)) {
+      if (await client.verifyPassword(preP)) {
+        if (newP.toString() === conP.toString()) {
+          client.password = newP;
+          const update = await client.save();
+          if (update) {
+            res.status(200).json({
+              message: 'Password Reset Successfull!',
+            });
+          } else {
+            res.status(500);
+            throw new Error();
+          }
+        } else {
+          res.status(400);
+          throw new Error('New Password does not match!');
+        }
+      } else {
+        res.status(400);
+        throw new Error('Previous password does not match!');
+      }
+    } else {
+      res.status(400);
+      throw new Error('You are not authorized to edit this information!');
+    }
+  } else {
+    res.status(404);
+    throw new Error('Client not found!');
+  }
+});
+
+export {
+  clientLogin,
+  getClientProfileByClient,
+  editSingleClientByClient,
+  resetPassword,
+};

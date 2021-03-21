@@ -5,6 +5,7 @@ import ClientDetails from './ClientDetails';
 import { useColorMode } from '@chakra-ui/color-mode';
 import ClientNavbar from '../components/ClientNavbar';
 import WithDrawScreen from './WithDrawScreen';
+import ClientResetPasswordScreen from './ClientResetPasswordScreen';
 
 const ClientDashboard = () => {
   const { path } = useRouteMatch();
@@ -26,7 +27,11 @@ const ClientDashboard = () => {
           <Switch>
             <Route path={`${path}/profile`} component={ClientDetails} />
             <Route path={`${path}/withdraw`} component={WithDrawScreen} />
-            <Redirect to={`${path}/my-hotspots`} />
+            <Route
+              path={`${path}/reset-password`}
+              component={ClientResetPasswordScreen}
+            />
+            <Redirect to={`${path}/profile`} />
           </Switch>
         </Box>
       </Container>

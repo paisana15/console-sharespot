@@ -53,7 +53,7 @@ app.listen(PORT, '127.0.0.1', () => {
     } catch (error) {
       console.log(error);
     }
-  }, 10000);
+  }, 3600000);
   // https.get(
   //   'https://api.helium.io/v1/hotspots/11mP5o3e8VgCxh6x5nz3j4hq3B4igvCdwdLY9fkY5WEn497A8ZU/rewards/sum?max_time=2030-08-27&min_time=2019-01-01',
   //   (res) => {
