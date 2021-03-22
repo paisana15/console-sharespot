@@ -11,5 +11,14 @@ client.getAccount((err, res) => {
 
 // send payout sample
 client.sendPayout("bulshit address", 9999999, (err, payoutResponse) => {
-    console.log("send Payout result", err, payoutResponse.getTransactionhash())
+    // console.log("send Payout result", err, payoutResponse.getTransactionhash())
+    if (err) {
+        if (err.code === 13) {
+            console.log("wallet locked")
+        } else {
+            // throw err
+        }
+    } else {
+        console.log("send Payout result", payoutResponse)
+    }
 })
