@@ -63,7 +63,7 @@ const ClientProfileEditByClient = ({ client_details }) => {
   return (
     <Box p='4'>
       <Text fontSize='2xl' display='inline-block' className='adminPageHeader'>
-        Edit Client
+        Edit Profile
       </Text>
       <Box mt='3'>
         <Formik

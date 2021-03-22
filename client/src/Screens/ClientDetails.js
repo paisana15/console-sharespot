@@ -8,6 +8,7 @@ import { getClientProfileByClient } from '../redux/action/ClientAction';
 import Loader from '../components/Loader';
 import AlertMessage from '../components/Alert';
 import ClientProfileEditByClient from './ClientProfileEditByClient';
+import WithDrawScreen from './WithDrawScreen';
 
 const ClientDetails = () => {
   const { path } = useRouteMatch();
@@ -44,6 +45,15 @@ const ClientDetails = () => {
             path={`${path}/edit`}
             component={() => (
               <ClientProfileEditByClient client_details={clientData} />
+            )}
+          />
+          <Route
+            path={`${path}/withdraw`}
+            component={() => (
+              <WithDrawScreen
+                client={clientData?.client}
+                wallet={clientData?.clientWallet}
+              />
             )}
           />
         </Switch>

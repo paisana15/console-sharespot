@@ -4,7 +4,6 @@ import { Redirect, Route, Switch, useRouteMatch } from 'react-router';
 import ClientDetails from './ClientDetails';
 import { useColorMode } from '@chakra-ui/color-mode';
 import ClientNavbar from '../components/ClientNavbar';
-import WithDrawScreen from './WithDrawScreen';
 import ClientResetPasswordScreen from './ClientResetPasswordScreen';
 
 const ClientDashboard = () => {
@@ -26,7 +25,6 @@ const ClientDashboard = () => {
         >
           <Switch>
             <Route path={`${path}/profile`} component={ClientDetails} />
-            <Route path={`${path}/withdraw`} component={WithDrawScreen} />
             <Route
               path={`${path}/reset-password`}
               component={ClientResetPasswordScreen}

@@ -28,7 +28,7 @@ const AllClients = () => {
 
   return (
     <Box p='4'>
-      <Flex mb='3'>
+      <Flex mb='3' alignItems='center'>
         <Text fontSize='2xl' className='adminPageHeader'>
           All Clients
         </Text>

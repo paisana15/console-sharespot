@@ -42,7 +42,7 @@ const ClientNavbar = () => {
             fontSize='sm'
             cursor='pointer'
           >
-            <Link to={`${path}/withdraw`}>
+            <Link to={`/c/profile/withdraw`}>
               <i className='fas fa-money-check-alt'></i>
               <span className='admin_navlink'>Withdraw</span>
             </Link>

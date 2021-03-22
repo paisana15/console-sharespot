@@ -20,6 +20,10 @@ import {
   FETCH_REWARD_BY_CLIENT_REQUEST,
   FETCH_REWARD_BY_CLIENT_SUCCESS,
   FETCH_REWARD_BY_CLIENT_RESET,
+  CLIENT_WITHDRAW_REQUEST,
+  CLIENT_WITHDRAW_SUCCESS,
+  CLIENT_WITHDRAW_RESET,
+  CLIENT_WITHDRAW_FAILED,
 } from '../actionTypes';
 
 export const clientLogin = (credentials) => async (dispatch) => {
@@ -220,6 +224,48 @@ export const getRewardByClient = (clientId) => async (dispatch, getState) => {
   } catch (error) {
     dispatch({
       type: FETCH_REWARD_BY_CLIENT_RESET,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const withdrawRequestByClient = (clientId, amount) => async (
+  dispatch,
+  getState
+) => {
+  try {
+    dispatch({
+      type: CLIENT_WITHDRAW_REQUEST,
+    });
+    const {
+      loginClient: { cInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${cInfo._ctoken}`,
+      },
+    };
+    const { data } = await axios.post(
+      `${baseURL}/api/client/withdrawRequest/${clientId}`,
+      { amount },
+      config
+    );
+    dispatch({
+      type: CLIENT_WITHDRAW_SUCCESS,
+      payload: data,
+    });
+    setTimeout(() => {
+      dispatch({
+        type: CLIENT_WITHDRAW_RESET,
+      });
+    }, 2000);
+  } catch (error) {
+    dispatch({
+      type: CLIENT_WITHDRAW_FAILED,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

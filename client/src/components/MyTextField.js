@@ -9,7 +9,6 @@ const MyTextField = ({ label, ref, placeholder, ...props }) => {
   return (
     <Stack mb='3' direction={['column', 'row']}>
       <FormLabel style={{ width: '60%' }}>{label}</FormLabel>
-
       <Input placeholder={placeholder} {...field} {...props} ref={ref} />
       {meta.touched && meta.error ? (
         <div style={{ color: 'red', fontSize: 13 }}>{meta.error}</div>

@@ -11,6 +11,9 @@ import {
   CLIENT_UPDATE_BYC_REQUEST,
   CLIENT_UPDATE_BYC_RESET,
   CLIENT_UPDATE_BYC_SUCCESS,
+  CLIENT_WITHDRAW_FAILED,
+  CLIENT_WITHDRAW_REQUEST,
+  CLIENT_WITHDRAW_SUCCESS,
   FETCH_REWARD_BY_CLIENT_FAILED,
   FETCH_REWARD_BY_CLIENT_REQUEST,
   FETCH_REWARD_BY_CLIENT_RESET,
@@ -18,6 +21,7 @@ import {
   GET_CLIENT_PROFILE_BYC_REQUEST,
   GET_CLIENT_PROFILE_BYC_SUCCESS,
   GET_SINGLE_CLIENT_FAILED,
+  CLIENT_WITHDRAW_RESET,
 } from '../actionTypes';
 
 export const ClientLoginReducer = (state = {}, action) => {
@@ -92,6 +96,20 @@ export const FetchRewardByClientReducer = (state = {}, action) => {
     case FETCH_REWARD_BY_CLIENT_FAILED:
       return { loading: false, error: action.payload };
     case FETCH_REWARD_BY_CLIENT_RESET:
+      return {};
+    default:
+      return state;
+  }
+};
+export const WithdrawRequestReducer = (state = {}, action) => {
+  switch (action.type) {
+    case CLIENT_WITHDRAW_REQUEST:
+      return { loading: true };
+    case CLIENT_WITHDRAW_SUCCESS:
+      return { loading: false, success: true };
+    case CLIENT_WITHDRAW_FAILED:
+      return { loading: false, error: action.payload };
+    case CLIENT_WITHDRAW_RESET:
       return {};
     default:
       return state;

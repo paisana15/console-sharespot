@@ -250,3 +250,28 @@ export {
   resetPassword,
   getHotspotRewardByClient,
 };
+export const clientWithdrawRequest = asyncHandler(async (req, res) => {
+  const clientId = req.params.clientId;
+  const client = await Client.findById(clientId);
+  if (client) {
+    if (client._id.equals(req.user?._id)) {
+      const clientWallet = await Wallet.findOne({ client_id: client?._id });
+      const { amount } = req.body;
+
+      if (parseFloat(amount) > parseFloat(clientWallet?.wallet_balance)) {
+        res.status(400);
+        throw new Error(
+          'Invalid amount! Withdraw amount is greater then wallet balance!'
+        );
+      } else {
+        res.status(200).json({ message: 'Withdrawal request received!' });
+      }
+    } else {
+      res.status(400);
+      throw new Error('You are not authorized to perform this action!');
+    }
+  } else {
+    res.status(404);
+    throw new Error('Client found!');
+  }
+});
