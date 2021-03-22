@@ -26,9 +26,6 @@ class WalletClient {
         metadata.add("auth", this.token)
 
         this.client.newPayout(payoutRequest, metadata, callback)
-        // this.client.newPayout(payoutRequest, metadata, (err, payoutRequest) => {
-        //     console.log(err, payoutRequest)
-        // })
     }
 
 }
