@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-import Double from '@mongoosejs/double';
 
 const ClientHotspotSchema = new mongoose.Schema(
   {
@@ -20,7 +19,7 @@ const ClientHotspotSchema = new mongoose.Schema(
       required: true,
     },
     percentage: {
-      type: Double,
+      type: Number,
       required: true,
     },
     total_earned: {
