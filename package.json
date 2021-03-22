@@ -13,17 +13,19 @@
   "author": "Saiful Islam Shihab",
   "license": "ISC",
   "dependencies": {
+    "@grpc/grpc-js": "^1.2.11",
     "axios": "^0.21.1",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-async-handler": "^1.1.4",
+    "google-protobuf": "^3.15.6",
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.29.1",
     "mongoose": "^5.12.0",
     "morgan": "^1.10.0",
     "nodemon": "^2.0.7",
-    "proto": "file:proto"
+    "proto": "file:server/proto"
   }
 }
