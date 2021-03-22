@@ -39,12 +39,12 @@ const ClientProfileEditByClient = ({ client_details }) => {
   const fieldValidationSchema = yup.object({
     firstname: yup
       .string()
-      .max(10, 'Max 10 Character!')
+      .max(15, 'Max 15 Character!')
       .min(1, 'Min 1 Character!')
       .required('First name required!'),
     lastname: yup
       .string()
-      .max(10, 'Max 10 Character!')
+      .max(15, 'Max 15 Character!')
       .min(1, 'Min 1 Character!')
       .required('Last name required!'),
     email: yup.string().email().required('Email required!'),

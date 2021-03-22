@@ -19,6 +19,10 @@ import {
   DELETE_SINGLE_CLIENT_REQUEST,
   DELETE_SINGLE_CLIENT_RESET,
   DELETE_SINGLE_CLIENT_SUCCESS,
+  FETCH_REWARD_BY_ADMIN_FAILED,
+  FETCH_REWARD_BY_ADMIN_REQUEST,
+  FETCH_REWARD_BY_ADMIN_RESET,
+  FETCH_REWARD_BY_ADMIN_SUCCESS,
   GET_ALL_CLIENTS_FAILED,
   GET_ALL_CLIENTS_REQUEST,
   GET_ALL_CLIENTS_SUCCESS,
@@ -68,6 +72,8 @@ export const GetSingleClientReducer = (
     case GET_SINGLE_CLIENT_REQUEST:
       return { loading: true };
     case GET_SINGLE_CLIENT_SUCCESS:
+      return { loading: false, client: action.payload };
+    case FETCH_REWARD_BY_ADMIN_SUCCESS:
       return { loading: false, client: action.payload };
     case HOTSPOT_DELETE:
       return { loading: false, client: action.payload };
@@ -142,6 +148,20 @@ export const HotspotUpdateReducer = (state = {}, action) => {
     case HOTSPOT_UPDATE_FAILED:
       return { loading: false, error: action.payload };
     case HOTSPOT_UPDATE_RESET:
+      return {};
+    default:
+      return state;
+  }
+};
+export const FetchRewardByAdminReducer = (state = {}, action) => {
+  switch (action.type) {
+    case FETCH_REWARD_BY_ADMIN_REQUEST:
+      return { loading: true };
+    case FETCH_REWARD_BY_ADMIN_SUCCESS:
+      return { loading: false };
+    case FETCH_REWARD_BY_ADMIN_FAILED:
+      return { loading: false, error: action.payload };
+    case FETCH_REWARD_BY_ADMIN_RESET:
       return {};
     default:
       return state;

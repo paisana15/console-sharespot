@@ -9,28 +9,65 @@ import {
   Tooltip,
   useColorMode,
   Button,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  useDisclosure,
 } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import { useHistory, useRouteMatch } from 'react-router';
 import AlertMessage from '../components/Alert';
+import { DeleteIcon, EditIcon } from '@chakra-ui/icons';
 import { useDispatch, useSelector } from 'react-redux';
+import {
+  deleteHotspot,
+  deleteClient,
+  getRewardByAdmin,
+  getSingleClient,
+} from '../redux/action/AdminAction';
 import Loader from '../components/Loader';
 import moment from 'moment';
 
-const ClientProfileScreen = ({ client_details }) => {
-  const dispatch = useDispatch();
+const ClientProfileScreenByAdmin = ({ client_details }) => {
   const { url } = useRouteMatch();
   const { colorMode } = useColorMode();
   const [client, setClient] = useState({});
   const [client_hotspot, setClientHotspot] = useState([]);
   const [client_wallet, setClientWallet] = useState({});
+  const dispatch = useDispatch();
   const history = useHistory();
+
+  const { onOpen, isOpen, onClose } = useDisclosure();
+
+  const singleClientDel = useSelector((state) => state.singleClientDel);
+  const { loading, success, error } = singleClientDel;
+
+  const fetchReward = useSelector((state) => state.fetchReward);
+  const {
+    loading: rewardLoading,
+    success: rewardSuccess,
+    error: rewardError,
+  } = fetchReward;
 
   useEffect(() => {
     setClient(client_details?.client);
     setClientHotspot(client_details?.client_hotspot);
     setClientWallet(client_details?.clientWallet);
-  }, [client_details, history]);
+    if (success) {
+      history.push('/h/clients');
+    }
+  }, [client_details, success, dispatch, rewardSuccess, history, client?._id]);
+
+  const clientDelteHandler = () => {
+    dispatch(deleteClient(client?._id));
+  };
+  const fetchRewardHandler = () => {
+    dispatch(getRewardByAdmin(client?._id));
+  };
 
   return (
     <>
@@ -84,9 +121,13 @@ const ClientProfileScreen = ({ client_details }) => {
         >
           <Heading size='md'>Total Withdrawn</Heading>
           <Text style={{ fontWeight: 'bold' }} fontSize='3xl'>
-            {`HNT ${
-              client_wallet ? client_wallet?.totalWithdraw?.toFixed(2) : '0'
-            }`}
+            {rewardLoading ? (
+              <Loader small />
+            ) : (
+              `HNT ${
+                client_wallet ? client_wallet?.totalWithdraw?.toFixed(2) : '0'
+              }`
+            )}
           </Text>
         </Box>
         <Spacer />
@@ -100,9 +141,13 @@ const ClientProfileScreen = ({ client_details }) => {
         >
           <Heading size='md'>Total Rewards</Heading>
           <Text style={{ fontWeight: 'bold' }} fontSize='3xl'>
-            {`HNT ${
-              client_wallet ? client_wallet?.totalRewards?.toFixed(2) : '0'
-            }`}
+            {rewardLoading ? (
+              <Loader small />
+            ) : (
+              `HNT ${
+                client_wallet ? client_wallet?.totalRewards?.toFixed(2) : '0'
+              }`
+            )}
           </Text>
         </Box>
         <Spacer />
@@ -116,9 +161,13 @@ const ClientProfileScreen = ({ client_details }) => {
         >
           <Heading size='md'>Balance</Heading>
           <Text style={{ fontWeight: 'bold' }} fontSize='3xl'>
-            {`HNT ${
-              client_wallet ? client_wallet?.wallet_balance?.toFixed(2) : '0'
-            }`}
+            {rewardLoading ? (
+              <Loader small />
+            ) : (
+              `HNT ${
+                client_wallet ? client_wallet?.wallet_balance?.toFixed(2) : '0'
+              }`
+            )}
           </Text>
         </Box>
       </Flex>
@@ -186,6 +235,34 @@ const ClientProfileScreen = ({ client_details }) => {
                       HNT {hotspot?.total_earned.toFixed(2)}
                     </Text>
                   </Box>
+
+                  <Flex>
+                    <Button
+                      size='sm'
+                      colorScheme='teal'
+                      variant='outline'
+                      borderColor='teal'
+                      mr='2'
+                      color='gray.500'
+                      onClick={() =>
+                        history.push(`${url}/hotspot/${hotspot?._id}/edit`)
+                      }
+                    >
+                      <EditIcon color='teal.300' />
+                    </Button>
+                    <Button
+                      size='sm'
+                      variant='outline'
+                      colorScheme='red'
+                      borderColor='red.400'
+                      color='gray.500'
+                      onClick={() => {
+                        dispatch(deleteHotspot(hotspot?._id, client?._id));
+                      }}
+                    >
+                      <DeleteIcon color='red.300' />
+                    </Button>
+                  </Flex>
                 </Flex>
               </Flex>
             ))
@@ -193,12 +270,63 @@ const ClientProfileScreen = ({ client_details }) => {
             <AlertMessage status='error' error='No hotspot assigned yet!' />
           )}
         </Box>
-        <Button mt='3' colorScheme="pink" variant={colorMode === 'dark' ? 'outline' : 'solid'}>
-          Get Reward
-        </Button>
+        <Flex mt='4' alignItems='center'>
+          <Button
+            variant='outline'
+            colorScheme='red'
+            leftIcon={<DeleteIcon />}
+            onClick={onOpen}
+          >
+            Delete Client
+          </Button>
+          <Button
+            onClick={fetchRewardHandler}
+            ml='2'
+            colorScheme='pink'
+            variant={colorMode === 'dark' ? 'outline' : 'solid'}
+          >
+            Fetch Reward
+          </Button>
+        </Flex>
+
+        {loading ? (
+          <Loader />
+        ) : error ? (
+          <AlertMessage status='error' error={error} />
+        ) : (
+          rewardError && <AlertMessage status='error' error={rewardError} />
+        )}
+        <Modal isOpen={isOpen} onClose={onClose}>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>Confirm Delete</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <Text>{'Are you sure you want to remove this client?'}</Text>
+            </ModalBody>
+
+            <ModalFooter>
+              <Button
+                variant='outline'
+                colorScheme='blue'
+                mr={3}
+                onClick={onClose}
+              >
+                Close
+              </Button>
+              <Button
+                onClick={clientDelteHandler}
+                colorScheme='red'
+                variant='outline'
+              >
+                Yes, Confirm
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
       </Box>
     </>
   );
 };
 
-export default ClientProfileScreen;
+export default ClientProfileScreenByAdmin;

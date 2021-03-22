@@ -374,9 +374,9 @@ const editSingleClient = asyncHandler(async (req, res) => {
 //     })
 //     .catch((err) => console.log(err));
 // };
-const updateWalletBalance = async (client_id, balance, deleteHotspot) => {
+const updateWalletBalance = async (clientId, balance, deleteHotspot) => {
   try {
-    const client_wallet = await Wallet.findOne({ client_id: client_id });
+    const client_wallet = await Wallet.findOne({ client_id: clientId });
     if (client_wallet) {
       // console.log(client_wallet.totalRewards + ', ' + 'new reward ' + balance);
 
@@ -406,49 +406,73 @@ const updateWalletBalance = async (client_id, balance, deleteHotspot) => {
 };
 
 const getHotspotReward = asyncHandler(async (req, res) => {
-  const client_id = req.params.clientId;
-  let clientHotspots = [];
-  const client_assigned_hotspot = await ClientHotspot.find({
-    client_id: client_id,
-  });
+  const clientId = req.params.clientId;
+  const client = await Client.findById(clientId);
+  if (client) {
+    let clientHotspots = [];
+    const client_assigned_hotspot = await ClientHotspot.find({
+      client_id: clientId,
+    });
 
-  client_assigned_hotspot.map((data) => {
-    const minDate = moment(data?.startDate).format('YYYY-MM-DD');
-    axios
-      .get(
-        `https://api.helium.io/v1/hotspots/${data?.hotspot_address}/rewards/sum?max_time=2030-08-27&min_time=${minDate}`
-      )
-      .then((res) => {
-        if (res?.data) {
-          const val = (res?.data?.data?.total * data?.percentage) / 100;
-          clientHotspots.push({
-            total: val,
+    client_assigned_hotspot.map((data) => {
+      const minDate = moment(data?.startDate).format('YYYY-MM-DD');
+      axios
+        .get(
+          `https://api.helium.io/v1/hotspots/${data?.hotspot_address}/rewards/sum?max_time=2030-08-27&min_time=${minDate}`
+        )
+        .then((res) => {
+          if (res?.data) {
+            const val = (res?.data?.data?.total * data?.percentage) / 100;
+            clientHotspots.push({
+              total: val,
+            });
+            data.total_earned = val;
+            data.save();
+          } else {
+            throw new Error('Failed to fetch data!');
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    });
+    setTimeout(async () => {
+      if (clientHotspots.length > 0) {
+        const total = clientHotspots
+          .map((data) => data.total)
+          .reduce((acc, curr) => {
+            return acc + curr;
+          }, 0);
+        const totalEarn = total.toFixed(2);
+        await updateWalletBalance(clientId, totalEarn, false);
+
+        const client_hotspot = await ClientHotspot.find({
+          client_id: clientId,
+        });
+        const clientWallet = await Wallet.findOne({ client_id: clientId });
+
+        if (client_hotspot.length < 0) {
+          res.status(200).json({
+            client: client,
+            client_hotspot: [],
+            clientWallet: {},
           });
-          data.total_earned = val;
-          data.save();
         } else {
-          throw new Error('Failed to fetch data!');
+          res.status(200).json({
+            client: client,
+            client_hotspot: client_hotspot,
+            clientWallet: clientWallet,
+          });
         }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  });
-  setTimeout(async () => {
-    if (clientHotspots.length > 0) {
-      const total = clientHotspots
-        .map((data) => data.total)
-        .reduce((acc, curr) => {
-          return acc + curr;
-        }, 0);
-      const totalEarn = total.toFixed(2);
-      await updateWalletBalance(client_id, totalEarn, false);
-      res.status(200).json({ message: 'Reward added!' });
-    } else {
-      res.status(500);
-      throw new Error();
-    }
-  }, 3000);
+      } else {
+        res.status(500);
+        throw new Error();
+      }
+    }, 5000);
+  } else {
+    res.status(404);
+    throw new Error('Client not found!');
+  }
 });
 const deleteHotspot = asyncHandler(async (req, res) => {
   const hotspotId = req.params.hotspotId;

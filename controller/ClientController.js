@@ -134,7 +134,7 @@ const resetPassword = asyncHandler(async (req, res) => {
   const client = await Client.findById(clientId);
   if (client) {
     const { preP, newP, conP } = req.body;
-    console.log(req.body);
+
     if (client?._id.equals(req.user?._id)) {
       if (await client.verifyPassword(preP)) {
         if (newP.toString() === conP.toString()) {

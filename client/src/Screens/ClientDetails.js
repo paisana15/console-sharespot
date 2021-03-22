@@ -37,10 +37,7 @@ const ClientDetails = () => {
             exact
             path={path}
             component={() => (
-              <ClientProfileScreen
-                disableDeleteBtn
-                client_details={clientData}
-              />
+              <ClientProfileScreen client_details={clientData} />
             )}
           />
           <Route

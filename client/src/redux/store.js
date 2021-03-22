@@ -7,6 +7,7 @@ import {
   AdminLoginReducer,
   ClientUpdateReducer,
   DelSingleClientReducer,
+  FetchRewardByAdminReducer,
   GetAllClientsReducer,
   GetSingleClientReducer,
   HotspotUpdateReducer,
@@ -32,6 +33,7 @@ const reducer = combineReducers({
   getClientByC: GetClientProfileByCReducer,
   updateClientByC: ClientUpdateByCReducer,
   resetPassword: resetPasswordReducer,
+  fetchReward: FetchRewardByAdminReducer,
 });
 
 const initialState = {

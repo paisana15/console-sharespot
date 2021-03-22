@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react';
 import { Box } from '@chakra-ui/react';
 import { Switch, Route, useRouteMatch, useParams } from 'react-router';
-import ClientProfileScreen from './ClientProfileScreen';
 import ClientProfileEditScreen from './ClientProfileEditScreen';
 import { useDispatch, useSelector } from 'react-redux';
 import Loader from '../components/Loader';
 import AlertMessage from '../components/Alert';
 import HotspotEditScreen from './HotspotEditScreen';
 import { getSingleClient } from '../redux/action/AdminAction';
+import ClientProfileScreenByAdmin from './ClientProfileScreenByAdmin';
 
 const ClientDetailsByAdmin = () => {
   const { path } = useRouteMatch();
@@ -36,7 +36,9 @@ const ClientDetailsByAdmin = () => {
           <Route
             exact
             path={path}
-            component={() => <ClientProfileScreen client_details={client} />}
+            component={() => (
+              <ClientProfileScreenByAdmin client_details={client} />
+            )}
           />
           <Route
             path={`${path}/edit`}
