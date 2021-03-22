@@ -18,6 +18,6 @@ client.sendPayout("bulshit address", 9999999, (err, payoutResponse) => {
             throw err
         }
     } else {
-        console.log("send Payout result", payoutResponse)
+        console.log("send Payout result", payoutResponse.getTransactionhash())
     }
 })
