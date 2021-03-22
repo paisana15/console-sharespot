@@ -18,6 +18,7 @@ import {
   ClientUpdateByCReducer,
   GetClientProfileByCReducer,
   resetPasswordReducer,
+  FetchRewardByClientReducer,
 } from './reducer/ClientReducer';
 
 const reducer = combineReducers({
@@ -34,6 +35,7 @@ const reducer = combineReducers({
   updateClientByC: ClientUpdateByCReducer,
   resetPassword: resetPasswordReducer,
   fetchReward: FetchRewardByAdminReducer,
+  getReward: FetchRewardByClientReducer,
 });
 
 const initialState = {

@@ -568,4 +568,5 @@ export {
   editHotspotToClient,
   deleteClient,
   deleteHotspot,
+  updateWalletBalance,
 };

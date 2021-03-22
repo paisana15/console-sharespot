@@ -17,6 +17,9 @@ import {
   CLIENT_PASSWORD_UPDATE_SUCCESS,
   CLIENT_PASSWORD_UPDATE_RESET,
   CLIENT_PASSWORD_UPDATE_FAILED,
+  FETCH_REWARD_BY_CLIENT_REQUEST,
+  FETCH_REWARD_BY_CLIENT_SUCCESS,
+  FETCH_REWARD_BY_CLIENT_RESET,
 } from '../actionTypes';
 
 export const clientLogin = (credentials) => async (dispatch) => {
@@ -182,6 +185,45 @@ export const passwordReset = (clientId, credentials) => async (
     });
     dispatch({
       type: CLIENT_PASSWORD_UPDATE_RESET,
+    });
+  }
+};
+
+export const getRewardByClient = (clientId) => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: FETCH_REWARD_BY_CLIENT_REQUEST,
+    });
+    const {
+      loginClient: { cInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${cInfo._ctoken}`,
+      },
+    };
+    const { data } = await axios.put(
+      `${baseURL}/api/client/getRewardByClient/${clientId}`,
+      {},
+      config
+    );
+    dispatch({
+      type: FETCH_REWARD_BY_CLIENT_SUCCESS,
+      payload: data,
+    });
+    setTimeout(() => {
+      dispatch({
+        type: FETCH_REWARD_BY_CLIENT_RESET,
+      });
+    }, 2000);
+  } catch (error) {
+    dispatch({
+      type: FETCH_REWARD_BY_CLIENT_RESET,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
     });
   }
 };

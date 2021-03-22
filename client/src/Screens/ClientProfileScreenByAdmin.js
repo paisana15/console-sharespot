@@ -27,7 +27,6 @@ import {
   deleteHotspot,
   deleteClient,
   getRewardByAdmin,
-  getSingleClient,
 } from '../redux/action/AdminAction';
 import Loader from '../components/Loader';
 import moment from 'moment';

@@ -11,6 +11,10 @@ import {
   CLIENT_UPDATE_BYC_REQUEST,
   CLIENT_UPDATE_BYC_RESET,
   CLIENT_UPDATE_BYC_SUCCESS,
+  FETCH_REWARD_BY_CLIENT_FAILED,
+  FETCH_REWARD_BY_CLIENT_REQUEST,
+  FETCH_REWARD_BY_CLIENT_RESET,
+  FETCH_REWARD_BY_CLIENT_SUCCESS,
   GET_CLIENT_PROFILE_BYC_REQUEST,
   GET_CLIENT_PROFILE_BYC_SUCCESS,
   GET_SINGLE_CLIENT_FAILED,
@@ -30,8 +34,10 @@ export const ClientLoginReducer = (state = {}, action) => {
       return state;
   }
 };
-
-export const GetClientProfileByCReducer = (state = {}, action) => {
+export const GetClientProfileByCReducer = (
+  state = { clientData: { client_hotspot: [] } },
+  action
+) => {
   switch (action.type) {
     case GET_CLIENT_PROFILE_BYC_REQUEST:
       return { loading: true };
@@ -40,6 +46,8 @@ export const GetClientProfileByCReducer = (state = {}, action) => {
         loading: false,
         clientData: action.payload,
       };
+    case FETCH_REWARD_BY_CLIENT_SUCCESS:
+      return { clientData: action.payload };
     case GET_SINGLE_CLIENT_FAILED:
       return { loading: false, error: action.payload };
 
@@ -47,7 +55,6 @@ export const GetClientProfileByCReducer = (state = {}, action) => {
       return state;
   }
 };
-
 export const ClientUpdateByCReducer = (state = {}, action) => {
   switch (action.type) {
     case CLIENT_UPDATE_BYC_REQUEST:
@@ -62,7 +69,6 @@ export const ClientUpdateByCReducer = (state = {}, action) => {
       return state;
   }
 };
-
 export const resetPasswordReducer = (state = {}, action) => {
   switch (action.type) {
     case CLIENT_PASSWORD_UPDATE_REQUEST:
@@ -72,6 +78,20 @@ export const resetPasswordReducer = (state = {}, action) => {
     case CLIENT_PASSWORD_UPDATE_FAILED:
       return { loading: false, error: action.payload };
     case CLIENT_PASSWORD_UPDATE_RESET:
+      return {};
+    default:
+      return state;
+  }
+};
+export const FetchRewardByClientReducer = (state = {}, action) => {
+  switch (action.type) {
+    case FETCH_REWARD_BY_CLIENT_REQUEST:
+      return { loading: true };
+    case FETCH_REWARD_BY_CLIENT_SUCCESS:
+      return { loading: false };
+    case FETCH_REWARD_BY_CLIENT_FAILED:
+      return { loading: false, error: action.payload };
+    case FETCH_REWARD_BY_CLIENT_RESET:
       return {};
     default:
       return state;

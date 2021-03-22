@@ -16,6 +16,7 @@ import AlertMessage from '../components/Alert';
 import { useDispatch, useSelector } from 'react-redux';
 import Loader from '../components/Loader';
 import moment from 'moment';
+import { getRewardByClient } from '../redux/action/ClientAction';
 
 const ClientProfileScreen = ({ client_details }) => {
   const dispatch = useDispatch();
@@ -26,11 +27,18 @@ const ClientProfileScreen = ({ client_details }) => {
   const [client_wallet, setClientWallet] = useState({});
   const history = useHistory();
 
+  const getReward = useSelector((state) => state.getReward);
+  const { loading, error } = getReward;
+
   useEffect(() => {
     setClient(client_details?.client);
     setClientHotspot(client_details?.client_hotspot);
     setClientWallet(client_details?.clientWallet);
   }, [client_details, history]);
+
+  const getRewardHandler = () => {
+    dispatch(getRewardByClient(client?._id));
+  };
 
   return (
     <>
@@ -84,9 +92,13 @@ const ClientProfileScreen = ({ client_details }) => {
         >
           <Heading size='md'>Total Withdrawn</Heading>
           <Text style={{ fontWeight: 'bold' }} fontSize='3xl'>
-            {`HNT ${
-              client_wallet ? client_wallet?.totalWithdraw?.toFixed(2) : '0'
-            }`}
+            {loading ? (
+              <Loader small />
+            ) : (
+              `HNT ${
+                client_wallet ? client_wallet?.totalWithdraw?.toFixed(2) : '0'
+              }`
+            )}
           </Text>
         </Box>
         <Spacer />
@@ -100,9 +112,13 @@ const ClientProfileScreen = ({ client_details }) => {
         >
           <Heading size='md'>Total Rewards</Heading>
           <Text style={{ fontWeight: 'bold' }} fontSize='3xl'>
-            {`HNT ${
-              client_wallet ? client_wallet?.totalRewards?.toFixed(2) : '0'
-            }`}
+            {loading ? (
+              <Loader small />
+            ) : (
+              `HNT ${
+                client_wallet ? client_wallet?.totalRewards?.toFixed(2) : '0'
+              }`
+            )}
           </Text>
         </Box>
         <Spacer />
@@ -116,9 +132,13 @@ const ClientProfileScreen = ({ client_details }) => {
         >
           <Heading size='md'>Balance</Heading>
           <Text style={{ fontWeight: 'bold' }} fontSize='3xl'>
-            {`HNT ${
-              client_wallet ? client_wallet?.wallet_balance?.toFixed(2) : '0'
-            }`}
+            {loading ? (
+              <Loader small />
+            ) : (
+              `HNT ${
+                client_wallet ? client_wallet?.wallet_balance?.toFixed(2) : '0'
+              }`
+            )}
           </Text>
         </Box>
       </Flex>
@@ -193,9 +213,19 @@ const ClientProfileScreen = ({ client_details }) => {
             <AlertMessage status='error' error='No hotspot assigned yet!' />
           )}
         </Box>
-        <Button mt='3' colorScheme="pink" variant={colorMode === 'dark' ? 'outline' : 'solid'}>
+        <Button
+          onClick={getRewardHandler}
+          mt='3'
+          colorScheme='pink'
+          variant={colorMode === 'dark' ? 'outline' : 'solid'}
+        >
           Get Reward
         </Button>
+        {error && (
+          <Box mt='2'>
+            <AlertMessage status='error' error={error} />
+          </Box>
+        )}
       </Box>
     </>
   );
