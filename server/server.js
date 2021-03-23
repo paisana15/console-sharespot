@@ -1,4 +1,3 @@
-import http from 'http';
 import express from 'express';
 import dotenv from 'dotenv';
 import connectDB from './config/db.js';
@@ -6,8 +5,6 @@ import morgan from 'morgan';
 import { errorHandler, notFound } from './middleware/errorMiddleware.js';
 import adminRoutes from './routes/AdminRoutes.js';
 import clientRoutes from './routes/ClientRoutes.js';
-import ClientHotspot from './models/ClientHotspotModel.js';
-import axios from 'axios';
 import cors from 'cors';
 dotenv.config();
 
@@ -54,16 +51,4 @@ app.listen(PORT, '127.0.0.1', () => {
   //     console.log(error);
   //   }
   // }, 3600000);
-  // https.get(
-  //   'https://api.helium.io/v1/hotspots/11mP5o3e8VgCxh6x5nz3j4hq3B4igvCdwdLY9fkY5WEn497A8ZU/rewards/sum?max_time=2030-08-27&min_time=2019-01-01',
-  //   (res) => {
-  //     const body = [];
-  //     res.on('data', (d) => {
-  //       body.push(d);
-  //     });
-  //     res.on('end', () => {
-  //       console.log(Buffer.concat(body).toString());
-  //     });
-  //   }
-  // );
 });

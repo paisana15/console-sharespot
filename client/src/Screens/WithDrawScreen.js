@@ -39,7 +39,7 @@ const WithDrawScreen = ({ client, wallet }) => {
     }
   }, [success, error, toast]);
   const fieldValidationSchema = yup.object({
-    withdraw_amount: yup
+    amount: yup
       .number()
       .max(
         wallet?.wallet_balance,
@@ -73,12 +73,11 @@ const WithDrawScreen = ({ client, wallet }) => {
       <Box mt='3'>
         <Formik
           initialValues={{
-            withdraw_amount: '',
+            amount: '',
           }}
           validationSchema={fieldValidationSchema}
           onSubmit={(data) => {
-            console.log(data);
-            dispatch(withdrawRequestByClient(client?._id));
+            dispatch(withdrawRequestByClient(client?._id, data));
           }}
         >
           {({
@@ -93,15 +92,15 @@ const WithDrawScreen = ({ client, wallet }) => {
               <FormControl>
                 <FormLabel>Amount</FormLabel>
                 <Input
-                  name='withdraw_amount'
+                  name='amount'
                   placeholder='Enter withdrawal amount'
-                  value={values.withdraw_amount}
+                  value={values.amount}
                   onChange={handleChange}
                   onBlur={handleBlur}
                 />
-                {errors.withdraw_amount && touched.withdraw_amount && (
+                {errors.amount && touched.amount && (
                   <div style={{ color: 'red', fontSize: 13 }}>
-                    {errors.withdraw_amount}
+                    {errors.amount}
                   </div>
                 )}
               </FormControl>

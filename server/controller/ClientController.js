@@ -4,8 +4,14 @@ import Client from '../models/ClientModel.js';
 import Wallet from '../models/WalletModel.js';
 import { generateToken } from '../utils/generateToken.js';
 import { updateWalletBalance } from './AdminController.js';
+import WithdrawRequest from '../models/WithdrawRequestModel.js';
 import axios from 'axios';
 import moment from 'moment';
+import { WalletClient } from 'proto';
+
+// // creating client
+const target = '139.59.164.172:8888'; // public Ip, we will change it for a local private address later
+const client = new WalletClient(target);
 
 // desc: client login
 // routes: api/client/login
@@ -14,7 +20,7 @@ import moment from 'moment';
 const clientLogin = asyncHandler(async (req, res) => {
   const { username, password } = req.body;
 
-  const client = await Client.findOne({ username });
+  const client = await Client.findOne({ username }).select('password');
 
   if (client) {
     if (await client.verifyPassword(password)) {
@@ -134,7 +140,7 @@ const editSingleClientByClient = asyncHandler(async (req, res) => {
 // method: get
 const resetPassword = asyncHandler(async (req, res) => {
   const clientId = req.params.clientId;
-  const client = await Client.findById(clientId);
+  const client = await Client.findById(clientId).select('password');
   if (client) {
     const { preP, newP, conP } = req.body;
 
@@ -252,19 +258,40 @@ export {
 };
 export const clientWithdrawRequest = asyncHandler(async (req, res) => {
   const clientId = req.params.clientId;
-  const client = await Client.findById(clientId);
-  if (client) {
-    if (client._id.equals(req.user?._id)) {
-      const clientWallet = await Wallet.findOne({ client_id: client?._id });
+  const client_user = await Client.findById(clientId);
+  if (client_user) {
+    if (client_user._id.equals(req.user?._id)) {
       const { amount } = req.body;
-
-      if (parseFloat(amount) > parseFloat(clientWallet?.wallet_balance)) {
-        res.status(400);
-        throw new Error(
-          'Invalid amount! Withdraw amount is greater then wallet balance!'
-        );
+      const clientWallet = await Wallet.findOne({
+        client_id: client_user?._id,
+      });
+      if (parseFloat(clientWallet.pendingPayment) === 0) {
+        if (parseFloat(amount) > parseFloat(clientWallet?.wallet_balance)) {
+          res.status(400);
+          throw new Error(
+            'Invalid amount! Withdraw amount is greater then wallet balance!'
+          );
+        } else {
+          clientWallet.pendingPayment = amount;
+          console.log(clientWallet.pendingPayment, amount);
+          const update = await clientWallet.save();
+          if (update) {
+            const newWithdrawRequest = await WithdrawRequest.create({
+              wallet: clientWallet?._id,
+              client: client_user._id,
+              amount: amount,
+            });
+            if (newWithdrawRequest) {
+              res.status(200).json({ message: 'Withdraw Request Received!' });
+            } else {
+              res.status(500);
+              throw new Error('Could not receive withdrawal request!');
+            }
+          }
+        }
       } else {
-        res.status(200).json({ message: 'Withdrawal request received!' });
+        res.status(400);
+        throw new Error('You already have a pending withdrawal request!');
       }
     } else {
       res.status(400);
@@ -272,6 +299,6 @@ export const clientWithdrawRequest = asyncHandler(async (req, res) => {
     }
   } else {
     res.status(404);
-    throw new Error('Client found!');
+    throw new Error('Client not found!');
   }
 });

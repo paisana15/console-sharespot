@@ -10,7 +10,7 @@ import {
   editSingleClient,
   editHotspotToClient,
   deleteClient,
-  deleteHotspot,
+  deleteHotspot, getWithdrawalRequests
 } from '../controller/AdminController.js';
 import { verifyAdmin } from '../middleware/authMiddleware.js';
 
@@ -31,5 +31,6 @@ router.route('/deleteClient/:clientId').delete(verifyAdmin, deleteClient);
 router
   .route('/deleteHotspot/:hotspotId/:clientId')
   .delete(verifyAdmin, deleteHotspot);
+router.route('/getWithdrawalRequests').get(verifyAdmin, getWithdrawalRequests);
 
 export default router;

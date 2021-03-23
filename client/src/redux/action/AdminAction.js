@@ -32,6 +32,9 @@ import {
   GET_SINGLE_CLIENT_FAILED,
   GET_SINGLE_CLIENT_REQUEST,
   GET_SINGLE_CLIENT_SUCCESS,
+  GET_WITHDRAWAL_FAILED,
+  GET_WITHDRAWAL_REQUEST,
+  GET_WITHDRAWAL_SUCCESS,
   HOTSPOT_DELETE,
   HOTSPOT_UPDATE_FAILED,
   HOTSPOT_UPDATE_REQUEST,
@@ -251,11 +254,10 @@ export const deleteClient = (clientId) => async (dispatch, getState) => {
       type: DELETE_SINGLE_CLIENT_SUCCESS,
       payload: data,
     });
-    setTimeout(() => {
-      dispatch({
-        type: DELETE_SINGLE_CLIENT_RESET,
-      });
-    }, 5000);
+
+    dispatch({
+      type: DELETE_SINGLE_CLIENT_RESET,
+    });
   } catch (error) {
     dispatch({
       type: DELETE_SINGLE_CLIENT_FAILED,
@@ -413,6 +415,39 @@ export const getRewardByAdmin = (clientId) => async (dispatch, getState) => {
   } catch (error) {
     dispatch({
       type: FETCH_REWARD_BY_ADMIN_RESET,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const getWithdrawalRequets = () => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: GET_WITHDRAWAL_REQUEST,
+    });
+    const {
+      loginAdmin: { aInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${aInfo._atoken}`,
+      },
+    };
+    const { data } = await axios.get(
+      `${baseURL}/api/admin/getWithdrawalRequests`,
+      config
+    );
+    dispatch({
+      type: GET_WITHDRAWAL_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: GET_WITHDRAWAL_FAILED,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

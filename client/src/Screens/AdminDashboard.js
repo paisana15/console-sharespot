@@ -7,6 +7,7 @@ import AddHotspotScreen from './AddHotspotScreen';
 import AdminNavbar from '../components/AdminNavbar';
 import { useColorMode } from '@chakra-ui/color-mode';
 import ClientDetailsByAdmin from './ClientDetailsByAdmin';
+import WithdrawRequestScreen from './WithdrawRequestScreen';
 
 const AdminDashboard = () => {
   const { path } = useRouteMatch();
@@ -35,6 +36,10 @@ const AdminDashboard = () => {
             <Route
               path={`${path}/add-new-client`}
               component={AddClientScreen}
+            />
+            <Route
+              path={`${path}/withdrawal-requests`}
+              component={WithdrawRequestScreen}
             />
             <Redirect to={`${path}/clients`} />
           </Switch>

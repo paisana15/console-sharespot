@@ -10,6 +10,7 @@ import {
   FetchRewardByAdminReducer,
   GetAllClientsReducer,
   GetSingleClientReducer,
+  GetWithdrawalRequestReducer,
   HotspotUpdateReducer,
 } from './reducer/AdminReducer';
 import jwt from 'jsonwebtoken';
@@ -38,6 +39,7 @@ const reducer = combineReducers({
   fetchReward: FetchRewardByAdminReducer,
   getReward: FetchRewardByClientReducer,
   requestWithdraw: WithdrawRequestReducer,
+  withdrawRequestGet: GetWithdrawalRequestReducer,
 });
 
 const initialState = {

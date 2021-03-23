@@ -54,9 +54,9 @@ const AdminNavbar = () => {
             fontSize='sm'
             cursor='pointer'
           >
-            <Link to={`${path}/add-hotspot`}>
+            <Link to={`${path}/withdrawal-requests`}>
               <i className='fas fa-bell'></i>
-              <span className='admin_navlink'>Notification</span>
+              <span className='admin_navlink'>Withdrawal Requests</span>
             </Link>
           </Box>
 

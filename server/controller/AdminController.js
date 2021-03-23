@@ -6,6 +6,7 @@ import Wallet from '../models/WalletModel.js';
 import { generateToken } from '../utils/generateToken.js';
 import axios from 'axios';
 import moment from 'moment';
+import WithdrawRequest from '../models/WithdrawRequestModel.js';
 
 // desc: admin login
 // routes: api/admin/login
@@ -511,50 +512,18 @@ const deleteHotspot = asyncHandler(async (req, res) => {
     throw new Error('Hotspot not found!');
   }
 });
-// const getHotspotReward = (req, res) => {
-//   const client_id = req.params.clientId;
-//   let clientHotspots = [];
-//   ClientHotspot.find({
-//     client_id: client_id,
-//   })
-//     .then((client_assigned_hotspot) => {
-//       client_assigned_hotspot.map((data) => {
-//         const minDate = moment(data?.startDate).format('YYYY-MM-DD');
-//         axios
-//           .get(
-//             `https://api.helium.io/v1/hotspots/${data?.hotspot_address}/rewards/sum?max_time=2030-08-27&min_time=${minDate}`
-//           )
-//           .then((res) => {
-//             if (res?.data) {
-//               clientHotspots.push({
-//                 total: (res?.data?.data?.total * data?.percentage) / 100,
-//               });
-//               return clientHotspots;
-//             } else {
-//               throw new Error('Failed to fetch data!');
-//             }
-//           })
-//           .then((clientHotspots) => {
-//             console.log(clientHotspots);
-//             const total = clientHotspots
-//               .map((data) => data.total)
-//               .reduce((acc, curr) => {
-//                 return acc + curr;
-//               }, 0);
-//             const totalEarn = total.toFixed(2);
-//             updateWalletBalance(client_id, totalEarn);
-
-//             res.status(200).json({ message: 'Hotspot reward updated!' });
-//           })
-//           .catch((error) => {
-//             console.log(error);
-//           });
-//       });
-//     })
-//     .catch((err) => {
-//       console.log(err);
-//     });
-// };
+const getWithdrawalRequests = asyncHandler(async (req, res) => {
+  const wr = await WithdrawRequest.find({})
+    .populate('wallet')
+    .populate('client');
+  if (wr) {
+    res.status(200);
+    res.json(wr);
+  } else {
+    res.status(404);
+    throw new Error('No Withdrawal Request!');
+  }
+});
 
 export {
   adminLogin,
@@ -569,4 +538,5 @@ export {
   deleteClient,
   deleteHotspot,
   updateWalletBalance,
+  getWithdrawalRequests,
 };

@@ -29,6 +29,9 @@ import {
   GET_SINGLE_CLIENT_FAILED,
   GET_SINGLE_CLIENT_REQUEST,
   GET_SINGLE_CLIENT_SUCCESS,
+  GET_WITHDRAWAL_REQUEST,
+  GET_WITHDRAWAL_SUCCESS,
+  GET_WITHDRAWAL_FAILED,
   HOTSPOT_DELETE,
   HOTSPOT_UPDATE_FAILED,
   HOTSPOT_UPDATE_REQUEST,
@@ -163,6 +166,21 @@ export const FetchRewardByAdminReducer = (state = {}, action) => {
       return { loading: false, error: action.payload };
     case FETCH_REWARD_BY_ADMIN_RESET:
       return {};
+    default:
+      return state;
+  }
+};
+export const GetWithdrawalRequestReducer = (
+  state = { wRequests: [] },
+  action
+) => {
+  switch (action.type) {
+    case GET_WITHDRAWAL_REQUEST:
+      return { loading: true };
+    case GET_WITHDRAWAL_SUCCESS:
+      return { loading: false, wRequests: action.payload };
+    case GET_WITHDRAWAL_FAILED:
+      return { loading: false, error: action.payload };
     default:
       return state;
   }

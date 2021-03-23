@@ -237,6 +237,7 @@ export const withdrawRequestByClient = (clientId, amount) => async (
   getState
 ) => {
   try {
+    console.log(amount);
     dispatch({
       type: CLIENT_WITHDRAW_REQUEST,
     });
@@ -251,7 +252,7 @@ export const withdrawRequestByClient = (clientId, amount) => async (
     };
     const { data } = await axios.post(
       `${baseURL}/api/client/withdrawRequest/${clientId}`,
-      { amount },
+      amount,
       config
     );
     dispatch({
@@ -270,6 +271,10 @@ export const withdrawRequestByClient = (clientId, amount) => async (
         error.response && error.response.data.message
           ? error.response.data.message
           : error.message,
+    });
+
+    dispatch({
+      type: CLIENT_WITHDRAW_RESET,
     });
   }
 };
