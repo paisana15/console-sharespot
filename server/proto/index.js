@@ -25,9 +25,7 @@ class WalletClient {
         const metadata = new grpcjs.Metadata()
         metadata.add("auth", this.token)
 
-        this.client.newPayout(payoutRequest, metadata, (err, payoutRequest) => {
-            console.log(err, payoutRequest)
-        })
+        this.client.newPayout(payoutRequest, metadata, callback)
     }
 
 }
