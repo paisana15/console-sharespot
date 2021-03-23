@@ -8,6 +8,7 @@ import AlertMessage from '../components/Alert';
 import HotspotEditScreen from './HotspotEditScreen';
 import { getSingleClient } from '../redux/action/AdminAction';
 import ClientProfileScreenByAdmin from './ClientProfileScreenByAdmin';
+import { Helmet } from 'react-helmet';
 
 const ClientDetailsByAdmin = () => {
   const { path } = useRouteMatch();
@@ -27,6 +28,11 @@ const ClientDetailsByAdmin = () => {
 
   return (
     <Box p='4'>
+      <Helmet>
+        <title>
+         Client Details | Admin Dashboard
+        </title>
+      </Helmet>
       {loading ? (
         <Loader />
       ) : error ? (

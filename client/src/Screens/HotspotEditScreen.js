@@ -12,6 +12,7 @@ import { useToast } from '@chakra-ui/toast';
 import { updateHotspot } from '../redux/action/AdminAction';
 import { useParams } from 'react-router';
 import moment from 'moment';
+import { Helmet } from 'react-helmet';
 
 const HotspotEditScreen = ({ hotspots }) => {
   const params = useParams();
@@ -84,6 +85,9 @@ const HotspotEditScreen = ({ hotspots }) => {
 
   return Object.keys(hotspot).length > 0 ? (
     <Box p='4'>
+      <Helmet>
+        <title>Hotspot Update | Admin Dashboard</title>
+      </Helmet>
       <Text display='inline-block' fontSize='2xl' className='adminPageHeader'>
         Update Hotspot
       </Text>

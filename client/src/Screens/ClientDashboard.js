@@ -5,6 +5,7 @@ import ClientDetails from './ClientDetails';
 import { useColorMode } from '@chakra-ui/color-mode';
 import ClientNavbar from '../components/ClientNavbar';
 import ClientResetPasswordScreen from './ClientResetPasswordScreen';
+import { Helmet } from 'react-helmet';
 
 const ClientDashboard = () => {
   const { path } = useRouteMatch();
@@ -12,6 +13,9 @@ const ClientDashboard = () => {
 
   return (
     <>
+      <Helmet>
+        <title>Client Dashboard</title>
+      </Helmet>
       <ClientNavbar />
       <Container maxW='container.xl'>
         <Box

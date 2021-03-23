@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { updateClientByClient } from '../redux/action/ClientAction';
 import { useHistory } from 'react-router';
 import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
 
 const ClientProfileEditByClient = ({ client_details }) => {
   const dispatch = useDispatch();
@@ -62,6 +63,9 @@ const ClientProfileEditByClient = ({ client_details }) => {
   });
   return (
     <Box p='4'>
+      <Helmet>
+        <title>Profile Update</title>
+      </Helmet>
       <Text fontSize='2xl' display='inline-block' className='adminPageHeader'>
         Edit Profile
       </Text>

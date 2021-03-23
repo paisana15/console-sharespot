@@ -1,4 +1,4 @@
-import { Box, Container, Spacer, Stack } from '@chakra-ui/layout';
+import { Box, Container, Spacer, Stack, Text } from '@chakra-ui/layout';
 import React from 'react';
 import { Link, useRouteMatch } from 'react-router-dom';
 import { adminLogout } from '../redux/action/AdminAction';
@@ -19,7 +19,12 @@ const AdminNavbar = () => {
     <Box color='white' overflow='hidden' bg='#2f2f2f' w='100%' p='4'>
       <Container maxW='container.xl'>
         <Stack align='center' direction={['column', 'row']} spacing='30px'>
-          <Logo />
+          <div style={{ marginRight: -15 }}>
+            <Logo />
+          </div>
+          <Text fontSize='xl' fontStyle='oblique' fontWeight='bold' ml='2'>
+            Sharespot Wallet
+          </Text>
           <Spacer />
           <Box
             color='gray.500'

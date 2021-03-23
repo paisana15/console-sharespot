@@ -9,6 +9,7 @@ import Loader from '../components/Loader';
 import AlertMessage from '../components/Alert';
 import ClientProfileEditByClient from './ClientProfileEditByClient';
 import WithDrawScreen from './WithDrawScreen';
+import { Helmet } from 'react-helmet';
 
 const ClientDetails = () => {
   const { path } = useRouteMatch();
@@ -28,6 +29,9 @@ const ClientDetails = () => {
 
   return (
     <Box p='4'>
+      <Helmet>
+        <title>My Account</title>
+      </Helmet>
       {loading ? (
         <Loader />
       ) : error ? (

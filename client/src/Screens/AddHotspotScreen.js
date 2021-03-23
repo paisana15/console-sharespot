@@ -10,6 +10,7 @@ import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { useToast } from '@chakra-ui/toast';
 import { addHotspotToClient } from '../redux/action/AdminAction';
+import { Helmet } from 'react-helmet';
 
 const AddHotspotScreen = () => {
   const toast = useToast();
@@ -75,6 +76,9 @@ const AddHotspotScreen = () => {
 
   return (
     <Box p='4'>
+      <Helmet>
+        <title>Add Hotspot | Admin Dashboard</title>
+      </Helmet>
       <Text display='inline-block' fontSize='2xl' className='adminPageHeader'>
         Add Hotspot
       </Text>

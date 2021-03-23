@@ -6,6 +6,7 @@ import { Button } from '@chakra-ui/button';
 import { useDispatch, useSelector } from 'react-redux';
 import { passwordReset } from '../redux/action/ClientAction';
 import { useToast } from '@chakra-ui/toast';
+import { Helmet } from 'react-helmet';
 
 const ClientResetPasswordScreen = () => {
   const dispatch = useDispatch();
@@ -53,6 +54,9 @@ const ClientResetPasswordScreen = () => {
   };
   return (
     <Box>
+      <Helmet>
+        <title>Reset Password</title>
+      </Helmet>
       <Text fontSize='2xl' display='inline-block' className='adminPageHeader'>
         Reset Password
       </Text>

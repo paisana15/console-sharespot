@@ -15,6 +15,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getAllClients } from '../redux/action/AdminAction';
 import Loader from '../components/Loader';
 import AlertMessage from '../components/Alert';
+import { Helmet } from 'react-helmet';
 
 const AllClients = () => {
   const dispatch = useDispatch();
@@ -28,6 +29,9 @@ const AllClients = () => {
 
   return (
     <Box p='4'>
+      <Helmet>
+        <title>All Clients | Admin Dashboard</title>
+      </Helmet>
       <Flex mb='3' alignItems='center'>
         <Text fontSize='2xl' className='adminPageHeader'>
           All Clients

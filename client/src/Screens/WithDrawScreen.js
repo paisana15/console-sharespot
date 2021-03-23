@@ -11,6 +11,7 @@ import {
 } from '@chakra-ui/react';
 import { useDispatch, useSelector } from 'react-redux';
 import { withdrawRequestByClient } from '../redux/action/ClientAction';
+import { Helmet } from 'react-helmet';
 
 const WithDrawScreen = ({ client, wallet }) => {
   const dispatch = useDispatch();
@@ -51,6 +52,9 @@ const WithDrawScreen = ({ client, wallet }) => {
 
   return (
     <Box p='4'>
+      <Helmet>
+        <title>Withdraw Rewards</title>
+      </Helmet>
       <Flex mb='3' alignItems='center'>
         <Text fontSize='2xl' className='adminPageHeader'>
           Withdraw Reward

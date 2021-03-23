@@ -8,6 +8,7 @@ import AdminNavbar from '../components/AdminNavbar';
 import { useColorMode } from '@chakra-ui/color-mode';
 import ClientDetailsByAdmin from './ClientDetailsByAdmin';
 import WithdrawRequestScreen from './WithdrawRequestScreen';
+import { Helmet } from 'react-helmet';
 
 const AdminDashboard = () => {
   const { path } = useRouteMatch();
@@ -15,6 +16,9 @@ const AdminDashboard = () => {
 
   return (
     <>
+      <Helmet>
+        <title>Admin Dashboard</title>
+      </Helmet>
       <AdminNavbar />
       <Container maxW='container.xl'>
         <Box

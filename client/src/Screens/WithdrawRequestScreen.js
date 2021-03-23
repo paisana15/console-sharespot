@@ -8,6 +8,7 @@ import AlertMessage from '../components/Alert';
 import Loader from '../components/Loader';
 import { Button } from '@chakra-ui/button';
 import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
 
 const WithdrawRequestScreen = () => {
   const dispatch = useDispatch();
@@ -22,6 +23,9 @@ const WithdrawRequestScreen = () => {
 
   return (
     <Box p='4'>
+      <Helmet>
+        <title>Withdrawal Request | Admin Dashboard</title>
+      </Helmet>
       <Text fontSize='2xl' display='inline-block' className='adminPageHeader'>
         Withdrawal Requests ({wRequests?.length})
       </Text>
