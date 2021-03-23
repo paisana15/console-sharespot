@@ -24,6 +24,9 @@ import {
   CLIENT_WITHDRAW_SUCCESS,
   CLIENT_WITHDRAW_RESET,
   CLIENT_WITHDRAW_FAILED,
+  GET_WITHDRAW_HISTORY_BYC_RESET,
+  GET_WITHDRAW_HISTORY_BYC_REQUEST,
+  GET_WITHDRAW_HISTORY_BYC_SUCCESS,
 } from '../actionTypes';
 
 export const clientLogin = (credentials) => async (dispatch) => {
@@ -237,7 +240,6 @@ export const withdrawRequestByClient = (clientId, amount) => async (
   getState
 ) => {
   try {
-    console.log(amount);
     dispatch({
       type: CLIENT_WITHDRAW_REQUEST,
     });
@@ -275,6 +277,42 @@ export const withdrawRequestByClient = (clientId, amount) => async (
 
     dispatch({
       type: CLIENT_WITHDRAW_RESET,
+    });
+  }
+};
+
+export const getWithdrawHistoryByC = (clientId) => async (
+  dispatch,
+  getState
+) => {
+  try {
+    dispatch({
+      type: GET_WITHDRAW_HISTORY_BYC_REQUEST,
+    });
+    const {
+      loginClient: { cInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${cInfo._ctoken}`,
+      },
+    };
+    const { data } = await axios.get(
+      `${baseURL}/api/client/getWithdrawHistory/${clientId}`,
+      config
+    );
+    dispatch({
+      type: GET_WITHDRAW_HISTORY_BYC_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: GET_WITHDRAW_HISTORY_BYC_RESET,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
     });
   }
 };

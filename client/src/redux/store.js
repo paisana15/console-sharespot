@@ -21,6 +21,7 @@ import {
   resetPasswordReducer,
   FetchRewardByClientReducer,
   WithdrawRequestReducer,
+  WithdrawHistoryReducer,
 } from './reducer/ClientReducer';
 
 const reducer = combineReducers({
@@ -40,6 +41,7 @@ const reducer = combineReducers({
   getReward: FetchRewardByClientReducer,
   requestWithdraw: WithdrawRequestReducer,
   withdrawRequestGet: GetWithdrawalRequestReducer,
+  histtoryWByc: WithdrawHistoryReducer,
 });
 
 const initialState = {

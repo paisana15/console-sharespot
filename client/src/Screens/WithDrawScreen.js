@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Badge, Box, Flex, Spacer, Text } from '@chakra-ui/layout';
+import { Badge, Box, Flex, Heading, Spacer, Text } from '@chakra-ui/layout';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 import {
@@ -7,17 +7,33 @@ import {
   FormControl,
   FormLabel,
   Input,
+  useColorMode,
   useToast,
 } from '@chakra-ui/react';
 import { useDispatch, useSelector } from 'react-redux';
-import { withdrawRequestByClient } from '../redux/action/ClientAction';
+import {
+  getWithdrawHistoryByC,
+  withdrawRequestByClient,
+} from '../redux/action/ClientAction';
 import { Helmet } from 'react-helmet';
+import Loader from '../components/Loader';
+import AlertMessage from '../components/Alert';
+import moment from 'moment';
 
 const WithDrawScreen = ({ client, wallet }) => {
   const dispatch = useDispatch();
   const toast = useToast();
+  const { colorMode } = useColorMode();
+
   const requestWithdraw = useSelector((state) => state.requestWithdraw);
   const { loading, success, error } = requestWithdraw;
+
+  const histtoryWByc = useSelector((state) => state.histtoryWByc);
+  const {
+    loading: historyLoading,
+    wHistories,
+    error: historyError,
+  } = histtoryWByc;
 
   useEffect(() => {
     if (success) {
@@ -38,7 +54,8 @@ const WithDrawScreen = ({ client, wallet }) => {
         isClosable: true,
       });
     }
-  }, [success, error, toast]);
+    dispatch(getWithdrawHistoryByC(client?._id));
+  }, [success, error, toast, client?._id, dispatch]);
   const fieldValidationSchema = yup.object({
     amount: yup
       .number()
@@ -74,53 +91,102 @@ const WithDrawScreen = ({ client, wallet }) => {
           </Text>
         </Box>
       </Flex>
-      <Box mt='3'>
-        <Formik
-          initialValues={{
-            amount: '',
-          }}
-          validationSchema={fieldValidationSchema}
-          onSubmit={(data) => {
-            dispatch(withdrawRequestByClient(client?._id, data));
-          }}
-        >
-          {({
-            handleSubmit,
-            handleChange,
-            handleBlur,
-            values,
-            errors,
-            touched,
-          }) => (
-            <form onSubmit={handleSubmit}>
-              <FormControl>
-                <FormLabel>Amount</FormLabel>
-                <Input
-                  name='amount'
-                  placeholder='Enter withdrawal amount'
-                  value={values.amount}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                />
-                {errors.amount && touched.amount && (
-                  <div style={{ color: 'red', fontSize: 13 }}>
-                    {errors.amount}
-                  </div>
-                )}
-              </FormControl>
-              <Button
-                isLoading={loading}
-                loadingText='Processing...'
-                mt='3'
-                type='submit'
-                colorScheme='facebook'
-              >
-                Request Withdraw
-              </Button>
-            </form>
-          )}
-        </Formik>
-      </Box>
+      <Flex mt='3'>
+        <Box style={{ width: '30%' }}>
+          <Formik
+            initialValues={{
+              amount: '',
+            }}
+            validationSchema={fieldValidationSchema}
+            onSubmit={(data) => {
+              dispatch(withdrawRequestByClient(client?._id, data));
+            }}
+          >
+            {({
+              handleSubmit,
+              handleChange,
+              handleBlur,
+              values,
+              errors,
+              touched,
+            }) => (
+              <form onSubmit={handleSubmit}>
+                <FormControl>
+                  <FormLabel>Amount</FormLabel>
+                  <Input
+                    name='amount'
+                    placeholder='Enter withdrawal amount'
+                    value={values.amount}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                  />
+                  {errors.amount && touched.amount && (
+                    <div style={{ color: 'red', fontSize: 13 }}>
+                      {errors.amount}
+                    </div>
+                  )}
+                </FormControl>
+                <Button
+                  isLoading={loading}
+                  loadingText='Processing...'
+                  mt='3'
+                  type='submit'
+                  colorScheme='facebook'
+                >
+                  Request Withdraw
+                </Button>
+              </form>
+            )}
+          </Formik>
+        </Box>
+        <Spacer />
+        <Box style={{ width: '50%' }}>
+          <Text mb='2' fontWeight='bold' fontStyle='oblique'>
+            Withdraw History
+          </Text>
+          <Box>
+            {historyLoading ? (
+              <Loader />
+            ) : historyError ? (
+              <AlertMessage status='error' error={historyError} />
+            ) : wHistories && wHistories?.length > 0 ? (
+              wHistories.map((data) => (
+                <Flex
+                  key={data?._id}
+                  p='4'
+                  borderRadius='lg'
+                  mb='3'
+                  boxShadow='base'
+                  bg={colorMode === 'light' ? '#f4f5f7' : '#303744'}
+                >
+                  <Box>
+                    <Heading size='sm'>
+                      {moment(data?.createdAt).format('LLL')}
+                    </Heading>
+                  </Box>
+                  <Spacer />
+                  <Flex textAlign='right' alignItems='center'>
+                    <Box mr='2'>
+                      <Text fontSize='sm' color='grey'>
+                        Amount
+                      </Text>
+                      <Text
+                        fontWeight='bold'
+                        color={colorMode === 'light' ? 'grey' : 'orange.200'}
+                        fontSize='sm'
+                      >
+                        HNT {data?.amount?.toFixed(2)}
+                      </Text>
+                    </Box>
+                  </Flex>
+                </Flex>
+              ))
+            ) : (
+              <AlertMessage status='error' error='No withdraw history!' />
+            )}
+          </Box>
+        </Box>
+      </Flex>
     </Box>
   );
 };

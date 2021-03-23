@@ -22,6 +22,9 @@ import {
   GET_CLIENT_PROFILE_BYC_SUCCESS,
   GET_SINGLE_CLIENT_FAILED,
   CLIENT_WITHDRAW_RESET,
+  GET_WITHDRAW_HISTORY_BYC_REQUEST,
+  GET_WITHDRAW_HISTORY_BYC_SUCCESS,
+  GET_WITHDRAW_HISTORY_BYC_RESET,
 } from '../actionTypes';
 
 export const ClientLoginReducer = (state = {}, action) => {
@@ -111,6 +114,19 @@ export const WithdrawRequestReducer = (state = {}, action) => {
       return { loading: false, error: action.payload };
     case CLIENT_WITHDRAW_RESET:
       return {};
+    default:
+      return state;
+  }
+};
+export const WithdrawHistoryReducer = (state = { wHistories: [] }, action) => {
+  switch (action.type) {
+    case GET_WITHDRAW_HISTORY_BYC_REQUEST:
+      return { loading: true };
+    case GET_WITHDRAW_HISTORY_BYC_SUCCESS:
+      return { loading: false, wHistories: action.payload };
+    case GET_WITHDRAW_HISTORY_BYC_RESET:
+      return { loading: false, error: action.payload };
+
     default:
       return state;
   }
