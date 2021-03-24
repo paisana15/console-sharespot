@@ -6,18 +6,22 @@ const client = new WalletClient(target);
 
 // get account sample
 client.getAccount((err, res) => {
-    console.log("get Account result", err, res.getAmount())
-})
+  console.log('get Account result', err, res.getAmount());
+});
 
 // send payout sample
-client.sendPayout("bulshit address", 9999999, (err, payoutResponse) => {
+client.sendPayout(
+  '13ESLoXiie3eXoyitxryNQNamGAnJjKt2WkiB4gNq95knxAiGEp',
+  1,
+  (err, payoutResponse) => {
     if (err) {
-        if (err.code === 13) {
-            console.log("wallet is locked")
-        } else {
-            throw err
-        }
+      if (err.code === 13) {
+        console.log('wallet is locked');
+      } else {
+        throw err;
+      }
     } else {
-        console.log("send Payout result", payoutResponse.getTransactionhash())
+      console.log('send Payout result', payoutResponse.getTransactionhash());
     }
-})
+  }
+);

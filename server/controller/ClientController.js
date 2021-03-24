@@ -7,11 +7,7 @@ import { updateWalletBalance } from './AdminController.js';
 import WithdrawRequest from '../models/WithdrawRequestModel.js';
 import axios from 'axios';
 import moment from 'moment';
-import { WalletClient } from 'proto';
-
-// // creating client
-const target = '139.59.164.172:8888'; // public Ip, we will change it for a local private address later
-const client = new WalletClient(target);
+import WithdrawHistory from '../models/WithdrawHistoryModel.js';
 
 // desc: client login
 // routes: api/client/login
@@ -249,14 +245,8 @@ const getHotspotRewardByClient = asyncHandler(async (req, res) => {
     throw new Error('Client not found!');
   }
 });
-export {
-  clientLogin,
-  getClientProfileByClient,
-  editSingleClientByClient,
-  resetPassword,
-  getHotspotRewardByClient,
-};
-export const clientWithdrawRequest = asyncHandler(async (req, res) => {
+
+const clientWithdrawRequest = asyncHandler(async (req, res) => {
   const clientId = req.params.clientId;
   const client_user = await Client.findById(clientId);
   if (client_user) {
@@ -273,7 +263,6 @@ export const clientWithdrawRequest = asyncHandler(async (req, res) => {
           );
         } else {
           clientWallet.pendingPayment = amount;
-          console.log(clientWallet.pendingPayment, amount);
           const update = await clientWallet.save();
           if (update) {
             const newWithdrawRequest = await WithdrawRequest.create({
@@ -291,7 +280,7 @@ export const clientWithdrawRequest = asyncHandler(async (req, res) => {
         }
       } else {
         res.status(400);
-        throw new Error('You already have a pending withdrawal request!');
+        throw new Error(`You already have a pending withdrawal request for HNT ${clientWallet.pendingPayment}!`);
       }
     } else {
       res.status(400);
@@ -302,3 +291,30 @@ export const clientWithdrawRequest = asyncHandler(async (req, res) => {
     throw new Error('Client not found!');
   }
 });
+
+const getWithdrawHistory = asyncHandler(async (req, res) => {
+  const clientId = req.params.clientId;
+  const client_user = await Client.findById(clientId);
+  if (client_user) {
+    const w_reqs = await WithdrawHistory.find({ client: clientId });
+    if (w_reqs) {
+      res.status(200);
+      res.json(w_reqs);
+    } else {
+      res.status(404);
+      throw new Error('No histories!');
+    }
+  } else {
+    res.status(404);
+    throw new Error('Client not found!');
+  }
+});
+export {
+  clientLogin,
+  getClientProfileByClient,
+  editSingleClientByClient,
+  resetPassword,
+  getHotspotRewardByClient,
+  clientWithdrawRequest,
+  getWithdrawHistory,
+};

@@ -2,6 +2,7 @@ import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import thunk from 'redux-thunk';
 import {
+  AcceptWithdrawReducer,
   AddHotspotClientReducer,
   AddNewClientReducer,
   AdminLoginReducer,
@@ -12,6 +13,7 @@ import {
   GetSingleClientReducer,
   GetWithdrawalRequestReducer,
   HotspotUpdateReducer,
+  RejectWithdrawReducer,
 } from './reducer/AdminReducer';
 import jwt from 'jsonwebtoken';
 import {
@@ -42,6 +44,8 @@ const reducer = combineReducers({
   requestWithdraw: WithdrawRequestReducer,
   withdrawRequestGet: GetWithdrawalRequestReducer,
   histtoryWByc: WithdrawHistoryReducer,
+  withdrawReject: RejectWithdrawReducer,
+  withdrawAccept: AcceptWithdrawReducer,
 });
 
 const initialState = {

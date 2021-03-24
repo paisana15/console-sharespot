@@ -2,6 +2,10 @@ import axios from 'axios';
 import { baseURL } from '../../baseURL';
 
 import {
+  ACCEPT_WITHDRAW_FAILED,
+  ACCEPT_WITHDRAW_REQUEST,
+  ACCEPT_WITHDRAW_RESET,
+  ACCEPT_WITHDRAW_SUCCESS,
   ADD_HOTSPOT_TO_CLIENT_FAILED,
   ADD_HOTSPOT_TO_CLIENT_REQUEST,
   ADD_HOTSPOT_TO_CLIENT_RESET,
@@ -40,6 +44,10 @@ import {
   HOTSPOT_UPDATE_REQUEST,
   HOTSPOT_UPDATE_RESET,
   HOTSPOT_UPDATE_SUCCESS,
+  REJECT_WITHDRAW_FAILED,
+  REJECT_WITHDRAW_REQUEST,
+  REJECT_WITHDRAW_RESET,
+  REJECT_WITHDRAW_SUCCESS,
 } from '../actionTypes';
 
 export const adminLogin = (credentials) => async (dispatch) => {
@@ -452,6 +460,90 @@ export const getWithdrawalRequets = () => async (dispatch, getState) => {
         error.response && error.response.data.message
           ? error.response.data.message
           : error.message,
+    });
+  }
+};
+
+export const rejectWithdrawRequest = (wrId) => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: REJECT_WITHDRAW_REQUEST,
+    });
+    const {
+      loginAdmin: { aInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${aInfo._atoken}`,
+      },
+    };
+    const { data } = await axios.put(
+      `${baseURL}/api/admin/withdrawalRequestReject/${wrId}/reject`,
+      {},
+      config
+    );
+    dispatch({
+      type: REJECT_WITHDRAW_SUCCESS,
+      payload: data,
+    });
+    setTimeout(() => {
+      dispatch({
+        type: REJECT_WITHDRAW_RESET,
+      });
+    }, 2000);
+  } catch (error) {
+    dispatch({
+      type: REJECT_WITHDRAW_FAILED,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+    dispatch({
+      type: REJECT_WITHDRAW_RESET,
+    });
+  }
+};
+
+export const acceptWithdrawRequest = (wrId) => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: ACCEPT_WITHDRAW_REQUEST,
+    });
+    const {
+      loginAdmin: { aInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${aInfo._atoken}`,
+      },
+    };
+    const { data } = await axios.put(
+      `${baseURL}/api/admin/withdrawalRequestAccept/${wrId}/accept`,
+      {},
+      config
+    );
+    dispatch({
+      type: ACCEPT_WITHDRAW_SUCCESS,
+      payload: data,
+    });
+    setTimeout(() => {
+      dispatch({
+        type: ACCEPT_WITHDRAW_RESET,
+      });
+    }, 2000);
+  } catch (error) {
+    dispatch({
+      type: ACCEPT_WITHDRAW_FAILED,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+    dispatch({
+      type: ACCEPT_WITHDRAW_RESET,
     });
   }
 };

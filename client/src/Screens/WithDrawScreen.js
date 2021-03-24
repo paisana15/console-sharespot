@@ -63,7 +63,7 @@ const WithDrawScreen = ({ client, wallet }) => {
         wallet?.wallet_balance,
         `Available for withdraw ${wallet?.totalRewards - wallet?.totalWithdraw}`
       )
-      .min(10, 'Min withdraw 10 HNT!')
+      .min(1, 'Min withdraw 1 HNT!')
       .required('Amount Required!'),
   });
 

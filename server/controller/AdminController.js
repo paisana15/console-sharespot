@@ -7,6 +7,12 @@ import { generateToken } from '../utils/generateToken.js';
 import axios from 'axios';
 import moment from 'moment';
 import WithdrawRequest from '../models/WithdrawRequestModel.js';
+import { WalletClient } from 'proto';
+import WithdrawHistory from '../models/WithdrawHistoryModel.js';
+
+// // creating client
+const target = '139.59.164.172:8888'; // public Ip, we will change it for a local private address later
+const client = new WalletClient(target);
 
 // desc: admin login
 // routes: api/admin/login
@@ -524,6 +530,107 @@ const getWithdrawalRequests = asyncHandler(async (req, res) => {
     throw new Error('No Withdrawal Request!');
   }
 });
+const withdrawalRequestAccept = asyncHandler(async (req, res) => {
+  const wreqId = req.params.wreqId;
+  const withdraw_request = await WithdrawRequest.findById(wreqId)
+    .populate('wallet')
+    .populate('client');
+  if (withdraw_request) {
+    const client_user = withdraw_request?.client;
+    const client_wallet = await Wallet.findById(withdraw_request?.wallet);
+
+    // withdraw process start
+    // get account sample
+    client.getAccount((err, res) => {
+      console.log('get Account result', err, res.getAmount());
+    });
+
+    // send payout sample
+    client.sendPayout(
+      `${client_user?.wallet_address}`,
+      withdraw_request?.amount * 1000000000,
+      async (err, payoutResponse) => {
+        if (err) {
+          if (err.code === 13) {
+            console.log('wallet is locked');
+            res.status(404);
+            throw new Error('Wallet is locked!');
+          } else {
+            res.status(500);
+            throw new Error(err);
+          }
+        } else {
+          console.log(
+            'send Payout result',
+            payoutResponse.getTransactionhash()
+          );
+          const transaction = payoutResponse.getTransactionhash();
+          // if transaction successfull
+
+          // creating withdraw history
+          const wHistory = await WithdrawHistory.create({
+            client: client_user,
+            amount: withdraw_request.amount,
+            transaction: transaction,
+          });
+
+          // clear pending payment to 0
+          client_wallet.pendingPayment = 0;
+          // update client wallet balance on db
+          client_wallet.totalWithdraw =
+            parseFloat(client_wallet.totalWithdraw) +
+            parseFloat(withdraw_request.amount);
+          client_wallet.wallet_balance =
+            parseFloat(client_wallet.totalRewards) -
+            parseFloat(client_wallet.totalWithdraw);
+          const cWallet = await client_wallet.save();
+
+          // withdraw request
+          const rmWh = await withdraw_request.remove();
+
+          if (wHistory && cWallet && rmWh) {
+            const wr = await WithdrawRequest.find({})
+              .populate('wallet')
+              .populate('client');
+            res.status(200);
+            res.json(wr);
+          } else {
+            res.status(500);
+            throw new Error();
+          }
+        }
+      }
+    );
+  } else {
+    res.status(404);
+    throw new Error('Withdraw request not found!');
+  }
+});
+const withdrawalRequestReject = asyncHandler(async (req, res) => {
+  const wreqId = req.params.wreqId;
+  const withdraw_request = await WithdrawRequest.findById(wreqId);
+  if (withdraw_request) {
+    const client_wallet = await Wallet.findById(withdraw_request.wallet);
+    console.log(client_wallet);
+    client_wallet.pendingPayment = 0;
+    const cw = await client_wallet.save();
+    const rwr = await withdraw_request.remove();
+
+    if (cw && rwr) {
+      const wr = await WithdrawRequest.find({})
+        .populate('wallet')
+        .populate('client');
+      res.status(200);
+      res.json(wr);
+    } else {
+      res.status(500);
+      throw new Error();
+    }
+  } else {
+    res.status(404);
+    throw new Error('Withdraw request not found!');
+  }
+});
 
 export {
   adminLogin,
@@ -539,4 +646,6 @@ export {
   deleteHotspot,
   updateWalletBalance,
   getWithdrawalRequests,
+  withdrawalRequestAccept,
+  withdrawalRequestReject,
 };

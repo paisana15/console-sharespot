@@ -1,7 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Flex, Heading, Spacer, Text } from '@chakra-ui/layout';
 import { useDispatch, useSelector } from 'react-redux';
-import { getWithdrawalRequets } from '../redux/action/AdminAction';
+import {
+  getWithdrawalRequets,
+  rejectWithdrawRequest,
+  acceptWithdrawRequest,
+} from '../redux/action/AdminAction';
 import moment from 'moment';
 import { useColorMode } from '@chakra-ui/color-mode';
 import AlertMessage from '../components/Alert';
@@ -9,17 +13,108 @@ import Loader from '../components/Loader';
 import { Button } from '@chakra-ui/button';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
+import { useToast } from '@chakra-ui/toast';
+
+import {
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+} from '@chakra-ui/modal';
+import { useDisclosure } from '@chakra-ui/hooks';
 
 const WithdrawRequestScreen = () => {
   const dispatch = useDispatch();
   const { colorMode } = useColorMode();
+  const toast = useToast();
+  const [wrId, setwrId] = useState('');
 
-  useEffect(() => {
-    dispatch(getWithdrawalRequets());
-  }, [dispatch]);
+  const { onOpen, isOpen, onClose } = useDisclosure();
+  const {
+    onOpen: onAOpen,
+    isOpen: isAOpen,
+    onClose: onAClose,
+  } = useDisclosure();
 
   const withdrawRequestGet = useSelector((state) => state.withdrawRequestGet);
   const { loading, wRequests, error } = withdrawRequestGet;
+
+  const withdrawReject = useSelector((state) => state.withdrawReject);
+  const {
+    loading: rejectLoading,
+    success: rejectSuccess,
+    error: rejectError,
+  } = withdrawReject;
+
+  const withdrawAccept = useSelector((state) => state.withdrawAccept);
+  const {
+    loading: acceptLoading,
+    success: acceptSuccess,
+    error: acceptError,
+  } = withdrawAccept;
+
+  useEffect(() => {
+    if (rejectSuccess) {
+      onClose();
+      toast({
+        title: 'Success!',
+        status: 'success',
+        description: 'Withdraw request rejected!',
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+    if (rejectError) {
+      onClose();
+      toast({
+        title: 'Failed!',
+        status: 'error',
+        description: rejectError,
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+    if (acceptSuccess) {
+      onAClose();
+      toast({
+        title: 'Success!',
+        status: 'success',
+        description: 'Payment sent to client wallet!',
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+    if (acceptError) {
+      onAClose();
+      toast({
+        title: 'Failed!',
+        status: 'error',
+        description: acceptError,
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+    dispatch(getWithdrawalRequets());
+  }, [
+    dispatch,
+    rejectSuccess,
+    rejectError,
+    toast,
+    onClose,
+    onAClose,
+    acceptError,
+    acceptSuccess,
+  ]);
+
+  const rejectHandler = () => {
+    dispatch(rejectWithdrawRequest(wrId));
+  };
+  const acceptHandler = () => {
+    dispatch(acceptWithdrawRequest(wrId));
+  };
 
   return (
     <Box p='4'>
@@ -36,7 +131,8 @@ const WithdrawRequestScreen = () => {
           <AlertMessage status='error' error={error} />
         ) : wRequests?.length > 0 ? (
           wRequests?.map((data) => (
-            <Flex
+            <Box
+              d={{ sm: 'flex' }}
               key={data?._id}
               p='4'
               borderRadius='lg'
@@ -80,6 +176,10 @@ const WithdrawRequestScreen = () => {
                     borderColor='teal'
                     mr='2'
                     color='gray.500'
+                    onClick={() => {
+                      onAOpen();
+                      setwrId(data?._id);
+                    }}
                   >
                     Accept
                   </Button>
@@ -89,12 +189,16 @@ const WithdrawRequestScreen = () => {
                     colorScheme='red'
                     borderColor='red.400'
                     color='gray.500'
+                    onClick={() => {
+                      onOpen();
+                      setwrId(data?._id);
+                    }}
                   >
                     Reject
                   </Button>
                 </Flex>
               </Flex>
-            </Flex>
+            </Box>
           ))
         ) : (
           <AlertMessage
@@ -102,6 +206,68 @@ const WithdrawRequestScreen = () => {
             error='No withdrawal requests available!'
           />
         )}
+        <Modal isOpen={isOpen} onClose={onClose}>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>Confirm Rejection</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <Text>
+                {'Are you sure you want to reject this withdraw request?'}
+              </Text>
+              {rejectLoading && <Loader />}
+            </ModalBody>
+
+            <ModalFooter>
+              <Button
+                variant='outline'
+                colorScheme='blue'
+                mr={3}
+                onClick={onClose}
+              >
+                Close
+              </Button>
+              <Button
+                onClick={rejectHandler}
+                colorScheme='red'
+                variant='outline'
+              >
+                Yes, Confirm
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+        <Modal isOpen={isAOpen} onClose={onAClose}>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>Accept Request</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <Text>
+                {'Are you sure you want to accept this withdraw request?'}
+              </Text>
+              {acceptLoading && <Loader />}
+            </ModalBody>
+
+            <ModalFooter>
+              <Button
+                variant='outline'
+                colorScheme='blue'
+                mr={3}
+                onClick={onAClose}
+              >
+                Close
+              </Button>
+              <Button
+                onClick={acceptHandler}
+                colorScheme='red'
+                variant='outline'
+              >
+                Yes, Confirm
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
       </Box>
     </Box>
   );

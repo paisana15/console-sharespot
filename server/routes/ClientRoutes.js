@@ -6,6 +6,7 @@ import {
   resetPassword,
   getHotspotRewardByClient,
   clientWithdrawRequest,
+  getWithdrawHistory,
 } from '../controller/ClientController.js';
 import { protect } from '../middleware/authMiddleware.js';
 
@@ -22,5 +23,6 @@ router
   .route('/getRewardByClient/:clientId')
   .put(protect, getHotspotRewardByClient);
 router.route('/withdrawRequest/:clientId').post(protect, clientWithdrawRequest);
+router.route('/getWithdrawHistory/:clientId').get(protect, getWithdrawHistory);
 
 export default router;

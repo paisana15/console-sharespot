@@ -37,6 +37,14 @@ import {
   HOTSPOT_UPDATE_REQUEST,
   HOTSPOT_UPDATE_RESET,
   HOTSPOT_UPDATE_SUCCESS,
+  REJECT_WITHDRAW_REQUEST,
+  REJECT_WITHDRAW_SUCCESS,
+  REJECT_WITHDRAW_RESET,
+  REJECT_WITHDRAW_FAILED,
+  ACCEPT_WITHDRAW_REQUEST,
+  ACCEPT_WITHDRAW_SUCCESS,
+  ACCEPT_WITHDRAW_FAILED,
+  ACCEPT_WITHDRAW_RESET,
 } from '../actionTypes';
 
 export const AdminLoginReducer = (state = {}, action) => {
@@ -179,8 +187,38 @@ export const GetWithdrawalRequestReducer = (
       return { loading: true };
     case GET_WITHDRAWAL_SUCCESS:
       return { loading: false, wRequests: action.payload };
+    case REJECT_WITHDRAW_SUCCESS:
+      return { loading: false, wRequests: action.payload };
     case GET_WITHDRAWAL_FAILED:
       return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+export const AcceptWithdrawReducer = (state = { wRequests: [] }, action) => {
+  switch (action.type) {
+    case ACCEPT_WITHDRAW_REQUEST:
+      return { loading: true };
+    case ACCEPT_WITHDRAW_SUCCESS:
+      return { loading: false, success: true };
+    case ACCEPT_WITHDRAW_FAILED:
+      return { loading: false, error: action.payload };
+    case ACCEPT_WITHDRAW_RESET:
+      return { loading: false, success: false, error: null };
+    default:
+      return state;
+  }
+};
+export const RejectWithdrawReducer = (state = { wRequests: [] }, action) => {
+  switch (action.type) {
+    case REJECT_WITHDRAW_REQUEST:
+      return { loading: true };
+    case REJECT_WITHDRAW_SUCCESS:
+      return { loading: false, success: true };
+    case REJECT_WITHDRAW_FAILED:
+      return { loading: false, error: action.payload };
+    case REJECT_WITHDRAW_RESET:
+      return { loading: false, success: false, error: null };
     default:
       return state;
   }
