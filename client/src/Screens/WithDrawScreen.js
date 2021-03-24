@@ -40,7 +40,7 @@ const WithDrawScreen = ({ client, wallet }) => {
       toast({
         status: 'success',
         title: 'Success!',
-        description: 'Withdraw Request Received!',
+        description: 'Withdraw Request Received! Wait for Admin approval!',
         duration: 3000,
         isClosable: true,
       });
@@ -72,7 +72,7 @@ const WithDrawScreen = ({ client, wallet }) => {
       <Helmet>
         <title>Withdraw Rewards</title>
       </Helmet>
-      <Flex mb='3' alignItems='center'>
+      <Box d={{ md: 'flex' }} mb='3' alignItems='center'>
         <Text fontSize='2xl' className='adminPageHeader'>
           Withdraw Reward
         </Text>
@@ -90,9 +90,9 @@ const WithDrawScreen = ({ client, wallet }) => {
             </Badge>
           </Text>
         </Box>
-      </Flex>
-      <Flex mt='3'>
-        <Box style={{ width: '30%' }}>
+      </Box>
+      <Box d={{ md: 'flex' }} mt='3'>
+        <Box w={{ base: '100%', md: '30%' }}>
           <Formik
             initialValues={{
               amount: '',
@@ -119,12 +119,17 @@ const WithDrawScreen = ({ client, wallet }) => {
                     value={values.amount}
                     onChange={handleChange}
                     onBlur={handleBlur}
+                    isDisabled={wallet?.pendingPayment > 0}
                   />
                   {errors.amount && touched.amount && (
                     <div style={{ color: 'red', fontSize: 13 }}>
                       {errors.amount}
                     </div>
                   )}
+                  <Text fontSize='sm' textColor='orange.500'>
+                    {wallet?.pendingPayment > 0 &&
+                      `You have pending withdraw request for HNT ${wallet?.pendingPayment}!`}
+                  </Text>
                 </FormControl>
                 <Button
                   isLoading={loading}
@@ -132,6 +137,7 @@ const WithDrawScreen = ({ client, wallet }) => {
                   mt='3'
                   type='submit'
                   colorScheme='facebook'
+                  isDisabled={wallet?.pendingPayment > 0}
                 >
                   Request Withdraw
                 </Button>
@@ -140,7 +146,7 @@ const WithDrawScreen = ({ client, wallet }) => {
           </Formik>
         </Box>
         <Spacer />
-        <Box style={{ width: '50%' }}>
+        <Box mt={{ base: '3', md: 0 }} w={{ base: '100%', md: '50%' }}>
           <Text mb='2' fontWeight='bold' fontStyle='oblique'>
             Withdraw History
           </Text>
@@ -186,7 +192,7 @@ const WithDrawScreen = ({ client, wallet }) => {
             )}
           </Box>
         </Box>
-      </Flex>
+      </Box>
     </Box>
   );
 };

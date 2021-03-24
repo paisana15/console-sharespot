@@ -1,15 +1,30 @@
-import { Box, Container, Spacer, Stack, Text } from '@chakra-ui/layout';
-import React from 'react';
+import { Box, Container, Flex, Text } from '@chakra-ui/layout';
+import React, { useState } from 'react';
 import { Link, useRouteMatch } from 'react-router-dom';
 import { adminLogout } from '../redux/action/AdminAction';
 import { useDispatch } from 'react-redux';
 import Logo from './Logo';
 import { useColorMode } from '@chakra-ui/color-mode';
 
+const MenuItems = ({ children }) => (
+  <Text
+    color='gray.500'
+    fontWeight='semibold'
+    letterSpacing=''
+    fontSize='sm'
+    cursor='pointer'
+    mt={{ base: 4, md: 0 }}
+    mr={6}
+    display='block'
+  >
+    {children}
+  </Text>
+);
+
 const AdminNavbar = () => {
   const dispatch = useDispatch();
   const { path } = useRouteMatch();
-
+  const [showMenu, setShow] = useState(false);
   const { colorMode, toggleColorMode } = useColorMode();
 
   const logoutHandler = () => {
@@ -18,83 +33,67 @@ const AdminNavbar = () => {
   return (
     <Box color='white' overflow='hidden' bg='#2f2f2f' w='100%' p='4'>
       <Container maxW='container.xl'>
-        <Stack align='center' direction={['column', 'row']} spacing='30px'>
-          <div style={{ marginRight: -15 }}>
+        <Flex as='nav' align='center' justify='space-between' wrap='wrap'>
+          <Box display='flex' alignItems='center'>
             <Logo />
-          </div>
-          <Text fontSize='xl' fontStyle='oblique' fontWeight='bold' ml='2'>
-            Sharespot Wallet
-          </Text>
-          <Spacer />
+            <Text fontSize='xl' fontStyle='oblique' fontWeight='bold' ml='2'>
+              Sharespot Wallet
+            </Text>
+          </Box>
           <Box
-            color='gray.500'
-            fontWeight='semibold'
-            letterSpacing=''
-            fontSize='sm'
-            cursor='pointer'
+            onClick={() => setShow(!showMenu)}
+            display={{ base: 'block', md: 'none' }}
+          >
+            <i className='fas fa-bars'></i>
+          </Box>
+          <Box
+            display={{ base: showMenu ? 'block' : 'none', md: 'flex' }}
+            alignItems='center'
           >
             <Link to={path}>
-              <i className='fas fa-users'></i>
-              <span className='admin_navlink'>Clients</span>
+              <MenuItems>
+                <i className='fas fa-users'></i> All CLients
+              </MenuItems>
             </Link>
-          </Box>
-          <Box
-            color='gray.500'
-            fontWeight='semibold'
-            letterSpacing='wide'
-            ml='6'
-            fontSize='sm'
-            cursor='pointer'
-          >
             <Link to={`${path}/add-hotspot`}>
-              <i className='fas fa-wifi'></i>
-              <span className='admin_navlink'>Add Hotspot</span>
+              <MenuItems>
+                <i className='fas fa-wifi'></i> Add Hotspot
+              </MenuItems>
             </Link>
-          </Box>
-          <Box
-            color='gray.500'
-            fontWeight='semibold'
-            letterSpacing='wide'
-            ml='6'
-            fontSize='sm'
-            cursor='pointer'
-          >
             <Link to={`${path}/withdrawal-requests`}>
-              <i className='fas fa-bell'></i>
-              <span className='admin_navlink'>Withdrawal Requests</span>
+              <MenuItems>
+                <i className='fas fa-bell'></i> Withdrawal Request
+              </MenuItems>
             </Link>
+            <MenuItems>
+              <span onClick={logoutHandler}>
+                <i
+                  style={{ marginRight: 5 }}
+                  className='fas fa-sign-out-alt'
+                ></i>
+                Sign out
+              </span>
+            </MenuItems>
+            <Box
+              d='flex'
+              borderRadius='full'
+              fontWeight='semibold'
+              letterSpacing='wide'
+              bg='#505050'
+              cursor='pointer'
+              fontSize='sm'
+              w='30px'
+              h='30px'
+              mt={{ base: '2', sm: '2', md: 0 }}
+              alignItems='center'
+              justifyContent='center'
+              color={`${colorMode === 'light' ? 'yellow.300' : 'white'}`}
+              onClick={toggleColorMode}
+            >
+              <i className='fas fa-cloud-moon'></i>
+            </Box>
           </Box>
-
-          <Box
-            color='gray.500'
-            fontWeight='semibold'
-            letterSpacing='wide'
-            cursor='pointer'
-            fontSize='sm'
-          >
-            <i className='fas fa-sign-out-alt'></i>
-            <span onClick={logoutHandler} className='admin_navlink'>
-              Sign out
-            </span>
-          </Box>
-          <Box
-            d='flex'
-            borderRadius='full'
-            fontWeight='semibold'
-            letterSpacing='wide'
-            bg='#505050'
-            cursor='pointer'
-            fontSize='sm'
-            w='30px'
-            h='30px'
-            alignItems='center'
-            justifyContent='center'
-            color={`${colorMode === 'light' ? 'yellow.300' : 'white'}`}
-            onClick={toggleColorMode}
-          >
-            <i className='fas fa-cloud-moon'></i>
-          </Box>
-        </Stack>
+        </Flex>
       </Container>
     </Box>
   );

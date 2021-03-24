@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Box, Flex, Text } from '@chakra-ui/layout';
+import { Box, Text } from '@chakra-ui/layout';
 import {
   Table,
   TableCaption,
@@ -32,20 +32,25 @@ const AllClients = () => {
       <Helmet>
         <title>All Clients | Admin Dashboard</title>
       </Helmet>
-      <Flex mb='3' alignItems='center'>
+      <Box display={{ sm: 'flex' }} mb='3' alignItems='center'>
         <Text fontSize='2xl' className='adminPageHeader'>
           All Clients
         </Text>
         <Spacer />
         <Box>
           <Link to={`/h/add-new-client`}>
-            <Button variant='solid' size='sm' colorScheme='purple'>
+            <Button
+              variant='outline'
+              w={{ base: '100%', md: 'auto' }}
+              size='sm'
+              colorScheme='purple'
+            >
               <i className='fas fa-user-plus' style={{ marginRight: 5 }}></i>{' '}
               Add New Client
             </Button>
           </Link>
         </Box>
-      </Flex>
+      </Box>
       <Box>
         {loading ? (
           <Loader />
