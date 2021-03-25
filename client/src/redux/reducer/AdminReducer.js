@@ -45,6 +45,9 @@ import {
   ACCEPT_WITHDRAW_SUCCESS,
   ACCEPT_WITHDRAW_FAILED,
   ACCEPT_WITHDRAW_RESET,
+  GET_MW_SW_CW_BALANCE_REQUEST,
+  GET_MW_SW_CW_BALANCE_SUCCESS,
+  GET_MW_SW_CW_BALANCE_RESET,
 } from '../actionTypes';
 
 export const AdminLoginReducer = (state = {}, action) => {
@@ -219,6 +222,18 @@ export const RejectWithdrawReducer = (state = { wRequests: [] }, action) => {
       return { loading: false, error: action.payload };
     case REJECT_WITHDRAW_RESET:
       return { loading: false, success: false, error: null };
+    default:
+      return state;
+  }
+};
+export const GetMWSWCWReducer = (state = { balances: {} }, action) => {
+  switch (action.type) {
+    case GET_MW_SW_CW_BALANCE_REQUEST:
+      return { loading: true };
+    case GET_MW_SW_CW_BALANCE_SUCCESS:
+      return { loading: false, balances: action.payload };
+    case GET_MW_SW_CW_BALANCE_RESET:
+      return { loading: false, error: action.payload };
     default:
       return state;
   }

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Box, Text } from '@chakra-ui/layout';
+import { Box, Heading, Text } from '@chakra-ui/layout';
 import {
   Table,
   TableCaption,
@@ -12,7 +12,7 @@ import {
 import { Spacer, Button } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllClients } from '../redux/action/AdminAction';
+import { getAllClients, getMWSWCWbalances } from '../redux/action/AdminAction';
 import Loader from '../components/Loader';
 import AlertMessage from '../components/Alert';
 import { Helmet } from 'react-helmet';
@@ -23,8 +23,12 @@ const AllClients = () => {
   const allClientsGet = useSelector((state) => state.allClientsGet);
   const { loading, clients, error } = allClientsGet;
 
+  const MWSWCWget = useSelector((state) => state.MWSWCWget);
+  const { loading: mwLoading, balances, error: mwError } = MWSWCWget;
+
   useEffect(() => {
     dispatch(getAllClients());
+    dispatch(getMWSWCWbalances());
   }, [dispatch]);
 
   return (
@@ -32,6 +36,73 @@ const AllClients = () => {
       <Helmet>
         <title>All Clients | Admin Dashboard</title>
       </Helmet>
+      <Box d={{ md: 'flex' }} color='white' mt='3'>
+        <Box
+          boxShadow='base'
+          textAlign='center'
+          p='4'
+          borderRadius='lg'
+          bg='red.400'
+          w={{ base: '100%', md: '30%' }}
+          mb={{ base: '3', sm: '3', md: '3' }}
+        >
+          <Heading size='md'>Main + Second Wallet Balance</Heading>
+          <Text style={{ fontWeight: 'bold' }} fontSize='3xl'>
+            {mwLoading ? (
+              <Loader small />
+            ) : (
+              `HNT ${balances ? balances?.mw_balance?.toFixed(2) : '0'}`
+            )}
+          </Text>
+        </Box>
+        <Spacer />
+        <Box
+          boxShadow='base'
+          textAlign='center'
+          p='4'
+          borderRadius='lg'
+          bg='green.400'
+          w={{ base: '100%', md: '30%' }}
+          mb={{ base: '3', sm: '3', md: '3' }}
+        >
+          <Heading size='md'>All Clients Balance</Heading>
+          <Text style={{ fontWeight: 'bold' }} fontSize='3xl'>
+            {mwLoading ? (
+              <Loader small />
+            ) : (
+              `HNT ${balances ? balances?.cw_balance?.toFixed(2) : '0'}`
+            )}
+          </Text>
+        </Box>
+        <Spacer />
+        <Box
+          boxShadow='base'
+          textAlign='center'
+          p='4'
+          borderRadius='lg'
+          bg='blue.400'
+          w={{ base: '100%', md: '30%' }}
+          mb={{ base: '3', sm: '3', md: '3' }}
+        >
+          <Heading size='md'>Available Balance (After Paid)</Heading>
+          <Text style={{ fontWeight: 'bold' }} fontSize='3xl'>
+            {mwLoading ? (
+              <Loader small />
+            ) : (
+              `HNT ${
+                balances
+                  ? (
+                      parseFloat(balances?.mw_balance) +
+                      parseFloat(balances?.sw_balance) -
+                      parseFloat(balances?.cw_balance)
+                    ).toFixed(2)
+                  : '0'
+              }`
+            )}
+          </Text>
+        </Box>
+        {mwError && <AlertMessage status='error' error={mwError} />}
+      </Box>
       <Box display={{ sm: 'flex' }} mb='3' alignItems='center'>
         <Text fontSize='2xl' className='adminPageHeader'>
           All Clients

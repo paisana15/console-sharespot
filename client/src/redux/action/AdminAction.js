@@ -33,6 +33,9 @@ import {
   GET_ALL_CLIENTS_FAILED,
   GET_ALL_CLIENTS_REQUEST,
   GET_ALL_CLIENTS_SUCCESS,
+  GET_MW_SW_CW_BALANCE_REQUEST,
+  GET_MW_SW_CW_BALANCE_RESET,
+  GET_MW_SW_CW_BALANCE_SUCCESS,
   GET_SINGLE_CLIENT_FAILED,
   GET_SINGLE_CLIENT_REQUEST,
   GET_SINGLE_CLIENT_SUCCESS,
@@ -544,6 +547,39 @@ export const acceptWithdrawRequest = (wrId) => async (dispatch, getState) => {
     });
     dispatch({
       type: ACCEPT_WITHDRAW_RESET,
+    });
+  }
+};
+
+export const getMWSWCWbalances = () => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: GET_MW_SW_CW_BALANCE_REQUEST,
+    });
+    const {
+      loginAdmin: { aInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${aInfo._atoken}`,
+      },
+    };
+    const { data } = await axios.get(
+      `${baseURL}/api/admin/getMainSecondWallet`,
+      config
+    );
+    dispatch({
+      type: GET_MW_SW_CW_BALANCE_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: GET_MW_SW_CW_BALANCE_RESET,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
     });
   }
 };

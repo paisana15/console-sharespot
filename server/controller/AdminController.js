@@ -546,19 +546,21 @@ const withdrawalRequestAccept = asyncHandler(async (req, res) => {
     });
 
     // send payout sample
+    console.log(withdraw_request?.amount);
+
     client.sendPayout(
       `${client_user?.wallet_address}`,
       withdraw_request?.amount * 1000000000,
       async (err, payoutResponse) => {
         if (err) {
-          if (err.code === 13) {
-            console.log('wallet is locked');
-            res.status(404);
-            throw new Error('Wallet is locked!');
-          } else {
-            res.status(500);
-            throw new Error(err);
-          }
+          // if (err.code === 13) {
+          //   console.log('wallet is locked');
+          //   res.status(404);
+          //   throw new Error('Wallet is locked!');
+          // } else {
+          //   res.status(500);
+          // }
+          throw new Error(err);
         } else {
           console.log(
             'send Payout result',
@@ -631,6 +633,37 @@ const withdrawalRequestReject = asyncHandler(async (req, res) => {
     throw new Error('Withdraw request not found!');
   }
 });
+const getMainSecondWallet = (req, res) => {
+  const request1 = axios.get(
+    'https://api.helium.io/v1/accounts/13ESLoXiie3eXoyitxryNQNamGAnJjKt2WkiB4gNq95knxAiGEp/stats'
+  );
+  const request2 = axios.get(
+    'https://api.helium.io/v1/accounts/13RUgCBbhLM2jNnzUhY7VRTAgdTi4bUi1o1eW3wV81wquavju7p/stats'
+  );
+  axios
+    .all([request1, request2])
+    .then(
+      axios.spread((...responses) => {
+        const mw_balance =
+          responses[0]?.data?.data?.last_day[0]?.balance * 0.00000001;
+        const sw_balance =
+          responses[1]?.data?.data?.last_day[0]?.balance * 0.00000001;
+        return { mw_balance, sw_balance };
+      })
+    )
+    .then(({ mw_balance, sw_balance }) => {
+      Wallet.find({}).then((wallets) => {
+        const cw_balance = wallets.reduce(
+          (acc, curr) =>
+            parseFloat(acc?.wallet_balance) + parseFloat(curr?.wallet_balance)
+        );
+        res.status(200).json({ mw_balance, sw_balance, cw_balance });
+      });
+    })
+    .catch((errors) => {
+      throw new Error(errors);
+    });
+};
 
 export {
   adminLogin,
@@ -648,4 +681,5 @@ export {
   getWithdrawalRequests,
   withdrawalRequestAccept,
   withdrawalRequestReject,
+  getMainSecondWallet,
 };

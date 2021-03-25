@@ -14,6 +14,7 @@ import {
   getWithdrawalRequests,
   withdrawalRequestAccept,
   withdrawalRequestReject,
+  getMainSecondWallet,
 } from '../controller/AdminController.js';
 import { verifyAdmin } from '../middleware/authMiddleware.js';
 
@@ -41,5 +42,6 @@ router
 router
   .route('/withdrawalRequestReject/:wreqId/reject')
   .put(verifyAdmin, withdrawalRequestReject);
+router.route('/getMainSecondWallet').get(verifyAdmin, getMainSecondWallet);
 
 export default router;

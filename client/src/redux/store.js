@@ -10,6 +10,7 @@ import {
   DelSingleClientReducer,
   FetchRewardByAdminReducer,
   GetAllClientsReducer,
+  GetMWSWCWReducer,
   GetSingleClientReducer,
   GetWithdrawalRequestReducer,
   HotspotUpdateReducer,
@@ -46,6 +47,7 @@ const reducer = combineReducers({
   histtoryWByc: WithdrawHistoryReducer,
   withdrawReject: RejectWithdrawReducer,
   withdrawAccept: AcceptWithdrawReducer,
+  MWSWCWget: GetMWSWCWReducer,
 });
 
 const initialState = {
