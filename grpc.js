@@ -6,7 +6,7 @@ const client = new WalletClient(target);
 
 // get account sample
 client.getAccount((err, res) => {
-    console.log('get Account result', err, res.getAmount());
+  console.log('get Account result', err, res.getAmount());
 });
 
 // synchronous mode
@@ -25,4 +25,3 @@ catch((err) => {
         console.log("balance too low")
     }
 })
-

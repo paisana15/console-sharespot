@@ -10,6 +10,9 @@ import {
   ADD_HOTSPOT_TO_CLIENT_REQUEST,
   ADD_HOTSPOT_TO_CLIENT_RESET,
   ADD_HOTSPOT_TO_CLIENT_SUCCESS,
+  ADD_MANUAL_WITHDRAW_HISTORY_FAILED,
+  ADD_MANUAL_WITHDRAW_HISTORY_REQUEST,
+  ADD_MANUAL_WITHDRAW_HISTORY_SUCCESS,
   ADD_NEW_CLIENT_FAILED,
   ADD_NEW_CLIENT_REQUEST,
   ADD_NEW_CLIENT_RESET,
@@ -33,6 +36,12 @@ import {
   GET_ALL_CLIENTS_FAILED,
   GET_ALL_CLIENTS_REQUEST,
   GET_ALL_CLIENTS_SUCCESS,
+  GET_MANUAL_WITHDRAW_HISTORY_FAILED,
+  GET_MANUAL_WITHDRAW_HISTORY_REQUEST,
+  GET_MANUAL_WITHDRAW_HISTORY_SUCCESS,
+  DELETE_MANUAL_WITHDRAW_HISTORY_FAILED,
+  DELETE_MANUAL_WITHDRAW_HISTORY_REQUEST,
+  DELETE_MANUAL_WITHDRAW_HISTORY_SUCCESS,
   GET_MW_SW_CW_BALANCE_REQUEST,
   GET_MW_SW_CW_BALANCE_RESET,
   GET_MW_SW_CW_BALANCE_SUCCESS,
@@ -576,6 +585,115 @@ export const getMWSWCWbalances = () => async (dispatch, getState) => {
   } catch (error) {
     dispatch({
       type: GET_MW_SW_CW_BALANCE_RESET,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const getManulaWithdrawHistory = (clientId) => async (
+  dispatch,
+  getState
+) => {
+  try {
+    dispatch({
+      type: GET_MANUAL_WITHDRAW_HISTORY_REQUEST,
+    });
+    const {
+      loginAdmin: { aInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${aInfo._atoken}`,
+      },
+    };
+    const { data } = await axios.get(
+      `${baseURL}/api/admin/getManulaWithdrawHistory/${clientId}`,
+      config
+    );
+    dispatch({
+      type: GET_MANUAL_WITHDRAW_HISTORY_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: GET_MANUAL_WITHDRAW_HISTORY_FAILED,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const addManulaWithdrawHistory = (clientId, mw_amount) => async (
+  dispatch,
+  getState
+) => {
+  try {
+    dispatch({
+      type: ADD_MANUAL_WITHDRAW_HISTORY_REQUEST,
+    });
+    const {
+      loginAdmin: { aInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${aInfo._atoken}`,
+      },
+    };
+    const { data } = await axios.put(
+      `${baseURL}/api/admin/addManualWithdraw/${clientId}`,
+      { mw_amount },
+      config
+    );
+    dispatch({
+      type: ADD_MANUAL_WITHDRAW_HISTORY_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: ADD_MANUAL_WITHDRAW_HISTORY_FAILED,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const deleteManulaWithdrawHistory = (historyId) => async (
+  dispatch,
+  getState
+) => {
+  try {
+    dispatch({
+      type: DELETE_MANUAL_WITHDRAW_HISTORY_REQUEST,
+    });
+    const {
+      loginAdmin: { aInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${aInfo._atoken}`,
+      },
+    };
+    const { data } = await axios.delete(
+      `${baseURL}/api/admin/deleteManualWithdraw/${historyId}`,
+      config
+    );
+    dispatch({
+      type: DELETE_MANUAL_WITHDRAW_HISTORY_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: DELETE_MANUAL_WITHDRAW_HISTORY_FAILED,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

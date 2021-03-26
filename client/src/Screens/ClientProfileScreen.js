@@ -220,14 +220,19 @@ const ClientProfileScreen = ({ client_details }) => {
             <AlertMessage status='error' error='No hotspot assigned yet!' />
           )}
         </Box>
-        <Button
-          onClick={getRewardHandler}
-          mt='3'
-          colorScheme='pink'
-          variant={colorMode === 'dark' ? 'outline' : 'solid'}
-        >
-          Get Reward
-        </Button>
+        <Box mt='4'>
+          <Button
+            w={{ base: '100%', md: 'auto' }}
+            mr={{ md: 2 }}
+            mt={{ base: 2, md: 0 }}
+            onClick={getRewardHandler}
+            colorScheme='orange'
+            variant={colorMode === 'dark' ? 'outline' : 'solid'}
+          >
+            <i style={{ marginRight: 5 }} className='fas fa-download'></i>Fetch
+            Reward
+          </Button>
+        </Box>
         {error && (
           <Box mt='2'>
             <AlertMessage status='error' error={error} />
