@@ -17,15 +17,24 @@ class WalletClient {
         this.client.accountGet(new google_protobuf_empty_pb.Empty(), metadata, callback)
     }
 
-    sendPayout(address, amount, callback) {
+    sendPayout(address, amount) {
         const payoutRequest = new pb.PayoutReq();
         payoutRequest.setAddress(address)
         payoutRequest.setAmount(amount)
 
         const metadata = new grpcjs.Metadata()
         metadata.add("auth", this.token)
+        const client = this.client
 
-        this.client.newPayout(payoutRequest, metadata, callback)
+        return new Promise(function(resolve, reject) {
+            client.newPayout(payoutRequest, metadata, (err, payoutRes) => {
+                if (err) {
+                    reject(err)
+                } else {
+                    resolve(payoutRes)
+                }
+            })
+        })
     }
 
 }
