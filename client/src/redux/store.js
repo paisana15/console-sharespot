@@ -4,12 +4,15 @@ import thunk from 'redux-thunk';
 import {
   AcceptWithdrawReducer,
   AddHotspotClientReducer,
+  AddMWHistoriesReducer,
   AddNewClientReducer,
   AdminLoginReducer,
   ClientUpdateReducer,
+  DeleteMWHistoriesReducer,
   DelSingleClientReducer,
   FetchRewardByAdminReducer,
   GetAllClientsReducer,
+  GetMWHistoriesReducer,
   GetMWSWCWReducer,
   GetSingleClientReducer,
   GetWithdrawalRequestReducer,
@@ -48,6 +51,9 @@ const reducer = combineReducers({
   withdrawReject: RejectWithdrawReducer,
   withdrawAccept: AcceptWithdrawReducer,
   MWSWCWget: GetMWSWCWReducer,
+  getMWHistories: GetMWHistoriesReducer,
+  addMWHistory: AddMWHistoriesReducer,
+  deleteMWHistory: DeleteMWHistoriesReducer,
 });
 
 const initialState = {

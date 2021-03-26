@@ -101,8 +101,8 @@ const AllClients = () => {
             )}
           </Text>
         </Box>
-        {mwError && <AlertMessage status='error' error={mwError} />}
       </Box>
+      {mwError && <AlertMessage status='error' error={mwError} />}
       <Box display={{ sm: 'flex' }} mb='3' alignItems='center'>
         <Text fontSize='2xl' className='adminPageHeader'>
           All Clients

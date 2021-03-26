@@ -48,6 +48,15 @@ import {
   GET_MW_SW_CW_BALANCE_REQUEST,
   GET_MW_SW_CW_BALANCE_SUCCESS,
   GET_MW_SW_CW_BALANCE_RESET,
+  GET_MANUAL_WITHDRAW_HISTORY_REQUEST,
+  GET_MANUAL_WITHDRAW_HISTORY_SUCCESS,
+  GET_MANUAL_WITHDRAW_HISTORY_FAILED,
+  DELETE_MANUAL_WITHDRAW_HISTORY_REQUEST,
+  DELETE_MANUAL_WITHDRAW_HISTORY_SUCCESS,
+  DELETE_MANUAL_WITHDRAW_HISTORY_FAILED,
+  ADD_MANUAL_WITHDRAW_HISTORY_REQUEST,
+  ADD_MANUAL_WITHDRAW_HISTORY_SUCCESS,
+  ADD_MANUAL_WITHDRAW_HISTORY_FAILED,
 } from '../actionTypes';
 
 export const AdminLoginReducer = (state = {}, action) => {
@@ -79,18 +88,18 @@ export const GetAllClientsReducer = (state = { clients: [] }, action) => {
   }
 };
 export const GetSingleClientReducer = (
-  state = { client: { client_hotspot: [] } },
+  state = { clientData: { client: {}, client_hotspot: [], clientWallet: {} } },
   action
 ) => {
   switch (action.type) {
     case GET_SINGLE_CLIENT_REQUEST:
       return { loading: true };
     case GET_SINGLE_CLIENT_SUCCESS:
-      return { loading: false, client: action.payload };
+      return { loading: false, clientData: action.payload };
     case FETCH_REWARD_BY_ADMIN_SUCCESS:
-      return { loading: false, client: action.payload };
+      return { loading: false, clientData: action.payload };
     case HOTSPOT_DELETE:
-      return { loading: false, client: action.payload };
+      return { loading: false, clientData: action.payload };
     case GET_SINGLE_CLIENT_FAILED:
       return { loading: false, error: action.payload };
     default:
@@ -233,6 +242,47 @@ export const GetMWSWCWReducer = (state = { balances: {} }, action) => {
     case GET_MW_SW_CW_BALANCE_SUCCESS:
       return { loading: false, balances: action.payload };
     case GET_MW_SW_CW_BALANCE_RESET:
+      return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+export const GetMWHistoriesReducer = (state = { mw_histories: [] }, action) => {
+  switch (action.type) {
+    case GET_MANUAL_WITHDRAW_HISTORY_REQUEST:
+      return { loading: true };
+    case GET_MANUAL_WITHDRAW_HISTORY_SUCCESS:
+      return { loading: false, mw_histories: action.payload };
+    case DELETE_MANUAL_WITHDRAW_HISTORY_SUCCESS:
+      return { loading: false, mw_histories: action.payload };
+    case ADD_MANUAL_WITHDRAW_HISTORY_SUCCESS:
+      return { mw_histories: action.payload };
+    case GET_MANUAL_WITHDRAW_HISTORY_FAILED:
+      return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+export const AddMWHistoriesReducer = (state = {}, action) => {
+  switch (action.type) {
+    case ADD_MANUAL_WITHDRAW_HISTORY_REQUEST:
+      return { loading: true };
+    case ADD_MANUAL_WITHDRAW_HISTORY_SUCCESS:
+      return { loading: false, success: true };
+    case ADD_MANUAL_WITHDRAW_HISTORY_FAILED:
+      return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+export const DeleteMWHistoriesReducer = (state = {}, action) => {
+  switch (action.type) {
+    case DELETE_MANUAL_WITHDRAW_HISTORY_REQUEST:
+      return { loading: true };
+    case DELETE_MANUAL_WITHDRAW_HISTORY_SUCCESS:
+      return { loading: false, success: true };
+    case DELETE_MANUAL_WITHDRAW_HISTORY_FAILED:
       return { loading: false, error: action.payload };
     default:
       return state;

@@ -9,6 +9,7 @@ import moment from 'moment';
 import WithdrawRequest from '../models/WithdrawRequestModel.js';
 import { WalletClient } from 'proto';
 import WithdrawHistory from '../models/WithdrawHistoryModel.js';
+import ManualWithdrawHistory from '../models/ManualWithdrawHistoryModel.js';
 
 // // creating client
 const target = '139.59.164.172:8888'; // public Ip, we will change it for a local private address later
@@ -546,26 +547,26 @@ const withdrawalRequestAccept = asyncHandler(async (req, res) => {
     });
 
     // send payout sample
-    console.log(withdraw_request?.amount);
 
     client.sendPayout(
       `${client_user?.wallet_address}`,
       withdraw_request?.amount * 1000000000,
       async (err, payoutResponse) => {
         if (err) {
-          // if (err.code === 13) {
-          //   console.log('wallet is locked');
-          //   res.status(404);
-          //   throw new Error('Wallet is locked!');
-          // } else {
-          //   res.status(500);
-          // }
-          throw new Error(err);
+          if (err.code === 7) {
+            res.status(500);
+            throw new Error('wallet is locked');
+          } else if (err.code === 8) {
+            res.status(500);
+            throw new Error('low balance', err.details);
+          } else {
+            throw new Error();
+          }
         } else {
-          console.log(
-            'send Payout result',
-            payoutResponse.getTransactionhash()
-          );
+          // console.log(
+          //   'send Payout result',
+          //   payoutResponse.getTransactionhash()
+          // );
           const transaction = payoutResponse.getTransactionhash();
           // if transaction successfull
 
@@ -608,6 +609,52 @@ const withdrawalRequestAccept = asyncHandler(async (req, res) => {
     throw new Error('Withdraw request not found!');
   }
 });
+// const withdrawalRequestAccept = (req, res) => {
+//   const wreqId = req.params.wreqId;
+//   WithdrawRequest.findById(wreqId)
+//     .populate('wallet')
+//     .populate('client')
+//     .then((withdraw_request) => {
+//       Wallet.findById(withdraw_request?.wallet)
+//         .then((client_wallet) => {
+//           const client_user = withdraw_request?.client;
+//           return { client_user, client_wallet };
+//         })
+//         .then(({ client_user, client_wallet }) => {
+//           client.sendPayout(
+//             `13ESLoXiie3eXoyitxryNQNamGAnJjKt2WkiB4gNq95knxAiGEp`,
+//             withdraw_request?.amount * 1000000000,
+//             (err, payoutResponse) => {
+//               if (err) {
+//                 if (err.code === 7) {
+//                   res.status(500);
+//                   throw new Error('wallet is locked');
+//                 } else if (err.code === 8) {
+//                   res.status(500);
+//                   throw new Error('low balance', err.details);
+//                 } else {
+//                   throw new Error();
+//                 }
+//               } else {
+//                 const transaction = payoutResponse.getTransactionhash();
+//                 return transaction;
+//               }
+//             }
+//           );
+//           return { client_user, client_wallet, transaction };
+//         })
+//         .then(({ client_user, client_wallet, transaction }) => {
+//           console.log(client_user, client_wallet);
+//         })
+//         .catch((error) => {
+//           throw new Error(error);
+//         });
+//     })
+//     .catch((error) => {
+//       throw new Error(error);
+//     });
+// };
+
 const withdrawalRequestReject = asyncHandler(async (req, res) => {
   const wreqId = req.params.wreqId;
   const withdraw_request = await WithdrawRequest.findById(wreqId);
@@ -644,11 +691,15 @@ const getMainSecondWallet = (req, res) => {
     .all([request1, request2])
     .then(
       axios.spread((...responses) => {
-        const mw_balance =
-          responses[0]?.data?.data?.last_day[0]?.balance * 0.00000001;
-        const sw_balance =
-          responses[1]?.data?.data?.last_day[0]?.balance * 0.00000001;
-        return { mw_balance, sw_balance };
+        if (responses) {
+          const mw_balance =
+            responses[0]?.data?.data?.last_day[0]?.balance * 0.00000001;
+          const sw_balance =
+            responses[1]?.data?.data?.last_day[0]?.balance * 0.00000001;
+          return { mw_balance, sw_balance };
+        } else {
+          throw new Error('Network Error!');
+        }
       })
     )
     .then(({ mw_balance, sw_balance }) => {
@@ -664,6 +715,95 @@ const getMainSecondWallet = (req, res) => {
       throw new Error(errors);
     });
 };
+const addManualWithdraw = asyncHandler(async (req, res) => {
+  const clientId = req.params.clientId;
+  const client = await Client.findById(clientId);
+  if (client) {
+    const { mw_amount } = req.body;
+    const client_wallet = await Wallet.findOne({ client_id: clientId });
+    if (parseFloat(mw_amount) > client_wallet?.totalRewards) {
+      res.status(400);
+      throw new Error(
+        `Withdraw can not be greater then total rewrads! Current TR: ${client_wallet?.totalRewards}`
+      );
+    } else {
+      client_wallet.totalWithdraw =
+        parseFloat(client_wallet.totalWithdraw) + parseFloat(mw_amount);
+      client_wallet.wallet_balance =
+        parseFloat(client_wallet.totalRewards) -
+        parseFloat(client_wallet.totalWithdraw);
+
+      const update = await client_wallet.save();
+
+      if (update) {
+        const new_mw_history = await ManualWithdrawHistory.create({
+          client_id: clientId,
+          mw_amount: mw_amount,
+        });
+        if (new_mw_history) {
+          const mw_histories = await ManualWithdrawHistory.find({}).populate(
+            'client_id'
+          );
+          res.status(200).json(mw_histories);
+        } else {
+          res.status(500);
+          throw new Error('Unable to add manual withdraw!');
+        }
+      } else {
+        res.status(500);
+        throw new Error('Unable to add manual withdraw!');
+      }
+    }
+  } else {
+    res.status(404);
+    throw new Error('Client not found!');
+  }
+});
+
+const getManulaWithdrawHistory = asyncHandler(async (req, res) => {
+  const mw_histories = await ManualWithdrawHistory.find({
+    client_id: req.params.clientId,
+  }).populate('client_id');
+  if (mw_histories) {
+    res.status(200).json(mw_histories);
+  } else {
+    res.status(404);
+    throw new Error('Not found!');
+  }
+});
+
+const deleteManualWithdraw = asyncHandler(async (req, res) => {
+  const history = await ManualWithdrawHistory.findById(req.params.historyId);
+  if (history) {
+    const client_wallet = await Wallet.findOne({
+      client_id: history.client_id,
+    });
+    client_wallet.totalWithdraw =
+      parseFloat(client_wallet.totalWithdraw) - parseFloat(history.mw_amount);
+    client_wallet.wallet_balance =
+      parseFloat(client_wallet.totalRewards) -
+      parseFloat(client_wallet.totalWithdraw);
+    const update = await client_wallet.save();
+    if (update) {
+      const delation = await history.remove();
+      if (delation) {
+        const mw_histories = await ManualWithdrawHistory.find({}).populate(
+          'client_id'
+        );
+        res.status(200).json(mw_histories);
+      } else {
+        res.status(500);
+        throw new Error('History delation error!');
+      }
+    } else {
+      res.status(500);
+      throw new Error('Wallet update error!');
+    }
+  } else {
+    res.status(404);
+    throw new Error('History not found!');
+  }
+});
 
 export {
   adminLogin,
@@ -682,4 +822,7 @@ export {
   withdrawalRequestAccept,
   withdrawalRequestReject,
   getMainSecondWallet,
+  addManualWithdraw,
+  getManulaWithdrawHistory,
+  deleteManualWithdraw,
 };

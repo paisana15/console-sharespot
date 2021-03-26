@@ -17,7 +17,7 @@ const ClientDetailsByAdmin = () => {
   const dispatch = useDispatch();
 
   const singleClientsGet = useSelector((state) => state.singleClientsGet);
-  const { loading, client, error } = singleClientsGet;
+  const { loading, clientData, error } = singleClientsGet;
 
   const loginClient = useSelector((state) => state.loginClient);
   const { cInfo } = loginClient;
@@ -29,9 +29,7 @@ const ClientDetailsByAdmin = () => {
   return (
     <Box p='4'>
       <Helmet>
-        <title>
-         Client Details | Admin Dashboard
-        </title>
+        <title>Client Details | Admin Dashboard</title>
       </Helmet>
       {loading ? (
         <Loader />
@@ -43,19 +41,19 @@ const ClientDetailsByAdmin = () => {
             exact
             path={path}
             component={() => (
-              <ClientProfileScreenByAdmin client_details={client} />
+              <ClientProfileScreenByAdmin client_details={clientData} />
             )}
           />
           <Route
             path={`${path}/edit`}
             component={() => (
-              <ClientProfileEditScreen client_details={client} />
+              <ClientProfileEditScreen client_details={clientData} />
             )}
           />
           <Route
             path={`${path}/hotspot/:hotspotId/edit`}
             component={() => (
-              <HotspotEditScreen hotspots={client?.client_hotspot} />
+              <HotspotEditScreen hotspots={clientData?.client_hotspot} />
             )}
           />
         </Switch>

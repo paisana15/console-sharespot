@@ -15,6 +15,9 @@ import {
   withdrawalRequestAccept,
   withdrawalRequestReject,
   getMainSecondWallet,
+  addManualWithdraw,
+  getManulaWithdrawHistory,
+  deleteManualWithdraw,
 } from '../controller/AdminController.js';
 import { verifyAdmin } from '../middleware/authMiddleware.js';
 
@@ -43,5 +46,14 @@ router
   .route('/withdrawalRequestReject/:wreqId/reject')
   .put(verifyAdmin, withdrawalRequestReject);
 router.route('/getMainSecondWallet').get(verifyAdmin, getMainSecondWallet);
+router
+  .route('/addManualWithdraw/:clientId')
+  .put(verifyAdmin, addManualWithdraw);
+router
+  .route('/getManulaWithdrawHistory/:clientId')
+  .get(verifyAdmin, getManulaWithdrawHistory);
+router
+  .route('/deleteManualWithdraw/:historyId')
+  .delete(verifyAdmin, deleteManualWithdraw);
 
 export default router;

@@ -17,6 +17,14 @@ import {
   ModalBody,
   ModalCloseButton,
   useDisclosure,
+  Table,
+  TableCaption,
+  Thead,
+  Th,
+  Tr,
+  Tbody,
+  Td,
+  useToast,
 } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import { useHistory, useRouteMatch } from 'react-router';
@@ -27,9 +35,15 @@ import {
   deleteHotspot,
   deleteClient,
   getRewardByAdmin,
+  getManulaWithdrawHistory,
+  addManulaWithdrawHistory,
+  deleteManulaWithdrawHistory,
 } from '../redux/action/AdminAction';
 import Loader from '../components/Loader';
 import moment from 'moment';
+import MyTextField from '../components/MyTextField';
+import { Formik } from 'formik';
+import * as yup from 'yup';
 
 const ClientProfileScreenByAdmin = ({ client_details }) => {
   const { url } = useRouteMatch();
@@ -39,11 +53,23 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
   const [client_wallet, setClientWallet] = useState({});
   const dispatch = useDispatch();
   const history = useHistory();
+  const toast = useToast();
 
   const { onOpen, isOpen, onClose } = useDisclosure();
+  const {
+    onOpen: onWOpen,
+    isOpen: isWOpen,
+    onClose: onWClose,
+  } = useDisclosure();
 
   const singleClientDel = useSelector((state) => state.singleClientDel);
   const { loading, success, error } = singleClientDel;
+
+  const getMWHistories = useSelector((state) => state.getMWHistories);
+  const { mw_histories } = getMWHistories;
+
+  const addMWHistory = useSelector((state) => state.addMWHistory);
+  const { error: addMWError } = addMWHistory;
 
   const fetchReward = useSelector((state) => state.fetchReward);
   const {
@@ -59,7 +85,35 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
     if (success) {
       history.push('/h/clients');
     }
-  }, [client_details, success, dispatch, rewardSuccess, history, client?._id]);
+    if (client?._id) {
+      dispatch(getManulaWithdrawHistory(client?._id));
+    }
+    if (addMWError) {
+      toast({
+        title: 'Failed!',
+        status: 'error',
+        description: addMWError,
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+  }, [
+    client_details,
+    success,
+    dispatch,
+    rewardSuccess,
+    toast,
+    history,
+    client?._id,
+    addMWError,
+  ]);
+
+  const fieldValidationSchema = yup.object({
+    m_withdraw: yup
+      .number()
+      .min(1, 'Min withdraw 1 HNT!')
+      .required('Amount Required!'),
+  });
 
   const clientDelteHandler = () => {
     dispatch(deleteClient(client?._id));
@@ -281,24 +335,41 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
             <AlertMessage status='error' error='No hotspot assigned yet!' />
           )}
         </Box>
-        <Flex mt='4' alignItems='center'>
+        <Box d={{ md: 'flex' }} mt='4' alignItems='center'>
           <Button
+            mr={{ md: 2 }}
+            w={{ base: '100%', md: 'auto' }}
+            mt={{ base: 2, md: 0 }}
             variant='outline'
             colorScheme='red'
-            leftIcon={<DeleteIcon />}
             onClick={onOpen}
           >
+            <i style={{ marginRight: 5 }} className='far fa-trash-alt'></i>
             Delete Client
           </Button>
           <Button
+            w={{ base: '100%', md: 'auto' }}
+            mr={{ md: 2 }}
+            mt={{ base: 2, md: 0 }}
             onClick={fetchRewardHandler}
-            ml='2'
-            colorScheme='pink'
+            colorScheme='orange'
             variant={colorMode === 'dark' ? 'outline' : 'solid'}
           >
-            Fetch Reward
+            <i style={{ marginRight: 5 }} className='fas fa-download'></i>Fetch
+            Reward
           </Button>
-        </Flex>
+          <Button
+            w={{ base: '100%', md: 'auto' }}
+            mr={{ md: 2 }}
+            mt={{ base: 2, md: 0 }}
+            colorScheme='yellow'
+            variant={colorMode === 'dark' ? 'outline' : 'solid'}
+            onClick={onWOpen}
+          >
+            <i style={{ marginRight: 5 }} className='fas fa-money-check'></i>Add
+            Withdraw
+          </Button>
+        </Box>
 
         {loading ? (
           <Loader />
@@ -333,6 +404,97 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
                 Yes, Confirm
               </Button>
             </ModalFooter>
+          </ModalContent>
+        </Modal>
+        <Modal isOpen={isWOpen} onClose={onWClose}>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>Add Manual Withdraw</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <Box>
+                <Formik
+                  initialValues={{
+                    m_withdraw: '',
+                  }}
+                  validationSchema={fieldValidationSchema}
+                  onSubmit={(data, { resetForm }) => {
+                    dispatch(
+                      addManulaWithdrawHistory(client?._id, data?.m_withdraw)
+                    );
+                    if (success) {
+                      resetForm();
+                    }
+                  }}
+                >
+                  {({ handleSubmit }) => (
+                    <form onSubmit={handleSubmit}>
+                      <MyTextField
+                        type='text'
+                        placeholder='Manual withdraw amount'
+                        label='Amount'
+                        name='m_withdraw'
+                      />
+                      <Box d='flex' alignItems='baseline' float='right'>
+                        <Button
+                          variant='outline'
+                          colorScheme='blue'
+                          onClick={onWClose}
+                          mr='2'
+                        >
+                          Close
+                        </Button>
+                        <Button mt='2' type='submit' colorScheme='facebook'>
+                          Add
+                        </Button>
+                      </Box>
+                    </form>
+                  )}
+                </Formik>
+              </Box>
+              <Box>
+                <Table mt='4' shadow='lg' size='sm' variant='striped'>
+                  <TableCaption>Recent withdraw added by admin</TableCaption>
+                  <Thead>
+                    <Tr>
+                      <Th>Date</Th>
+                      <Th isNumeric>Amount</Th>
+                    </Tr>
+                  </Thead>
+                  {mw_histories?.length > 0 ? (
+                    mw_histories?.map((data) => (
+                      <Tbody>
+                        <Tr key={data?._id}>
+                          <Td>{moment(data?.createdAt).format('LLL')}</Td>
+                          <Td textColor='green.400' isNumeric>
+                            HNT {data?.mw_amount}
+                          </Td>
+                          <Td isNumeric>
+                            <Button
+                              variant='outline'
+                              colorScheme='red'
+                              size='xs'
+                              onClick={() => {
+                                dispatch(
+                                  deleteManulaWithdrawHistory(data?._id)
+                                );
+                              }}
+                            >
+                              <DeleteIcon />
+                            </Button>
+                          </Td>
+                        </Tr>
+                      </Tbody>
+                    ))
+                  ) : (
+                    <AlertMessage
+                      status='error'
+                      error='No history for this user!'
+                    />
+                  )}
+                </Table>
+              </Box>
+            </ModalBody>
           </ModalContent>
         </Modal>
       </Box>
