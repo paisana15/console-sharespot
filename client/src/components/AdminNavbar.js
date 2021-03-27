@@ -31,7 +31,7 @@ const AdminNavbar = () => {
     dispatch(adminLogout());
   };
   return (
-    <Box color='white' overflow='hidden' bg='#2f2f2f' w='100%' p='4'>
+    <Box color='white' overflow='hidden' bg='#2a2f38' w='100%' p='4'>
       <Container maxW='container.xl'>
         <Flex as='nav' align='center' justify='space-between' wrap='wrap'>
           <Box display='flex' alignItems='center'>
