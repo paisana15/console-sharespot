@@ -10,6 +10,7 @@ import WithdrawRequest from '../models/WithdrawRequestModel.js';
 import { WalletClient } from 'proto';
 import WithdrawHistory from '../models/WithdrawHistoryModel.js';
 import ManualWithdrawHistory from '../models/ManualWithdrawHistoryModel.js';
+import e from 'express';
 
 // // creating client
 const target = '139.59.164.172:8888'; // public Ip, we will change it for a local private address later
@@ -666,41 +667,43 @@ const withdrawalRequestReject = asyncHandler(async (req, res) => {
     throw new Error('Withdraw request not found!');
   }
 });
-const getMainSecondWallet = (req, res) => {
-  const request1 = axios.get(
+
+const getMainSecondWallet = asyncHandler(async (req, res) => {
+  const response1 = await axios.get(
     'https://api.helium.io/v1/accounts/13ESLoXiie3eXoyitxryNQNamGAnJjKt2WkiB4gNq95knxAiGEp/stats'
   );
-  const request2 = axios.get(
+  const response2 = await axios.get(
     'https://api.helium.io/v1/accounts/13RUgCBbhLM2jNnzUhY7VRTAgdTi4bUi1o1eW3wV81wquavju7p/stats'
   );
-  axios
-    .all([request1, request2])
-    .then(
-      axios.spread((...responses) => {
-        if (responses) {
-          const mw_balance =
-            responses[0]?.data?.data?.last_day[0]?.balance * 0.00000001;
-          const sw_balance =
-            responses[1]?.data?.data?.last_day[0]?.balance * 0.00000001;
-          return { mw_balance, sw_balance };
-        } else {
-          throw new Error('Network Error!');
-        }
-      })
-    )
-    .then(({ mw_balance, sw_balance }) => {
-      Wallet.find({}).then((wallets) => {
-        const cw_balance = wallets.reduce(
-          (acc, curr) =>
-            parseFloat(acc?.wallet_balance) + parseFloat(curr?.wallet_balance)
-        );
+  if (
+    Object.keys(response1).length !== 0 &&
+    Object.keys(response2).length !== 0
+  ) {
+    const mw_balance = response1?.data?.data?.last_day[0]?.balance * 0.00000001;
+    const sw_balance = response2?.data?.data?.last_day[0]?.balance * 0.00000001;
+
+    const client_wallets = await Wallet.find({});
+    if (client_wallets) {
+      const cw_balance = client_wallets.reduce(
+        (acc, curr) =>
+          parseFloat(acc?.wallet_balance) + parseFloat(curr?.wallet_balance)
+      );
+      if (cw_balance) {
         res.status(200).json({ mw_balance, sw_balance, cw_balance });
-      });
-    })
-    .catch((errors) => {
-      throw new Error(errors);
-    });
-};
+      } else {
+        res.status(500);
+        throw new Error('Failed to calculate cw_balance!');
+      }
+    } else {
+      res.status(500);
+      throw new Error('Failed to fetch client wallet balances!');
+    }
+  } else {
+    res.status(500);
+    throw new Error('Failed to fetch data from API!');
+  }
+});
+
 const addManualWithdraw = asyncHandler(async (req, res) => {
   const clientId = req.params.clientId;
   const client = await Client.findById(clientId);
