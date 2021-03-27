@@ -541,69 +541,55 @@ const withdrawalRequestAccept = asyncHandler(async (req, res) => {
     const client_wallet = await Wallet.findById(withdraw_request?.wallet);
 
     // withdraw process start
-    // get account sample
-    client.getAccount((err, res) => {
-      console.log('get Account result', err, res.getAmount());
-    });
-
     // send payout sample
-
-    client.sendPayout(
+    let payoutResponse = await client.sendPayout(
       `${client_user?.wallet_address}`,
-      withdraw_request?.amount * 1000000000,
-      async (err, payoutResponse) => {
-        if (err) {
-          if (err.code === 7) {
-            res.status(500);
-            throw new Error('wallet is locked');
-          } else if (err.code === 8) {
-            res.status(500);
-            throw new Error('low balance', err.details);
-          } else {
-            throw new Error();
-          }
-        } else {
-          // console.log(
-          //   'send Payout result',
-          //   payoutResponse.getTransactionhash()
-          // );
-          const transaction = payoutResponse.getTransactionhash();
-          // if transaction successfull
-
-          // creating withdraw history
-          const wHistory = await WithdrawHistory.create({
-            client: client_user,
-            amount: withdraw_request.amount,
-            transaction: transaction,
-          });
-
-          // clear pending payment to 0
-          client_wallet.pendingPayment = 0;
-          // update client wallet balance on db
-          client_wallet.totalWithdraw =
-            parseFloat(client_wallet.totalWithdraw) +
-            parseFloat(withdraw_request.amount);
-          client_wallet.wallet_balance =
-            parseFloat(client_wallet.totalRewards) -
-            parseFloat(client_wallet.totalWithdraw);
-          const cWallet = await client_wallet.save();
-
-          // withdraw request
-          const rmWh = await withdraw_request.remove();
-
-          if (wHistory && cWallet && rmWh) {
-            const wr = await WithdrawRequest.find({})
-              .populate('wallet')
-              .populate('client');
-            res.status(200);
-            res.json(wr);
-          } else {
-            res.status(500);
-            throw new Error();
-          }
-        }
-      }
+      withdraw_request?.amount * 1000000000
     );
+    if (payoutResponse) {
+      const transaction = payoutResponse.getTransactionhash();
+      // if transaction successfull
+
+      // creating withdraw history
+      const wHistory = await WithdrawHistory.create({
+        client: client_user,
+        amount: withdraw_request.amount,
+        transaction: transaction,
+      });
+
+      // clear pending payment to 0
+      client_wallet.pendingPayment = 0;
+      // update client wallet balance on db
+      client_wallet.totalWithdraw =
+        parseFloat(client_wallet.totalWithdraw) +
+        parseFloat(withdraw_request.amount);
+      client_wallet.wallet_balance =
+        parseFloat(client_wallet.totalRewards) -
+        parseFloat(client_wallet.totalWithdraw);
+      const cWallet = await client_wallet.save();
+
+      // withdraw request
+      const rmWh = await withdraw_request.remove();
+
+      if (wHistory && cWallet && rmWh) {
+        const wr = await WithdrawRequest.find({})
+          .populate('wallet')
+          .populate('client');
+        res.status(200);
+        res.json(wr);
+      } else {
+        res.status(500);
+        throw new Error('Failed to create withdraw history!');
+      }
+    } else {
+      if (payoutResponse.error.code === 7) {
+        res.status(500);
+        throw new Error('Wallet locked');
+      } else if (payoutResponse.error.code === 8) {
+        res.status(500);
+        throw new Error('Balance too low');
+      }
+    }
   } else {
     res.status(404);
     throw new Error('Withdraw request not found!');
