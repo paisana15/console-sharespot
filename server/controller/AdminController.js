@@ -735,9 +735,9 @@ const addManualWithdraw = asyncHandler(async (req, res) => {
           mw_amount: mw_amount,
         });
         if (new_mw_history) {
-          const mw_histories = await ManualWithdrawHistory.find({}).populate(
-            'client_id'
-          );
+          const mw_histories = await ManualWithdrawHistory.find({
+            client_id: clientId,
+          }).populate('client_id');
           res.status(200).json(mw_histories);
         } else {
           res.status(500);
@@ -781,9 +781,9 @@ const deleteManualWithdraw = asyncHandler(async (req, res) => {
     if (update) {
       const delation = await history.remove();
       if (delation) {
-        const mw_histories = await ManualWithdrawHistory.find({}).populate(
-          'client_id'
-        );
+        const mw_histories = await ManualWithdrawHistory.find({
+          client_id: history.client_id,
+        }).populate('client_id');
         res.status(200).json(mw_histories);
       } else {
         res.status(500);

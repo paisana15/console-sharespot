@@ -8,6 +8,7 @@ import WithdrawRequest from '../models/WithdrawRequestModel.js';
 import axios from 'axios';
 import moment from 'moment';
 import WithdrawHistory from '../models/WithdrawHistoryModel.js';
+import ManualWithdrawHistory from '../models/ManualWithdrawHistoryModel.js';
 
 // desc: client login
 // routes: api/client/login
@@ -280,7 +281,9 @@ const clientWithdrawRequest = asyncHandler(async (req, res) => {
         }
       } else {
         res.status(400);
-        throw new Error(`You already have a pending withdrawal request for HNT ${clientWallet.pendingPayment}!`);
+        throw new Error(
+          `You already have a pending withdrawal request for HNT ${clientWallet.pendingPayment}!`
+        );
       }
     } else {
       res.status(400);
@@ -298,8 +301,26 @@ const getWithdrawHistory = asyncHandler(async (req, res) => {
   if (client_user) {
     const w_reqs = await WithdrawHistory.find({ client: clientId });
     if (w_reqs) {
-      res.status(200);
-      res.json(w_reqs);
+      const mw_histories = await ManualWithdrawHistory.find({
+        client_id: clientId,
+      });
+      if (mw_histories.length > 0) {
+        mw_histories.map((data) => {
+          const newObj = {
+            client: data?.client_id,
+            amount: data?.mw_amount,
+            transaction: '',
+          };
+          w_reqs.push(newObj);
+        });
+        setTimeout(() => {
+          res.status(200);
+          res.json(w_reqs);
+        }, 3000);
+      } else {
+        res.status(200);
+        res.json(w_reqs);
+      }
     } else {
       res.status(404);
       throw new Error('No histories!');
