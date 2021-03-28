@@ -669,10 +669,9 @@ const withdrawalRequestReject = asyncHandler(async (req, res) => {
 });
 
 const calc_cw_balances = async (arr) => {
-  const sum = arr.reduce(
-    (acc, curr) =>
-      parseFloat(acc?.wallet_balance) + parseFloat(curr?.wallet_balance)
-  );
+  const sum = arr
+    .map((data) => data.wallet_balance)
+    .reduce((acc, curr) => parseFloat(acc) + parseFloat(curr));
   return await sum;
 };
 
