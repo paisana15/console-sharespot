@@ -668,6 +668,14 @@ const withdrawalRequestReject = asyncHandler(async (req, res) => {
   }
 });
 
+const calc_cw_balances = async (arr) => {
+  const sum = arr.reduce(
+    (acc, curr) =>
+      parseFloat(acc?.wallet_balance) + parseFloat(curr?.wallet_balance)
+  );
+  return await sum;
+};
+
 const getMainSecondWallet = asyncHandler(async (req, res) => {
   const response1 = await axios.get(
     'https://api.helium.io/v1/accounts/13ESLoXiie3eXoyitxryNQNamGAnJjKt2WkiB4gNq95knxAiGEp/stats'
@@ -684,10 +692,7 @@ const getMainSecondWallet = asyncHandler(async (req, res) => {
 
     const client_wallets = await Wallet.find({});
     if (client_wallets) {
-      const cw_balance = client_wallets.reduce(
-        (acc, curr) =>
-          parseFloat(acc?.wallet_balance) + parseFloat(curr?.wallet_balance)
-      );
+      const cw_balance = await calc_cw_balances(client_wallets);
       if (cw_balance) {
         res.status(200).json({ mw_balance, sw_balance, cw_balance });
       } else {
