@@ -519,6 +519,7 @@ const deleteHotspot = asyncHandler(async (req, res) => {
     throw new Error('Hotspot not found!');
   }
 });
+
 const getWithdrawalRequests = asyncHandler(async (req, res) => {
   const wr = await WithdrawRequest.find({})
     .populate('wallet')
@@ -531,6 +532,7 @@ const getWithdrawalRequests = asyncHandler(async (req, res) => {
     throw new Error('No Withdrawal Request!');
   }
 });
+
 const withdrawalRequestAccept = asyncHandler(async (req, res) => {
   const wreqId = req.params.wreqId;
   const withdraw_request = await WithdrawRequest.findById(wreqId)
@@ -568,10 +570,45 @@ const withdrawalRequestAccept = asyncHandler(async (req, res) => {
         parseFloat(client_wallet.totalWithdraw);
       const cWallet = await client_wallet.save();
 
-      // withdraw request
+      // withdraw request value
+      const wa = withdraw_request.amount;
+      // remove withdraw request
       const rmWh = await withdraw_request.remove();
 
       if (wHistory && cWallet && rmWh) {
+        // seding email
+        const email = client_user.email;
+
+        const valid_email = emailValidator.validate(email);
+
+        if (valid_email) {
+          const transporter = nodemailer.createTransport({
+            host: 'smtp.gmail.com',
+            port: 465,
+            secure: true,
+            auth: {
+              user: process.env.EMAIL, // your email
+              pass: process.env.PASSE, // email pass
+            },
+          });
+
+          const emailSent = await transporter.sendMail({
+            from: process.env.EMAIL,
+            to: email,
+            subject: 'You have just received a payment!',
+            text: 'Payment Received',
+            html: `Hey ${
+              client_user.firstname + ' ' + client_user.lastname
+            }, You have just received a payment from Sharespot, HNT ${wa}. Have a good day!</p>`,
+          });
+          if (emailSent) {
+            console.log('Email sent!');
+          } else {
+            console.log('Failed to send email!');
+          }
+        } else {
+          console.log('Invalid email');
+        }
         const wr = await WithdrawRequest.find({})
           .populate('wallet')
           .populate('client');
