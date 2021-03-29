@@ -139,16 +139,18 @@ const AllClients = () => {
               </Tr>
             </Thead>
             <Tbody>
-              {clients?.map((client) => (
-                <Tr key={client?._id}>
-                  <Td>
-                    <Link to={`/h/client/${client?._id}`}>
-                      {client?.firstname + ' ' + client?.lastname}
-                    </Link>
-                  </Td>
-                  <Td isNumeric>{client?.total_hotspot}</Td>
-                </Tr>
-              ))}
+              {clients
+                .sort((a, b) => (a?.firstname > b?.firstname ? 1 : -1))
+                .map((client) => (
+                  <Tr key={client?._id}>
+                    <Td>
+                      <Link to={`/h/client/${client?._id}`}>
+                        {client?.firstname + ' ' + client?.lastname}
+                      </Link>
+                    </Td>
+                    <Td isNumeric>{client?.total_hotspot}</Td>
+                  </Tr>
+                ))}
             </Tbody>
           </Table>
         ) : (
