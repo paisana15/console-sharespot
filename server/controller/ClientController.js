@@ -327,6 +327,7 @@ const getWithdrawHistory = asyncHandler(async (req, res) => {
     throw new Error('Client not found!');
   }
 });
+
 export {
   clientLogin,
   getClientProfileByClient,

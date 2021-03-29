@@ -60,6 +60,9 @@ import {
   REJECT_WITHDRAW_REQUEST,
   REJECT_WITHDRAW_RESET,
   REJECT_WITHDRAW_SUCCESS,
+  GET_WITHDRAW_HISTORY_BYA_REQUEST,
+  GET_WITHDRAW_HISTORY_BYA_SUCCESS,
+  GET_WITHDRAW_HISTORY_BYA_FAILED,
 } from '../actionTypes';
 
 export const adminLogin = (credentials) => async (dispatch) => {
@@ -694,6 +697,42 @@ export const deleteManulaWithdrawHistory = (historyId) => async (
   } catch (error) {
     dispatch({
       type: DELETE_MANUAL_WITHDRAW_HISTORY_FAILED,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const getWithdrawHistoryByA = (clientId) => async (
+  dispatch,
+  getState
+) => {
+  try {
+    dispatch({
+      type: GET_WITHDRAW_HISTORY_BYA_REQUEST,
+    });
+    const {
+      loginAdmin: { aInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${aInfo._atoken}`,
+      },
+    };
+    const { data } = await axios.get(
+      `${baseURL}/api/admin/getWithdrawHistoryByAdmin/${clientId}`,
+      config
+    );
+    dispatch({
+      type: GET_WITHDRAW_HISTORY_BYA_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: GET_WITHDRAW_HISTORY_BYA_FAILED,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

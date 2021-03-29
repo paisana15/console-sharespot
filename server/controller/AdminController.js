@@ -419,6 +419,72 @@ const updateWalletBalance = async (clientId, balance, deleteHotspot) => {
   }
 };
 
+// const getHotspotReward = (req, res, next) => {
+//   const clientId = req.params.clientId;
+
+//   Client.findById(clientId)
+//     .then((client) => {
+//       ClientHotspot.find({ client_id: clientId })
+//         .then((client_hotspots) => {
+//           let clientHotspots = [];
+//           client_hotspots.map((data) => {
+//             const minDate = moment(data?.startDate).format('YYYY-MM-DD');
+//             axios
+//               .get(
+//                 `https://api.helium.io/v1/hotspots/${data?.hotspot_address}/rewards/sum?max_time=2030-08-27&min_time=${minDate}`
+//               )
+//               .then((response) => {
+//                 if (response?.data) {
+//                   const val =
+//                     (response?.data?.data?.total * data?.percentage) / 100;
+//                   clientHotspots.push({
+//                     total: val,
+//                   });
+//                   data.total_earned = val;
+//                   data.save();
+//                 } else {
+//                   res.status(404);
+//                   throw new Error('Failed to fetch data!');
+//                 }
+//               })
+//               .catch((error) => next(error));
+//           });
+//           return clientHotspots;
+//         })
+//         .then((clientHotspots) => {
+//           const total = clientHotspots
+//             .map((data) => data.total)
+//             .reduce((acc, curr) => {
+//               return acc + curr;
+//             }, 0);
+//           const totalEarn = total.toFixed(2);
+//           updateWalletBalance(clientId, totalEarn, false);
+//         })
+//         .then(() => {
+//           ClientHotspot.find({
+//             client_id: clientId,
+//           })
+//             .then((client_hotspot) => {
+//               Wallet.findOne({
+//                 client_id: clientId,
+//               }).then((clientWallet) => {
+//                 return { client_hotspot, clientWallet };
+//               });
+//             })
+//             .then((client_hotspot, clientWallet) => {
+//               res.status(200).json({
+//                 client: client,
+//                 client_hotspot: client_hotspot,
+//                 clientWallet: clientWallet,
+//               });
+//             })
+//             .catch((error) => next(error));
+//         })
+//         .catch((error) => next(error));
+//     })
+//     .catch((error) => next(error));
+// };
+
 const getHotspotReward = asyncHandler(async (req, res) => {
   const clientId = req.params.clientId;
   const client = await Client.findById(clientId);
@@ -478,12 +544,13 @@ const getHotspotReward = asyncHandler(async (req, res) => {
         res.status(500);
         throw new Error();
       }
-    }, 10000);
+    }, 5000);
   } else {
     res.status(404);
     throw new Error('Client not found!');
   }
 });
+
 const deleteHotspot = asyncHandler(async (req, res) => {
   const hotspotId = req.params.hotspotId;
   const clientId = req.params.clientId;
@@ -836,6 +903,42 @@ const deleteManualWithdraw = asyncHandler(async (req, res) => {
   }
 });
 
+const getWithdrawHistoryByAdmin = asyncHandler(async (req, res) => {
+  const clientId = req.params.clientId;
+  const client_user = await Client.findById(clientId);
+  if (client_user) {
+    const w_reqs = await WithdrawHistory.find({ client: clientId });
+    if (w_reqs) {
+      const mw_histories = await ManualWithdrawHistory.find({
+        client_id: clientId,
+      });
+      if (mw_histories.length > 0) {
+        mw_histories.map((data) => {
+          const newObj = {
+            client: data?.client_id,
+            amount: data?.mw_amount,
+            transaction: '',
+          };
+          w_reqs.push(newObj);
+        });
+        setTimeout(() => {
+          res.status(200);
+          res.json(w_reqs);
+        }, 3000);
+      } else {
+        res.status(200);
+        res.json(w_reqs);
+      }
+    } else {
+      res.status(404);
+      throw new Error('No histories!');
+    }
+  } else {
+    res.status(404);
+    throw new Error('Client not found!');
+  }
+});
+
 export {
   adminLogin,
   addClient,
@@ -856,4 +959,5 @@ export {
   addManualWithdraw,
   getManulaWithdrawHistory,
   deleteManualWithdraw,
+  getWithdrawHistoryByAdmin,
 };

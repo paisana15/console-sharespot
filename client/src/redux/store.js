@@ -18,6 +18,7 @@ import {
   GetWithdrawalRequestReducer,
   HotspotUpdateReducer,
   RejectWithdrawReducer,
+  WithdrawHistoryByAReducer,
 } from './reducer/AdminReducer';
 import jwt from 'jsonwebtoken';
 import {
@@ -48,6 +49,7 @@ const reducer = combineReducers({
   requestWithdraw: WithdrawRequestReducer,
   withdrawRequestGet: GetWithdrawalRequestReducer,
   histtoryWByc: WithdrawHistoryReducer,
+  histtoryWBya: WithdrawHistoryByAReducer,
   withdrawReject: RejectWithdrawReducer,
   withdrawAccept: AcceptWithdrawReducer,
   MWSWCWget: GetMWSWCWReducer,

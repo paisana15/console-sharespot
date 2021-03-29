@@ -57,6 +57,9 @@ import {
   ADD_MANUAL_WITHDRAW_HISTORY_REQUEST,
   ADD_MANUAL_WITHDRAW_HISTORY_SUCCESS,
   ADD_MANUAL_WITHDRAW_HISTORY_FAILED,
+  GET_WITHDRAW_HISTORY_BYA_REQUEST,
+  GET_WITHDRAW_HISTORY_BYA_SUCCESS,
+  GET_WITHDRAW_HISTORY_BYA_FAILED,
 } from '../actionTypes';
 
 export const AdminLoginReducer = (state = {}, action) => {
@@ -283,6 +286,21 @@ export const DeleteMWHistoriesReducer = (state = {}, action) => {
     case DELETE_MANUAL_WITHDRAW_HISTORY_SUCCESS:
       return { loading: false, success: true };
     case DELETE_MANUAL_WITHDRAW_HISTORY_FAILED:
+      return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+export const WithdrawHistoryByAReducer = (
+  state = { wHistories: [] },
+  action
+) => {
+  switch (action.type) {
+    case GET_WITHDRAW_HISTORY_BYA_REQUEST:
+      return { loading: true };
+    case GET_WITHDRAW_HISTORY_BYA_SUCCESS:
+      return { loading: false, wHistories: action.payload };
+    case GET_WITHDRAW_HISTORY_BYA_FAILED:
       return { loading: false, error: action.payload };
     default:
       return state;

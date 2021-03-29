@@ -24,7 +24,7 @@ import {
   CLIENT_WITHDRAW_RESET,
   GET_WITHDRAW_HISTORY_BYC_REQUEST,
   GET_WITHDRAW_HISTORY_BYC_SUCCESS,
-  GET_WITHDRAW_HISTORY_BYC_RESET,
+  GET_WITHDRAW_HISTORY_BYC_FAILED,
 } from '../actionTypes';
 
 export const ClientLoginReducer = (state = {}, action) => {
@@ -124,9 +124,8 @@ export const WithdrawHistoryReducer = (state = { wHistories: [] }, action) => {
       return { loading: true };
     case GET_WITHDRAW_HISTORY_BYC_SUCCESS:
       return { loading: false, wHistories: action.payload };
-    case GET_WITHDRAW_HISTORY_BYC_RESET:
+    case GET_WITHDRAW_HISTORY_BYC_FAILED:
       return { loading: false, error: action.payload };
-
     default:
       return state;
   }

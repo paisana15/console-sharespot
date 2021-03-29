@@ -38,6 +38,7 @@ import {
   getManulaWithdrawHistory,
   addManulaWithdrawHistory,
   deleteManulaWithdrawHistory,
+  getWithdrawHistoryByA,
 } from '../redux/action/AdminAction';
 import Loader from '../components/Loader';
 import moment from 'moment';
@@ -61,6 +62,11 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
     isOpen: isWOpen,
     onClose: onWClose,
   } = useDisclosure();
+  const {
+    onOpen: onWHOpen,
+    isOpen: isWHOpen,
+    onClose: onWHClose,
+  } = useDisclosure();
 
   const singleClientDel = useSelector((state) => state.singleClientDel);
   const { loading, success, error } = singleClientDel;
@@ -70,6 +76,13 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
 
   const addMWHistory = useSelector((state) => state.addMWHistory);
   const { error: addMWError } = addMWHistory;
+
+  const histtoryWBya = useSelector((state) => state.histtoryWBya);
+  const {
+    loading: historyLoading,
+    wHistories,
+    error: historyError,
+  } = histtoryWBya;
 
   const fetchReward = useSelector((state) => state.fetchReward);
   const {
@@ -120,6 +133,10 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
   };
   const fetchRewardHandler = () => {
     dispatch(getRewardByAdmin(client?._id));
+  };
+  const getClientWHHandler = () => {
+    onWHOpen();
+    dispatch(getWithdrawHistoryByA(client?._id));
   };
 
   return (
@@ -340,7 +357,7 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
             mr={{ md: 2 }}
             w={{ base: '100%', md: 'auto' }}
             mt={{ base: 2, md: 0 }}
-            variant='outline'
+            variant='solid'
             colorScheme='red'
             onClick={onOpen}
           >
@@ -353,7 +370,7 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
             mt={{ base: 2, md: 0 }}
             onClick={fetchRewardHandler}
             colorScheme='orange'
-            variant={colorMode === 'dark' ? 'outline' : 'solid'}
+            variant='outline'
           >
             <i style={{ marginRight: 5 }} className='fas fa-download'></i>Fetch
             Reward
@@ -363,11 +380,22 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
             mr={{ md: 2 }}
             mt={{ base: 2, md: 0 }}
             colorScheme='yellow'
-            variant={colorMode === 'dark' ? 'outline' : 'solid'}
+            variant='outline'
             onClick={onWOpen}
           >
             <i style={{ marginRight: 5 }} className='fas fa-money-check'></i>Add
             Withdraw
+          </Button>
+          <Button
+            w={{ base: '100%', md: 'auto' }}
+            mr={{ md: 2 }}
+            mt={{ base: 2, md: 0 }}
+            colorScheme='purple'
+            variant='outline'
+            onClick={getClientWHHandler}
+          >
+            <i style={{ marginRight: 5 }} className='fas fa-money-check'></i>
+            Withdraw History
           </Button>
         </Box>
 
@@ -388,12 +416,7 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
             </ModalBody>
 
             <ModalFooter>
-              <Button
-                variant='outline'
-                colorScheme='blue'
-                mr={3}
-                onClick={onClose}
-              >
+              <Button variant='outline' colorScheme='blue' onClick={onClose}>
                 Close
               </Button>
               <Button
@@ -402,6 +425,69 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
                 variant='outline'
               >
                 Yes, Confirm
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+        <Modal isOpen={isWHOpen} onClose={onWHClose}>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>Withdraw History</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <Box>
+                {historyLoading ? (
+                  <Loader />
+                ) : historyError ? (
+                  <AlertMessage status='error' error={historyError} />
+                ) : wHistories && wHistories?.length > 0 ? (
+                  wHistories.map((data) => (
+                    <Flex
+                      key={data?._id}
+                      p='4'
+                      borderRadius='lg'
+                      mb='3'
+                      boxShadow='base'
+                      bg={colorMode === 'light' ? '#f4f5f7' : '#303744'}
+                    >
+                      <Box>
+                        <Heading size='sm'>
+                          {moment(data?.createdAt).format('LLL')}
+                        </Heading>
+                      </Box>
+                      <Spacer />
+                      <Flex textAlign='right' alignItems='center'>
+                        <Box mr='2'>
+                          <Text fontSize='sm' color='grey'>
+                            Amount
+                          </Text>
+                          <Text
+                            fontWeight='bold'
+                            color={
+                              colorMode === 'light' ? 'grey' : 'orange.200'
+                            }
+                            fontSize='sm'
+                          >
+                            HNT {data?.amount?.toFixed(2)}
+                          </Text>
+                        </Box>
+                      </Flex>
+                    </Flex>
+                  ))
+                ) : (
+                  <AlertMessage status='error' error='No withdraw history!' />
+                )}
+              </Box>
+            </ModalBody>
+
+            <ModalFooter>
+              <Button
+                variant='outline'
+                colorScheme='blue'
+                mr={3}
+                onClick={onWHClose}
+              >
+                Close
               </Button>
             </ModalFooter>
           </ModalContent>
@@ -453,7 +539,7 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
                 </Formik>
               </Box>
               <Box>
-                <Table mt='4' shadow='lg' size='sm' variant='striped'>
+                <Table mt='24' shadow='lg' size='sm' variant='striped'>
                   <TableCaption>Recent withdraw added by admin</TableCaption>
                   <Thead>
                     <Tr>

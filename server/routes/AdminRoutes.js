@@ -18,6 +18,7 @@ import {
   addManualWithdraw,
   getManulaWithdrawHistory,
   deleteManualWithdraw,
+  getWithdrawHistoryByAdmin,
 } from '../controller/AdminController.js';
 import { verifyAdmin } from '../middleware/authMiddleware.js';
 
@@ -55,5 +56,8 @@ router
 router
   .route('/deleteManualWithdraw/:historyId')
   .delete(verifyAdmin, deleteManualWithdraw);
+router
+  .route('/getWithdrawHistoryByAdmin/:clientId')
+  .get(verifyAdmin, getWithdrawHistoryByAdmin);
 
 export default router;

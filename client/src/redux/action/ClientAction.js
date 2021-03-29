@@ -24,9 +24,9 @@ import {
   CLIENT_WITHDRAW_SUCCESS,
   CLIENT_WITHDRAW_RESET,
   CLIENT_WITHDRAW_FAILED,
-  GET_WITHDRAW_HISTORY_BYC_RESET,
   GET_WITHDRAW_HISTORY_BYC_REQUEST,
   GET_WITHDRAW_HISTORY_BYC_SUCCESS,
+  GET_WITHDRAW_HISTORY_BYC_FAILED,
 } from '../actionTypes';
 
 export const clientLogin = (credentials) => async (dispatch) => {
@@ -308,7 +308,7 @@ export const getWithdrawHistoryByC = (clientId) => async (
     });
   } catch (error) {
     dispatch({
-      type: GET_WITHDRAW_HISTORY_BYC_RESET,
+      type: GET_WITHDRAW_HISTORY_BYC_FAILED,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message
