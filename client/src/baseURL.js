@@ -1,1 +1,1 @@
-export const baseURL = `${process.env.PROD_SERVER_URL}`;
+export const baseURL = `https://api.dashboard.sharespot.pt:8888`;

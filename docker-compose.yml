@@ -1,0 +1,23 @@
+version: '3'
+services:
+
+  api:
+    build:
+      context: .
+      dockerfile: server/Dockerfile
+    environment:
+      NODE_ENV: ${NODE_ENV}
+      PORT: ${PORT}
+      MONGO_URI: ${MONGO_URI}
+      JWT_SECRET: ${JWT_SECRET}
+      EMAIL: ${EMAIL}
+      PASSE: ${PASSE}
+      PROD_SERVER: ${PROD_SERVER}
+
+  web:
+    build:
+      context: .
+      dockerfile: client/Dockerfile
+    environment:
+      JWT_SECRET: ${JWT_SECRET}
+      PROD_SERVER_URL: ${PROD_SERVER}
