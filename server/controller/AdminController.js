@@ -10,7 +10,6 @@ import WithdrawRequest from '../models/WithdrawRequestModel.js';
 import { WalletClient } from 'proto';
 import WithdrawHistory from '../models/WithdrawHistoryModel.js';
 import ManualWithdrawHistory from '../models/ManualWithdrawHistoryModel.js';
-import e from 'express';
 
 // // creating client
 const target = '139.59.164.172:8888'; // public Ip, we will change it for a local private address later
@@ -390,9 +389,13 @@ const updateWalletBalance = async (clientId, balance, deleteHotspot) => {
       // console.log(client_wallet.totalRewards + ', ' + 'new reward ' + balance);
 
       if (deleteHotspot) {
-        client_wallet.totalRewards =
-          parseFloat(client_wallet.totalRewards) -
-          parseFloat(balance?.toFixed(2));
+        if (client_wallet.totalRewards !== 0) {
+          client_wallet.totalRewards =
+            parseFloat(client_wallet.totalRewards) -
+            parseFloat(balance?.toFixed(2));
+        } else {
+          client_wallet.totalRewards = 0;
+        }
       } else {
         client_wallet.totalRewards = parseFloat(balance);
       }
@@ -410,7 +413,7 @@ const updateWalletBalance = async (clientId, balance, deleteHotspot) => {
       throw new Error('wallet not found!');
     }
   } catch (error) {
-    console.log(error);
+    throw new Error(error);
   }
 };
 
@@ -423,28 +426,24 @@ const getHotspotReward = asyncHandler(async (req, res) => {
       client_id: clientId,
     });
 
-    client_assigned_hotspot.map((data) => {
+    client_assigned_hotspot.map(async (data) => {
       const minDate = moment(data?.startDate).format('YYYY-MM-DD');
-      axios
-        .get(
-          `https://api.helium.io/v1/hotspots/${data?.hotspot_address}/rewards/sum?max_time=2030-08-27&min_time=${minDate}`
-        )
-        .then((res) => {
-          if (res?.data) {
-            const val = (res?.data?.data?.total * data?.percentage) / 100;
-            clientHotspots.push({
-              total: val,
-            });
-            data.total_earned = val;
-            data.save();
-          } else {
-            throw new Error('Failed to fetch data!');
-          }
-        })
-        .catch((error) => {
-          console.log(error);
+      const response = await axios.get(
+        `https://api.helium.io/v1/hotspots/${data?.hotspot_address}/rewards/sum?max_time=2030-08-27&min_time=${minDate}`
+      );
+      if (response?.data) {
+        const val = (response?.data?.data?.total * data?.percentage) / 100;
+        clientHotspots.push({
+          total: val,
         });
+        data.total_earned = val;
+        await data.save();
+      } else {
+        res.status(404);
+        throw new Error('Failed to fetch data!');
+      }
     });
+
     setTimeout(async () => {
       if (clientHotspots.length > 0) {
         const total = clientHotspots

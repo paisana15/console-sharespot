@@ -182,28 +182,24 @@ const getHotspotRewardByClient = asyncHandler(async (req, res) => {
         client_id: clientId,
       });
 
-      client_assigned_hotspot.map((data) => {
+      client_assigned_hotspot.map(async (data) => {
         const minDate = moment(data?.startDate).format('YYYY-MM-DD');
-        axios
-          .get(
-            `https://api.helium.io/v1/hotspots/${data?.hotspot_address}/rewards/sum?max_time=2030-08-27&min_time=${minDate}`
-          )
-          .then((res) => {
-            if (res?.data) {
-              const val = (res?.data?.data?.total * data?.percentage) / 100;
-              clientHotspots.push({
-                total: val,
-              });
-              data.total_earned = val;
-              data.save();
-            } else {
-              throw new Error('Failed to fetch data!');
-            }
-          })
-          .catch((error) => {
-            console.log(error);
+        const response = await axios.get(
+          `https://api.helium.io/v1/hotspots/${data?.hotspot_address}/rewards/sum?max_time=2030-08-27&min_time=${minDate}`
+        );
+        if (response?.data) {
+          const val = (response?.data?.data?.total * data?.percentage) / 100;
+          clientHotspots.push({
+            total: val,
           });
+          data.total_earned = val;
+          await data.save();
+        } else {
+          res.status(404);
+          throw new Error('Failed to fetch data!');
+        }
       });
+
       setTimeout(async () => {
         if (clientHotspots.length > 0) {
           const total = clientHotspots
@@ -212,6 +208,7 @@ const getHotspotRewardByClient = asyncHandler(async (req, res) => {
               return acc + curr;
             }, 0);
           const totalEarn = total.toFixed(2);
+
           await updateWalletBalance(clientId, totalEarn, false);
 
           const client_hotspot = await ClientHotspot.find({
@@ -233,8 +230,8 @@ const getHotspotRewardByClient = asyncHandler(async (req, res) => {
             });
           }
         } else {
-          res.status(500);
-          throw new Error();
+          res.status(404);
+          throw new Error('Client hotspot not found!');
         }
       }, 5000);
     } else {
