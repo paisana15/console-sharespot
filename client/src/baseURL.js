@@ -1,1 +1,1 @@
-export const baseURL = 'http://localhost:5001';
+export const baseURL = `${process.env.PROD_SERVER_URL}`;

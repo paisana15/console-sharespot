@@ -63,7 +63,7 @@ const initialState = {
     isAuthenticated: localStorage.getItem('aInfo')
       ? jwt.verify(
           JSON.parse(localStorage.getItem('aInfo'))._atoken,
-          `9856gf#o0B*kjvgi8796vfcwe`, // will be hidden in prod mode
+          `${process.env.JWT_SECRET}`,
           (err, dec) => {
             if (err) {
               localStorage.removeItem('aInfo');
@@ -82,7 +82,7 @@ const initialState = {
     isAuthenticated: localStorage.getItem('cInfo')
       ? jwt.verify(
           JSON.parse(localStorage.getItem('cInfo'))._ctoken,
-          `9856gf#o0B*kjvgi8796vfcwe`, // will be hidden in prod mode
+          `${process.env.JWT_SECRET}`,
           (err, dec) => {
             if (err) {
               localStorage.removeItem('cInfo');
