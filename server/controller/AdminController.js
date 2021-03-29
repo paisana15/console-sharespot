@@ -550,6 +550,70 @@ const getHotspotReward = asyncHandler(async (req, res) => {
     throw new Error('Client not found!');
   }
 });
+const getHotspotRewardByS = asyncHandler(async (req, res) => {
+  const clientId = req.params.clientId;
+  const client = await Client.findById(clientId);
+  if (client) {
+    let clientHotspots = [];
+    const client_assigned_hotspot = await ClientHotspot.find({
+      client_id: clientId,
+    });
+    client_assigned_hotspot.map(async (data) => {
+      const minDate = moment(data?.startDate).format('YYYY-MM-DD');
+      const response = await axios.get(
+        `https://api.helium.io/v1/hotspots/${data?.hotspot_address}/rewards/sum?max_time=2030-08-27&min_time=${minDate}`
+      );
+      if (response?.data) {
+        const val = (response?.data?.data?.total * data?.percentage) / 100;
+        clientHotspots.push({
+          total: val,
+        });
+        data.total_earned = val;
+        await data.save();
+      } else {
+        res.status(404);
+        throw new Error('Failed to fetch data!');
+      }
+    });
+
+    setTimeout(async () => {
+      if (clientHotspots.length > 0) {
+        const total = clientHotspots
+          .map((data) => data.total)
+          .reduce((acc, curr) => {
+            return acc + curr;
+          }, 0);
+        const totalEarn = total.toFixed(2);
+        await updateWalletBalance(clientId, totalEarn, false);
+
+        const client_hotspot = await ClientHotspot.find({
+          client_id: clientId,
+        });
+        const clientWallet = await Wallet.findOne({ client_id: clientId });
+
+        if (client_hotspot.length < 0) {
+          res.status(200).json({
+            client: client,
+            client_hotspot: [],
+            clientWallet: {},
+          });
+        } else {
+          res.status(200).json({
+            client: client,
+            client_hotspot: client_hotspot,
+            clientWallet: clientWallet,
+          });
+        }
+      } else {
+        res.status(500);
+        throw new Error();
+      }
+    }, 5000);
+  } else {
+    res.status(404);
+    throw new Error('Client not found!');
+  }
+});
 
 const deleteHotspot = asyncHandler(async (req, res) => {
   const hotspotId = req.params.hotspotId;
@@ -960,4 +1024,5 @@ export {
   getManulaWithdrawHistory,
   deleteManualWithdraw,
   getWithdrawHistoryByAdmin,
+  getHotspotRewardByS,
 };

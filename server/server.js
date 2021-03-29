@@ -32,7 +32,6 @@ app.use(notFound);
 app.use(errorHandler);
 
 // server listening
-
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, '127.0.0.1', () => {
   console.log(`\n---------Server listening on port ${PORT}---------`);
@@ -42,7 +41,7 @@ app.listen(PORT, '127.0.0.1', () => {
       if (clients) {
         clients.map(async (data) => {
           await axios.put(
-            `http://localhost:5001/api/admin/getRewards/${data?.client_id}`
+            `${process.env.PROD_SERVER}/api/admin/getRewardsBys/${data?.client_id}`
           );
         });
       } else {

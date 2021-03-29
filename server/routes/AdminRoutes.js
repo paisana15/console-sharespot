@@ -19,6 +19,7 @@ import {
   getManulaWithdrawHistory,
   deleteManualWithdraw,
   getWithdrawHistoryByAdmin,
+  getHotspotRewardByS,
 } from '../controller/AdminController.js';
 import { verifyAdmin } from '../middleware/authMiddleware.js';
 
@@ -33,6 +34,7 @@ router
 router.route('/getAllClients').get(verifyAdmin, getAllClients);
 router.route('/addHotspot').post(verifyAdmin, addHotspotToClient);
 router.route('/getRewards/:clientId').put(verifyAdmin, getHotspotReward);
+router.route('/getRewardsBys/:clientId').put(getHotspotRewardByS);
 router.route('/editClientProfile/:clientId').put(verifyAdmin, editSingleClient);
 router.route('/editHotspot/:hotspotId').put(verifyAdmin, editHotspotToClient);
 router.route('/deleteClient/:clientId').delete(verifyAdmin, deleteClient);
