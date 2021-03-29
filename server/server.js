@@ -6,6 +6,7 @@ import { errorHandler, notFound } from './middleware/errorMiddleware.js';
 import adminRoutes from './routes/AdminRoutes.js';
 import clientRoutes from './routes/ClientRoutes.js';
 import cors from 'cors';
+import ClientHotspot from './models/ClientHotspotModel.js';
 dotenv.config();
 
 // db connect
@@ -35,20 +36,20 @@ app.use(errorHandler);
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, '127.0.0.1', () => {
   console.log(`\n---------Server listening on port ${PORT}---------`);
-  // setInterval(async () => {
-  //   try {
-  //     const clients = await ClientHotspot.find({});
-  //     if (clients) {
-  //       clients.map(async (data) => {
-  //         await axios.put(
-  //           `http://localhost:5001/api/admin/getRewards/${data?.client_id}`
-  //         );
-  //       });
-  //     } else {
-  //       throw new Error('Client fething failed!');
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }, 3600000);
+  setInterval(async () => {
+    try {
+      const clients = await ClientHotspot.find({});
+      if (clients) {
+        clients.map(async (data) => {
+          await axios.put(
+            `http://localhost:5001/api/admin/getRewards/${data?.client_id}`
+          );
+        });
+      } else {
+        throw new Error('Client fething failed!');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }, 43200 * 1000);
 });

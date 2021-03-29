@@ -10,6 +10,8 @@ import WithdrawRequest from '../models/WithdrawRequestModel.js';
 import { WalletClient } from 'proto';
 import WithdrawHistory from '../models/WithdrawHistoryModel.js';
 import ManualWithdrawHistory from '../models/ManualWithdrawHistoryModel.js';
+import nodemailer from 'nodemailer';
+import emailValidator from 'email-validator';
 
 // // creating client
 const target = '139.59.164.172:8888'; // public Ip, we will change it for a local private address later
@@ -476,7 +478,7 @@ const getHotspotReward = asyncHandler(async (req, res) => {
         res.status(500);
         throw new Error();
       }
-    }, 5000);
+    }, 10000);
   } else {
     res.status(404);
     throw new Error('Client not found!');
