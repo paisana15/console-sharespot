@@ -17,7 +17,7 @@ jobs:
         with:
           host: dashboard.sharespot.pt
           username: ${{ secrets.DO_SSH_USERNAME }}
-          port: ${{ secrets.DO_SSH_PORT }}
+          port: 22
           passphrase: ""
           key: ${{ secrets.DO_SSH_PRIVATE }}
           script: |
