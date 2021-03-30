@@ -1,0 +1,27 @@
+
+on:
+  release:
+    types: [created]
+
+name: Deploy to Digital Ocean
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Executing remote  command
+        uses: appleboy/ssh-action@master
+        with:
+          host: dashboard.sharespot.pt
+          username: ${{ secrets.DO_SSH_USERNAME }}
+          port: 22
+          passphrase: ${{ secrets.DO_SSH_PASSPHRASE }}
+          key: ${{ secrets.DO_SSH_PRIVATE }}
+          script: |
+            cd /root/dashboard
+            git pull
+            docker-compose down --rmi all
+            docker-compose up -d
