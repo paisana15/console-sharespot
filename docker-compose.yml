@@ -1,10 +1,27 @@
 version: '3'
 services:
 
+  nginx:
+    image: nginx:1.15-alpine
+    networks:
+      - default
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8888:8888"
+    volumes:
+      - ./data/nginx:/etc/nginx/conf.d
+      - /etc/letsencrypt:/etc/letsencrypt
+    depends_on:
+      - api
+      - web
+
   api:
     build:
       context: .
       dockerfile: server/Dockerfile
+    networks:
+      - default
     environment:
       NODE_ENV: ${NODE_ENV}
       PORT: ${PORT}
@@ -18,6 +35,11 @@ services:
     build:
       context: .
       dockerfile: client/Dockerfile
+    networks:
+      - default
     environment:
       JWT_SECRET: ${JWT_SECRET}
       PROD_SERVER_URL: ${PROD_SERVER}
+
+networks:
+  default:
