@@ -8,16 +8,20 @@ name: Deploy to Digital Ocean
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Deploy to Docker swarm
-        uses: wshihadeh/docker-deployment-action@v1
+      - uses: actions/checkout@v1
+
+      - name: Executing remote  command
+        uses: appleboy/ssh-action@master
         with:
-          remote_docker_host: root@dashboard.sharespot.pt
-          ssh_private_key: ${{ secrets.DO_SSH_PRIVATE_KEY }}
-          ssh_public_key: ${{ secrets.DO_SSH_PUBLIC_KEY }}
-          deployment_mode: docker-compose
-          copy_stack_file: true
-          deploy_path: /root/dashboard
-          stack_file_name: docker-compose.yml
-          keep_files: 5
-          args: docker-compose -f $INPUT_STACK_FILE_NAME
+          host: dashboard.sharespot.pt
+          username: ${{ secrets.DO_SSH_USERNAME }}
+          port: ${{ secrets.DO_SSH_PORT }}
+          passphrase: ""
+          key: ${{ secrets.DO_SSH_PRIVATE }}
+          script: |
+            cd /root/dashboard
+            git pull
+            docker-compose down --rmi all
+            docker-compose up -d
