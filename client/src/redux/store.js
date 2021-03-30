@@ -1,6 +1,8 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import thunk from 'redux-thunk';
+import jwt_decode from 'jwt-decode';
+
 import {
   AcceptWithdrawReducer,
   AddHotspotClientReducer,
@@ -20,7 +22,6 @@ import {
   RejectWithdrawReducer,
   WithdrawHistoryByAReducer,
 } from './reducer/AdminReducer';
-import jwt from 'jsonwebtoken';
 import {
   ClientLoginReducer,
   ClientUpdateByCReducer,
@@ -58,21 +59,19 @@ const reducer = combineReducers({
   deleteMWHistory: DeleteMWHistoriesReducer,
 });
 
+const verifyToken = (token, lsItem) => {
+  const currentDate = new Date();
+  const decodeToken = jwt_decode(token);
+  if (currentDate.getTime() > decodeToken.exp * 1000) {
+    localStorage.removeItem(lsItem);
+    return false;
+  } else return true;
+};
+
 const initialState = {
   loginAdmin: {
     isAuthenticated: localStorage.getItem('aInfo')
-      ? jwt.verify(
-          JSON.parse(localStorage.getItem('aInfo'))._atoken,
-          `${process.env.JWT_SECRET}`,
-          (err, dec) => {
-            if (err) {
-              localStorage.removeItem('aInfo');
-              return false;
-            } else {
-              return true;
-            }
-          }
-        )
+      ? verifyToken(JSON.parse(localStorage.getItem('aInfo'))._atoken, 'aInfo')
       : false,
     aInfo: localStorage.getItem('aInfo')
       ? JSON.parse(localStorage.getItem('aInfo'))
@@ -80,18 +79,7 @@ const initialState = {
   },
   loginClient: {
     isAuthenticated: localStorage.getItem('cInfo')
-      ? jwt.verify(
-          JSON.parse(localStorage.getItem('cInfo'))._ctoken,
-          `${process.env.JWT_SECRET}`,
-          (err, dec) => {
-            if (err) {
-              localStorage.removeItem('cInfo');
-              return false;
-            } else {
-              return true;
-            }
-          }
-        )
+      ? verifyToken(JSON.parse(localStorage.getItem('cInfo'))._ctoken, 'cInfo')
       : false,
     cInfo: localStorage.getItem('cInfo')
       ? JSON.parse(localStorage.getItem('cInfo'))

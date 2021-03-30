@@ -5,6 +5,7 @@ import { adminLogout } from '../redux/action/AdminAction';
 import { useDispatch } from 'react-redux';
 import Logo from './Logo';
 import { useColorMode } from '@chakra-ui/color-mode';
+import { IconButton } from '@chakra-ui/button';
 
 const MenuItems = ({ children }) => (
   <Text
@@ -74,24 +75,20 @@ const AdminNavbar = () => {
                 Sign out
               </span>
             </MenuItems>
-            <Box
-              d='flex'
-              borderRadius='full'
-              fontWeight='semibold'
-              letterSpacing='wide'
-              bg='#505050'
-              cursor='pointer'
-              fontSize='sm'
-              w='30px'
-              h='30px'
-              mt={{ base: '2', sm: '2', md: 0 }}
-              alignItems='center'
-              justifyContent='center'
-              color={`${colorMode === 'light' ? 'yellow.300' : 'white'}`}
+            <IconButton
+              mt={{ base: 2, md: 0 }}
               onClick={toggleColorMode}
-            >
-              <i className='fas fa-cloud-moon'></i>
-            </Box>
+              aria-label='Switch Theme'
+              variant='unstyled'
+              icon={
+                <i
+                  style={{
+                    color: colorMode === 'light' ? 'yellow' : '#ffffff',
+                  }}
+                  className='fas fa-cloud-moon'
+                ></i>
+              }
+            />
           </Box>
         </Flex>
       </Container>

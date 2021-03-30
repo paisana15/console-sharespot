@@ -245,11 +245,13 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
         </Box>
       </Box>
       <Box mt='4'>
-        <Heading size='xs'>Assigned Hotspot ({client?.total_hotspot})</Heading>
+        <Heading mb='3' size='xs'>
+          Assigned Hotspot ({client?.total_hotspot})
+        </Heading>
         <Box
           boxShadow='md'
           borderRadius='md'
-          p='5'
+          p='4'
           className='assigned_hotspot_wrapper'
         >
           {client_hotspot?.length > 0 ? (
@@ -352,7 +354,7 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
             <AlertMessage status='error' error='No hotspot assigned yet!' />
           )}
         </Box>
-        <Box d={{ md: 'flex' }} mt='4' alignItems='center'>
+        <Box d={{ md: 'flex' }} mt='6' alignItems='center'>
           <Button
             mr={{ md: 2 }}
             w={{ base: '100%', md: 'auto' }}
