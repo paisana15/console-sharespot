@@ -12,6 +12,7 @@ import WithdrawHistory from '../models/WithdrawHistoryModel.js';
 import ManualWithdrawHistory from '../models/ManualWithdrawHistoryModel.js';
 import nodemailer from 'nodemailer';
 import emailValidator from 'email-validator';
+import _ from 'lodash';
 
 // // creating client
 const target = '139.59.164.172:8888'; // public Ip, we will change it for a local private address later
@@ -345,45 +346,7 @@ const editSingleClient = asyncHandler(async (req, res) => {
     throw new Error('Client not found!');
   }
 });
-// desc: get hotspot reward
-// routes: api/admin/getRewards
-// access: private
-// method: put
-// const getHotspotReward = (req, res) => {
-//   let clientHotspots = [];
-//   ClientHotspot.find({
-//     client_id: req.params.clientId,
-//   })
-//     .then((client_assigned_hotspot) =>
-//       client_assigned_hotspot.map((data) => {
-//         axios
-//           .get(
-//             `https://api.helium.io/v1/hotspots/${data?.hotspot_address}/rewards/sum?max_time=2030-08-27&min_time=2019-01-01`
-//           )
-//           .then((res) => {
-//             if (res?.data) {
-//               clientHotspots.push(res?.data?.data);
-//             }
-//           })
-//           .catch((error) => {
-//             console.log(error);
-//           });
-//       })
-//     )
-//     .then((clientHotspots) => {
-//       clientHotspots
-//         .map((data) => data?.total)
-//         .reduce((acc, curr) => {
-//           return acc + curr;
-//         }, 0);
-//     })
-//     .then((total) => {
-//       const totalEarn = (total * 10) / 100;
-//       console.log(totalEarn);
-//       res.status(200).json(clientHotspots);
-//     })
-//     .catch((err) => console.log(err));
-// };
+
 const updateWalletBalance = async (clientId, balance, deleteHotspot) => {
   try {
     const client_wallet = await Wallet.findOne({ client_id: clientId });
@@ -419,199 +382,104 @@ const updateWalletBalance = async (clientId, balance, deleteHotspot) => {
   }
 };
 
-// const getHotspotReward = (req, res, next) => {
-//   const clientId = req.params.clientId;
-
-//   Client.findById(clientId)
-//     .then((client) => {
-//       ClientHotspot.find({ client_id: clientId })
-//         .then((client_hotspots) => {
-//           let clientHotspots = [];
-//           client_hotspots.map((data) => {
-//             const minDate = moment(data?.startDate).format('YYYY-MM-DD');
-//             axios
-//               .get(
-//                 `https://api.helium.io/v1/hotspots/${data?.hotspot_address}/rewards/sum?max_time=2030-08-27&min_time=${minDate}`
-//               )
-//               .then((response) => {
-//                 if (response?.data) {
-//                   const val =
-//                     (response?.data?.data?.total * data?.percentage) / 100;
-//                   clientHotspots.push({
-//                     total: val,
-//                   });
-//                   data.total_earned = val;
-//                   data.save();
-//                 } else {
-//                   res.status(404);
-//                   throw new Error('Failed to fetch data!');
-//                 }
-//               })
-//               .catch((error) => next(error));
-//           });
-//           return clientHotspots;
-//         })
-//         .then((clientHotspots) => {
-//           const total = clientHotspots
-//             .map((data) => data.total)
-//             .reduce((acc, curr) => {
-//               return acc + curr;
-//             }, 0);
-//           const totalEarn = total.toFixed(2);
-//           updateWalletBalance(clientId, totalEarn, false);
-//         })
-//         .then(() => {
-//           ClientHotspot.find({
-//             client_id: clientId,
-//           })
-//             .then((client_hotspot) => {
-//               Wallet.findOne({
-//                 client_id: clientId,
-//               }).then((clientWallet) => {
-//                 return { client_hotspot, clientWallet };
-//               });
-//             })
-//             .then((client_hotspot, clientWallet) => {
-//               res.status(200).json({
-//                 client: client,
-//                 client_hotspot: client_hotspot,
-//                 clientWallet: clientWallet,
-//               });
-//             })
-//             .catch((error) => next(error));
-//         })
-//         .catch((error) => next(error));
-//     })
-//     .catch((error) => next(error));
-// };
-
-const getHotspotReward = asyncHandler(async (req, res) => {
-  const clientId = req.params.clientId;
-  const client = await Client.findById(clientId);
-  if (client) {
-    let clientHotspots = [];
-    const client_assigned_hotspot = await ClientHotspot.find({
-      client_id: clientId,
-    });
-
-    client_assigned_hotspot.map(async (data) => {
+const calHotspotTotal = async (assigned_hotspots) => {
+  const responses = await Promise.all(
+    assigned_hotspots.map(async (data) => {
       const minDate = moment(data?.startDate).format('YYYY-MM-DD');
       const response = await axios.get(
         `https://api.helium.io/v1/hotspots/${data?.hotspot_address}/rewards/sum?max_time=2030-08-27&min_time=${minDate}`
       );
-      if (response?.data) {
-        const val = (response?.data?.data?.total * data?.percentage) / 100;
-        clientHotspots.push({
-          total: val,
-        });
-        data.total_earned = val;
-        await data.save();
-      } else {
-        res.status(404);
-        throw new Error('Failed to fetch data!');
+      const val = (response?.data?.data?.total * data?.percentage) / 100;
+      data.total_earned = val;
+      await data.save();
+      return response;
+    })
+  );
+  const clientHotspotsTotal = responses.map((response, i) => {
+    return {
+      total:
+        (response?.data?.data?.total * assigned_hotspots[i]?.percentage) / 100,
+    };
+  });
+  return clientHotspotsTotal;
+};
+
+const getHotspotReward = async (clients_list) => {
+  try {
+    clients_list.forEach(async (clientId) => {
+      const client_assigned_hotspot = await ClientHotspot.find({
+        client_id: clientId,
+      });
+      const clientHotspotsTotal = await calHotspotTotal(
+        client_assigned_hotspot
+      );
+
+      const total = clientHotspotsTotal
+        .map((data) => data.total)
+        .reduce((acc, curr) => {
+          return acc + curr;
+        }, 0);
+      const totalEarn = total.toFixed(2);
+      await updateWalletBalance(clientId, totalEarn, false);
+    });
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+const getHotspotRewardByAdmin = asyncHandler(async (req, res) => {
+  const clients = await ClientHotspot.find({});
+  if (clients.length > 0) {
+    const clients_list = [];
+
+    clients.forEach((client) => {
+      if (
+        _.findIndex(
+          clients_list,
+          (data) => data.toString() === client.client_id.toString()
+        ) < 0
+      ) {
+        clients_list.push(client?.client_id);
       }
     });
-
-    setTimeout(async () => {
-      if (clientHotspots.length > 0) {
-        const total = clientHotspots
-          .map((data) => data.total)
-          .reduce((acc, curr) => {
-            return acc + curr;
-          }, 0);
-        const totalEarn = total.toFixed(2);
-        await updateWalletBalance(clientId, totalEarn, false);
-
-        const client_hotspot = await ClientHotspot.find({
-          client_id: clientId,
-        });
-        const clientWallet = await Wallet.findOne({ client_id: clientId });
-
-        if (client_hotspot.length < 0) {
-          res.status(200).json({
-            client: client,
-            client_hotspot: [],
-            clientWallet: {},
-          });
-        } else {
-          res.status(200).json({
-            client: client,
-            client_hotspot: client_hotspot,
-            clientWallet: clientWallet,
-          });
-        }
-      } else {
-        res.status(500);
-        throw new Error();
-      }
-    }, 5000);
+    const data = getHotspotReward(clients_list);
+    if (data) {
+      res.status(200).json({ message: 'Reward fetched!' });
+    } else {
+      res.status(500);
+      throw new Error('Failed to load hotspot reward!');
+    }
   } else {
     res.status(404);
-    throw new Error('Client not found!');
+    throw new Error('No hotspot found!');
   }
 });
+
 const getHotspotRewardByS = asyncHandler(async (req, res) => {
-  const clientId = req.params.clientId;
-  const client = await Client.findById(clientId);
-  if (client) {
-    let clientHotspots = [];
-    const client_assigned_hotspot = await ClientHotspot.find({
-      client_id: clientId,
-    });
-    client_assigned_hotspot.map(async (data) => {
-      const minDate = moment(data?.startDate).format('YYYY-MM-DD');
-      const response = await axios.get(
-        `https://api.helium.io/v1/hotspots/${data?.hotspot_address}/rewards/sum?max_time=2030-08-27&min_time=${minDate}`
-      );
-      if (response?.data) {
-        const val = (response?.data?.data?.total * data?.percentage) / 100;
-        clientHotspots.push({
-          total: val,
-        });
-        data.total_earned = val;
-        await data.save();
-      } else {
-        res.status(404);
-        throw new Error('Failed to fetch data!');
+  const clients = await ClientHotspot.find({});
+  if (clients.length > 0) {
+    const clients_list = [];
+
+    clients.forEach((client) => {
+      if (
+        _.findIndex(
+          clients_list,
+          (data) => data.toString() === client.client_id.toString()
+        ) < 0
+      ) {
+        clients_list.push(client?.client_id);
       }
     });
-
-    setTimeout(async () => {
-      if (clientHotspots.length > 0) {
-        const total = clientHotspots
-          .map((data) => data.total)
-          .reduce((acc, curr) => {
-            return acc + curr;
-          }, 0);
-        const totalEarn = total.toFixed(2);
-        await updateWalletBalance(clientId, totalEarn, false);
-
-        const client_hotspot = await ClientHotspot.find({
-          client_id: clientId,
-        });
-        const clientWallet = await Wallet.findOne({ client_id: clientId });
-
-        if (client_hotspot.length < 0) {
-          res.status(200).json({
-            client: client,
-            client_hotspot: [],
-            clientWallet: {},
-          });
-        } else {
-          res.status(200).json({
-            client: client,
-            client_hotspot: client_hotspot,
-            clientWallet: clientWallet,
-          });
-        }
-      } else {
-        res.status(500);
-        throw new Error();
-      }
-    }, 5000);
+    const data = getHotspotReward(clients_list);
+    if (data) {
+      res.status(200).json({ message: 'Reward fetched!' });
+    } else {
+      res.status(500);
+      throw new Error('Failed to load hotspot reward!');
+    }
   } else {
     res.status(404);
-    throw new Error('Client not found!');
+    throw new Error('No hotspot found!');
   }
 });
 
@@ -840,7 +708,9 @@ const withdrawalRequestReject = asyncHandler(async (req, res) => {
 const calc_cw_balances = async (arr) => {
   const sum = arr
     .map((data) => data.wallet_balance)
-    .reduce((acc, curr) => parseFloat(acc) + parseFloat(curr));
+    .reduce((acc, curr) => {
+      return parseFloat(acc) + parseFloat(curr);
+    }, 0);
   return await sum;
 };
 
@@ -849,7 +719,7 @@ const getMainSecondWallet = asyncHandler(async (req, res) => {
     'https://api.helium.io/v1/accounts/13ESLoXiie3eXoyitxryNQNamGAnJjKt2WkiB4gNq95knxAiGEp/stats'
   );
   const response2 = await axios.get(
-    'https://api.helium.io/v1/accounts/13RUgCBbhLM2jNnzUhY7VRTAgdTi4bUi1o1eW3wV81wquavju7p/stats'
+    'https://api.helium.io/v1/accounts/13RUgCB bhLM2jNnzUhY7VRTAgdTi4bUi1o1eW3wV81wquavju7p/stats'
   );
   if (
     Object.keys(response1).length !== 0 &&
@@ -865,7 +735,9 @@ const getMainSecondWallet = asyncHandler(async (req, res) => {
         res.status(200).json({ mw_balance, sw_balance, cw_balance });
       } else {
         res.status(500);
-        throw new Error('Failed to calculate cw_balance!');
+        throw new Error(
+          'Failed to calculate cw_balances! Client balances is 0!'
+        );
       }
     } else {
       res.status(500);
@@ -1025,4 +897,5 @@ export {
   deleteManualWithdraw,
   getWithdrawHistoryByAdmin,
   getHotspotRewardByS,
+  getHotspotRewardByAdmin,
 };

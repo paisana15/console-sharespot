@@ -17,6 +17,9 @@ const WithdrawRequestSchema = new mongoose.Schema(
       default: 0.0,
       required: true,
     },
+    w_qr_code: {
+      type: String,
+    },
   },
   {
     timestamps: true,

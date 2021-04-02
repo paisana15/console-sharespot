@@ -12,10 +12,10 @@ import {
   ClientUpdateReducer,
   DeleteMWHistoriesReducer,
   DelSingleClientReducer,
-  FetchRewardByAdminReducer,
   GetAllClientsReducer,
   GetMWHistoriesReducer,
   GetMWSWCWReducer,
+  GetRewardByAdminReducer,
   GetSingleClientReducer,
   GetWithdrawalRequestReducer,
   HotspotUpdateReducer,
@@ -45,7 +45,6 @@ const reducer = combineReducers({
   getClientByC: GetClientProfileByCReducer,
   updateClientByC: ClientUpdateByCReducer,
   resetPassword: resetPasswordReducer,
-  fetchReward: FetchRewardByAdminReducer,
   getReward: FetchRewardByClientReducer,
   requestWithdraw: WithdrawRequestReducer,
   withdrawRequestGet: GetWithdrawalRequestReducer,
@@ -57,6 +56,7 @@ const reducer = combineReducers({
   getMWHistories: GetMWHistoriesReducer,
   addMWHistory: AddMWHistoriesReducer,
   deleteMWHistory: DeleteMWHistoriesReducer,
+  getRewardByA: GetRewardByAdminReducer,
 });
 
 const verifyToken = (token, lsItem) => {

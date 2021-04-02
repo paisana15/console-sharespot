@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Flex, Heading, Spacer, Text } from '@chakra-ui/layout';
+import { Box, Heading, Spacer, Text } from '@chakra-ui/layout';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   getWithdrawalRequets,
@@ -25,18 +25,25 @@ import {
   ModalOverlay,
 } from '@chakra-ui/modal';
 import { useDisclosure } from '@chakra-ui/hooks';
+import { Image } from '@chakra-ui/image';
 
 const WithdrawRequestScreen = () => {
   const dispatch = useDispatch();
   const { colorMode } = useColorMode();
   const toast = useToast();
   const [wrId, setwrId] = useState('');
+  const [qrCode, setQRCode] = useState('');
 
   const { onOpen, isOpen, onClose } = useDisclosure();
   const {
     onOpen: onAOpen,
     isOpen: isAOpen,
     onClose: onAClose,
+  } = useDisclosure();
+  const {
+    onOpen: onQROpen,
+    isOpen: isQROpen,
+    onClose: onQRClose,
   } = useDisclosure();
 
   const withdrawRequestGet = useSelector((state) => state.withdrawRequestGet);
@@ -117,7 +124,7 @@ const WithdrawRequestScreen = () => {
   };
 
   return (
-    <Box p='4'>
+    <Box p={{ md: 4 }}>
       <Helmet>
         <title>Withdrawal Request | Admin Dashboard</title>
       </Helmet>
@@ -146,15 +153,29 @@ const WithdrawRequestScreen = () => {
                     {data?.client?.firstname + ' ' + data?.client?.lastname}
                   </Heading>
                 </Link>
-                <Flex mt='2'>
-                  <Text textTransform='' fontSize='xs'>
+                <Box d={{ md: 'flex' }} mt='2'>
+                  <Text fontStyle='italic' fontSize='xs'>
                     <i className='far fa-clock '></i>{' '}
                     {moment(data?.createdAt).format('LLL')}
                   </Text>
-                </Flex>
+                  <Text color='blue.500' ml='3' fontSize='xs'>
+                    WA: {data?.client?.wallet_address}
+                  </Text>
+                  <Button
+                    ml='2'
+                    variant='outline'
+                    size='xs'
+                    onClick={() => {
+                      setQRCode(data?.w_qr_code);
+                      onQROpen();
+                    }}
+                  >
+                    QR
+                  </Button>
+                </Box>
               </Box>
               <Spacer />
-              <Flex textAlign='right' alignItems='center'>
+              <Box d={{ md: 'flex' }} textAlign='right' alignItems='center'>
                 <Box mr='2'>
                   <Text fontSize='sm' color='grey'>
                     Amount
@@ -168,13 +189,13 @@ const WithdrawRequestScreen = () => {
                   </Text>
                 </Box>
 
-                <Flex>
+                <Box f={{ sm: 'flex' }}>
                   <Button
                     size='sm'
                     colorScheme='teal'
                     variant='outline'
                     borderColor='teal'
-                    mr='2'
+                    mr={2}
                     color='gray.500'
                     onClick={() => {
                       onAOpen();
@@ -196,8 +217,8 @@ const WithdrawRequestScreen = () => {
                   >
                     Reject
                   </Button>
-                </Flex>
-              </Flex>
+                </Box>
+              </Box>
             </Box>
           ))
         ) : (
@@ -264,6 +285,23 @@ const WithdrawRequestScreen = () => {
                 variant='outline'
               >
                 Yes, Confirm
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+        <Modal isOpen={isQROpen} onClose={onQRClose}>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>Wallet Address</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <Image margin="auto" src={qrCode} alt='QR Code' />
+              {acceptLoading && <Loader />}
+            </ModalBody>
+
+            <ModalFooter>
+              <Button variant='outline' colorScheme='blue' onClick={onQRClose}>
+                Close
               </Button>
             </ModalFooter>
           </ModalContent>

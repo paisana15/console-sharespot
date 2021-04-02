@@ -121,6 +121,7 @@ const ClientProfileEditByClient = ({ client_details }) => {
                 label='Wallet Address'
                 name='wallet_address'
                 placeholder='Choose wallet address'
+                disabled
               />
 
               <Button
