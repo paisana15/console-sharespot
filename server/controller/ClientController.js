@@ -9,6 +9,7 @@ import axios from 'axios';
 import moment from 'moment';
 import WithdrawHistory from '../models/WithdrawHistoryModel.js';
 import ManualWithdrawHistory from '../models/ManualWithdrawHistoryModel.js';
+import QRCode from 'qrcode';
 
 // desc: client login
 // routes: api/client/login
@@ -244,6 +245,14 @@ const getHotspotRewardByClient = asyncHandler(async (req, res) => {
   }
 });
 
+const QRCodeForWA = async (address) => {
+  try {
+    const str = await QRCode.toDataURL(address);
+    return str;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
 const clientWithdrawRequest = asyncHandler(async (req, res) => {
   const clientId = req.params.clientId;
   const client_user = await Client.findById(clientId);
@@ -263,10 +272,12 @@ const clientWithdrawRequest = asyncHandler(async (req, res) => {
           clientWallet.pendingPayment = amount;
           const update = await clientWallet.save();
           if (update) {
+            const qrCode = await QRCodeForWA(client_user?.wallet_address);
             const newWithdrawRequest = await WithdrawRequest.create({
               wallet: clientWallet?._id,
               client: client_user._id,
               amount: amount,
+              w_qr_code: qrCode,
             });
             if (newWithdrawRequest) {
               res.status(200).json({ message: 'Withdraw Request Received!' });

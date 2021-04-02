@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Flex, Heading, Spacer, Text } from '@chakra-ui/layout';
+import { Box, Heading, Spacer, Text } from '@chakra-ui/layout';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   getWithdrawalRequets,
@@ -25,18 +25,25 @@ import {
   ModalOverlay,
 } from '@chakra-ui/modal';
 import { useDisclosure } from '@chakra-ui/hooks';
+import { Image } from '@chakra-ui/image';
 
 const WithdrawRequestScreen = () => {
   const dispatch = useDispatch();
   const { colorMode } = useColorMode();
   const toast = useToast();
   const [wrId, setwrId] = useState('');
+  const [qrCode, setQRCode] = useState('');
 
   const { onOpen, isOpen, onClose } = useDisclosure();
   const {
     onOpen: onAOpen,
     isOpen: isAOpen,
     onClose: onAClose,
+  } = useDisclosure();
+  const {
+    onOpen: onQROpen,
+    isOpen: isQROpen,
+    onClose: onQRClose,
   } = useDisclosure();
 
   const withdrawRequestGet = useSelector((state) => state.withdrawRequestGet);
@@ -154,6 +161,17 @@ const WithdrawRequestScreen = () => {
                   <Text color='blue.500' ml='3' fontSize='xs'>
                     WA: {data?.client?.wallet_address}
                   </Text>
+                  <Button
+                    ml='2'
+                    variant='outline'
+                    size='xs'
+                    onClick={() => {
+                      setQRCode(data?.w_qr_code);
+                      onQROpen();
+                    }}
+                  >
+                    QR
+                  </Button>
                 </Box>
               </Box>
               <Spacer />
@@ -267,6 +285,23 @@ const WithdrawRequestScreen = () => {
                 variant='outline'
               >
                 Yes, Confirm
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+        <Modal isOpen={isQROpen} onClose={onQRClose}>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>Wallet Address</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <Image margin="auto" src={qrCode} alt='QR Code' />
+              {acceptLoading && <Loader />}
+            </ModalBody>
+
+            <ModalFooter>
+              <Button variant='outline' colorScheme='blue' onClick={onQRClose}>
+                Close
               </Button>
             </ModalFooter>
           </ModalContent>
