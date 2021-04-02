@@ -7,6 +7,8 @@ import adminRoutes from './routes/AdminRoutes.js';
 import clientRoutes from './routes/ClientRoutes.js';
 import cors from 'cors';
 import ClientHotspot from './models/ClientHotspotModel.js';
+import axios from 'axios';
+
 dotenv.config();
 
 // db connect
@@ -33,19 +35,15 @@ app.use(errorHandler);
 
 // server listening
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, 'api', () => {
-  console.log(`\n---------Server listening on port ${PORT}---------`);
+app.listen(PORT, '127.0.0.1', () => {
+  console.log(`\n---Server listening on port ${PORT}---`);
   setInterval(async () => {
     try {
-      const clients = await ClientHotspot.find({});
-      if (clients) {
-        clients.map(async (data) => {
-          await axios.put(
-            `${process.env.PROD_SERVER}/api/admin/getRewardsBys/${data?.client_id}`
-          );
-        });
-      } else {
-        throw new Error('Client fething failed!');
+      const getReward = await axios.put(
+        `${process.env.PROD_SERVER}/api/admin/getRewardsByServer`
+      );
+      if (!getReward) {
+        console.log('Failed to update clients reward!');
       }
     } catch (error) {
       console.log(error);

@@ -34,7 +34,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   deleteHotspot,
   deleteClient,
-  getRewardByAdmin,
   getManulaWithdrawHistory,
   addManulaWithdrawHistory,
   deleteManulaWithdrawHistory,
@@ -84,13 +83,6 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
     error: historyError,
   } = histtoryWBya;
 
-  const fetchReward = useSelector((state) => state.fetchReward);
-  const {
-    loading: rewardLoading,
-    success: rewardSuccess,
-    error: rewardError,
-  } = fetchReward;
-
   useEffect(() => {
     setClient(client_details?.client);
     setClientHotspot(client_details?.client_hotspot);
@@ -114,7 +106,6 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
     client_details,
     success,
     dispatch,
-    rewardSuccess,
     toast,
     history,
     client?._id,
@@ -131,9 +122,7 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
   const clientDelteHandler = () => {
     dispatch(deleteClient(client?._id));
   };
-  const fetchRewardHandler = () => {
-    dispatch(getRewardByAdmin(client?._id));
-  };
+
   const getClientWHHandler = () => {
     onWHOpen();
     dispatch(getWithdrawHistoryByA(client?._id));
@@ -192,13 +181,7 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
         >
           <Heading size='md'>Total Withdrawn</Heading>
           <Text style={{ fontWeight: 'bold' }} fontSize='3xl'>
-            {rewardLoading ? (
-              <Loader small />
-            ) : (
-              `HNT ${
-                client_wallet ? client_wallet?.totalWithdraw?.toFixed(2) : '0'
-              }`
-            )}
+            HNT {client_wallet ? client_wallet?.totalWithdraw?.toFixed(2) : '0'}
           </Text>
         </Box>
         <Spacer />
@@ -213,13 +196,7 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
         >
           <Heading size='md'>Total Rewards</Heading>
           <Text style={{ fontWeight: 'bold' }} fontSize='3xl'>
-            {rewardLoading ? (
-              <Loader small />
-            ) : (
-              `HNT ${
-                client_wallet ? client_wallet?.totalRewards?.toFixed(2) : '0'
-              }`
-            )}
+            HNT {client_wallet ? client_wallet?.totalRewards?.toFixed(2) : '0'}
           </Text>
         </Box>
         <Spacer />
@@ -234,13 +211,8 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
         >
           <Heading size='md'>Balance</Heading>
           <Text style={{ fontWeight: 'bold' }} fontSize='3xl'>
-            {rewardLoading ? (
-              <Loader small />
-            ) : (
-              `HNT ${
-                client_wallet ? client_wallet?.wallet_balance?.toFixed(2) : '0'
-              }`
-            )}
+            HNT{' '}
+            {client_wallet ? client_wallet?.wallet_balance?.toFixed(2) : '0'}
           </Text>
         </Box>
       </Box>
@@ -370,17 +342,6 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
             w={{ base: '100%', md: 'auto' }}
             mr={{ md: 2 }}
             mt={{ base: 2, md: 0 }}
-            onClick={fetchRewardHandler}
-            colorScheme='orange'
-            variant='outline'
-          >
-            <i style={{ marginRight: 5 }} className='fas fa-download'></i>Fetch
-            Reward
-          </Button>
-          <Button
-            w={{ base: '100%', md: 'auto' }}
-            mr={{ md: 2 }}
-            mt={{ base: 2, md: 0 }}
             colorScheme='yellow'
             variant='outline'
             onClick={onWOpen}
@@ -403,10 +364,8 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
 
         {loading ? (
           <Loader />
-        ) : error ? (
-          <AlertMessage status='error' error={error} />
         ) : (
-          rewardError && <AlertMessage status='error' error={rewardError} />
+          error && <AlertMessage status='error' error={error} />
         )}
         <Modal isOpen={isOpen} onClose={onClose}>
           <ModalOverlay />
@@ -418,7 +377,12 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
             </ModalBody>
 
             <ModalFooter>
-              <Button variant='outline' colorScheme='blue' onClick={onClose}>
+              <Button
+                mr='2'
+                variant='outline'
+                colorScheme='blue'
+                onClick={onClose}
+              >
                 Close
               </Button>
               <Button

@@ -9,27 +9,57 @@ import {
   Thead,
   Tr,
 } from '@chakra-ui/table';
-import { Spacer, Button } from '@chakra-ui/react';
+import { Spacer, Button, useToast } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllClients, getMWSWCWbalances } from '../redux/action/AdminAction';
+import {
+  getAllClients,
+  getMWSWCWbalances,
+  getRewardByAdmin,
+} from '../redux/action/AdminAction';
 import Loader from '../components/Loader';
 import AlertMessage from '../components/Alert';
 import { Helmet } from 'react-helmet';
 
 const AllClients = () => {
   const dispatch = useDispatch();
-
+  const toast = useToast();
   const allClientsGet = useSelector((state) => state.allClientsGet);
   const { loading, clients, error } = allClientsGet;
 
   const MWSWCWget = useSelector((state) => state.MWSWCWget);
   const { loading: mwLoading, balances, error: mwError } = MWSWCWget;
 
+  const getRewardByA = useSelector((state) => state.getRewardByA);
+  const {
+    loading: rewardFLoading,
+    success: rewardFSuccess,
+    error: rewardFError,
+  } = getRewardByA;
+
   useEffect(() => {
     dispatch(getAllClients());
     dispatch(getMWSWCWbalances());
-  }, [dispatch]);
+
+    if (rewardFSuccess) {
+      toast({
+        status: 'success',
+        title: 'Success!',
+        description: 'Clients reward fetched!',
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+    if (rewardFError) {
+      toast({
+        status: 'error',
+        title: 'Failed!',
+        description: rewardFError,
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+  }, [dispatch, toast, rewardFSuccess, rewardFError]);
 
   return (
     <Box p='4'>
@@ -156,6 +186,23 @@ const AllClients = () => {
         ) : (
           <AlertMessage status='error' error='No clients found!' />
         )}
+      </Box>
+      <Box mt='2'>
+        <Button
+          w={{ base: '100%', md: 'auto' }}
+          mr={{ md: 2 }}
+          mt={{ base: 2, md: 0 }}
+          colorScheme='orange'
+          variant='outline'
+          isLoading={rewardFLoading}
+          loadingText='Fetching...'
+          onClick={() => {
+            dispatch(getRewardByAdmin());
+          }}
+        >
+          <i style={{ marginRight: 5 }} className='fas fa-download'></i>Fetch
+          Reward
+        </Button>
       </Box>
     </Box>
   );

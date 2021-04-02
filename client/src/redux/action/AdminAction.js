@@ -29,10 +29,6 @@ import {
   DELETE_SINGLE_CLIENT_REQUEST,
   DELETE_SINGLE_CLIENT_RESET,
   DELETE_SINGLE_CLIENT_SUCCESS,
-  FETCH_REWARD_BY_ADMIN_REQUEST,
-  FETCH_REWARD_BY_ADMIN_RESET,
-  FETCH_REWARD_BY_ADMIN_SUCCESS,
-  FETCH_REWARD_BY_CLIENT_RESET,
   GET_ALL_CLIENTS_FAILED,
   GET_ALL_CLIENTS_REQUEST,
   GET_ALL_CLIENTS_SUCCESS,
@@ -63,6 +59,10 @@ import {
   GET_WITHDRAW_HISTORY_BYA_REQUEST,
   GET_WITHDRAW_HISTORY_BYA_SUCCESS,
   GET_WITHDRAW_HISTORY_BYA_FAILED,
+  GET_REWARD_BY_ADMIN_SUCCESS,
+  GET_REWARD_BY_ADMIN_FAILED,
+  GET_REWARD_BY_ADMIN_REQUEST,
+  GET_REWARD_BY_ADMIN_RESET,
 } from '../actionTypes';
 
 export const adminLogin = (credentials) => async (dispatch) => {
@@ -406,46 +406,6 @@ export const updateHotspot = (hotspotId, hotspot) => async (
   }
 };
 
-export const getRewardByAdmin = (clientId) => async (dispatch, getState) => {
-  try {
-    dispatch({
-      type: FETCH_REWARD_BY_ADMIN_REQUEST,
-    });
-    const {
-      loginAdmin: { aInfo },
-    } = getState();
-
-    const config = {
-      headers: {
-        Authorization: `Bearer ${aInfo._atoken}`,
-      },
-    };
-
-    const { data } = await axios.put(
-      `${baseURL}/api/admin/getRewards/${clientId}`,
-      {},
-      config
-    );
-    dispatch({
-      type: FETCH_REWARD_BY_ADMIN_SUCCESS,
-      payload: data,
-    });
-    setTimeout(() => {
-      dispatch({
-        type: FETCH_REWARD_BY_CLIENT_RESET,
-      });
-    }, 2000);
-  } catch (error) {
-    dispatch({
-      type: FETCH_REWARD_BY_ADMIN_RESET,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
-    });
-  }
-};
-
 export const getWithdrawalRequets = () => async (dispatch, getState) => {
   try {
     dispatch({
@@ -737,6 +697,43 @@ export const getWithdrawHistoryByA = (clientId) => async (
         error.response && error.response.data.message
           ? error.response.data.message
           : error.message,
+    });
+  }
+};
+
+export const getRewardByAdmin = () => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: GET_REWARD_BY_ADMIN_REQUEST,
+    });
+    const {
+      loginAdmin: { aInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${aInfo._atoken}`,
+      },
+    };
+    await axios.put(`${baseURL}/api/admin/getRewardsByAdmin`, {}, config);
+    dispatch({
+      type: GET_REWARD_BY_ADMIN_SUCCESS,
+    });
+    setTimeout(() => {
+      dispatch({
+        type: GET_REWARD_BY_ADMIN_RESET,
+      });
+    }, 2000);
+  } catch (error) {
+    dispatch({
+      type: GET_REWARD_BY_ADMIN_FAILED,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+    dispatch({
+      type: GET_REWARD_BY_ADMIN_RESET,
     });
   }
 };

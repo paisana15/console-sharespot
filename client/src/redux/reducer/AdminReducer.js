@@ -19,10 +19,6 @@ import {
   DELETE_SINGLE_CLIENT_REQUEST,
   DELETE_SINGLE_CLIENT_RESET,
   DELETE_SINGLE_CLIENT_SUCCESS,
-  FETCH_REWARD_BY_ADMIN_FAILED,
-  FETCH_REWARD_BY_ADMIN_REQUEST,
-  FETCH_REWARD_BY_ADMIN_RESET,
-  FETCH_REWARD_BY_ADMIN_SUCCESS,
   GET_ALL_CLIENTS_FAILED,
   GET_ALL_CLIENTS_REQUEST,
   GET_ALL_CLIENTS_SUCCESS,
@@ -60,6 +56,10 @@ import {
   GET_WITHDRAW_HISTORY_BYA_REQUEST,
   GET_WITHDRAW_HISTORY_BYA_SUCCESS,
   GET_WITHDRAW_HISTORY_BYA_FAILED,
+  GET_REWARD_BY_ADMIN_REQUEST,
+  GET_REWARD_BY_ADMIN_SUCCESS,
+  GET_REWARD_BY_ADMIN_FAILED,
+  GET_REWARD_BY_ADMIN_RESET,
 } from '../actionTypes';
 
 export const AdminLoginReducer = (state = {}, action) => {
@@ -98,8 +98,6 @@ export const GetSingleClientReducer = (
     case GET_SINGLE_CLIENT_REQUEST:
       return { loading: true };
     case GET_SINGLE_CLIENT_SUCCESS:
-      return { loading: false, clientData: action.payload };
-    case FETCH_REWARD_BY_ADMIN_SUCCESS:
       return { loading: false, clientData: action.payload };
     case HOTSPOT_DELETE:
       return { loading: false, clientData: action.payload };
@@ -179,20 +177,7 @@ export const HotspotUpdateReducer = (state = {}, action) => {
       return state;
   }
 };
-export const FetchRewardByAdminReducer = (state = {}, action) => {
-  switch (action.type) {
-    case FETCH_REWARD_BY_ADMIN_REQUEST:
-      return { loading: true };
-    case FETCH_REWARD_BY_ADMIN_SUCCESS:
-      return { loading: false };
-    case FETCH_REWARD_BY_ADMIN_FAILED:
-      return { loading: false, error: action.payload };
-    case FETCH_REWARD_BY_ADMIN_RESET:
-      return {};
-    default:
-      return state;
-  }
-};
+
 export const GetWithdrawalRequestReducer = (
   state = { wRequests: [] },
   action
@@ -302,6 +287,21 @@ export const WithdrawHistoryByAReducer = (
       return { loading: false, wHistories: action.payload };
     case GET_WITHDRAW_HISTORY_BYA_FAILED:
       return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+export const GetRewardByAdminReducer = (state = {}, action) => {
+  switch (action.type) {
+    case GET_REWARD_BY_ADMIN_REQUEST:
+      return { loading: true };
+    case GET_REWARD_BY_ADMIN_SUCCESS:
+      return { loading: false, success: true };
+    case GET_REWARD_BY_ADMIN_FAILED:
+      return { loading: false, error: action.payload };
+    case GET_REWARD_BY_ADMIN_RESET:
+      return {};
     default:
       return state;
   }
