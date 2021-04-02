@@ -117,7 +117,7 @@ const WithdrawRequestScreen = () => {
   };
 
   return (
-    <Box p='4'>
+    <Box p={{ md: 4 }}>
       <Helmet>
         <title>Withdrawal Request | Admin Dashboard</title>
       </Helmet>
@@ -146,15 +146,18 @@ const WithdrawRequestScreen = () => {
                     {data?.client?.firstname + ' ' + data?.client?.lastname}
                   </Heading>
                 </Link>
-                <Flex mt='2'>
-                  <Text textTransform='' fontSize='xs'>
+                <Box d={{ md: 'flex' }} mt='2'>
+                  <Text fontStyle='italic' fontSize='xs'>
                     <i className='far fa-clock '></i>{' '}
                     {moment(data?.createdAt).format('LLL')}
                   </Text>
-                </Flex>
+                  <Text color='blue.500' ml='3' fontSize='xs'>
+                    WA: {data?.client?.wallet_address}
+                  </Text>
+                </Box>
               </Box>
               <Spacer />
-              <Flex textAlign='right' alignItems='center'>
+              <Box d={{ md: 'flex' }} textAlign='right' alignItems='center'>
                 <Box mr='2'>
                   <Text fontSize='sm' color='grey'>
                     Amount
@@ -168,13 +171,13 @@ const WithdrawRequestScreen = () => {
                   </Text>
                 </Box>
 
-                <Flex>
+                <Box f={{ sm: 'flex' }}>
                   <Button
                     size='sm'
                     colorScheme='teal'
                     variant='outline'
                     borderColor='teal'
-                    mr='2'
+                    mr={2}
                     color='gray.500'
                     onClick={() => {
                       onAOpen();
@@ -196,8 +199,8 @@ const WithdrawRequestScreen = () => {
                   >
                     Reject
                   </Button>
-                </Flex>
-              </Flex>
+                </Box>
+              </Box>
             </Box>
           ))
         ) : (
