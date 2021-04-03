@@ -160,7 +160,7 @@ const WithDrawScreen = ({ client, wallet }) => {
           >
             Withdraw History
           </Text>
-          <Box>
+          <Box className='assigned_hotspot_wrapper'>
             {historyLoading ? (
               <Loader />
             ) : historyError ? (
@@ -169,7 +169,8 @@ const WithDrawScreen = ({ client, wallet }) => {
               wHistories.map((data) => (
                 <Flex
                   key={data?._id}
-                  p='4'
+                  p='2'
+                  px="4"
                   borderRadius='lg'
                   mb='3'
                   boxShadow='base'
