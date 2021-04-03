@@ -89,7 +89,7 @@ const WithdrawRequestScreen = () => {
       toast({
         title: 'Success!',
         status: 'success',
-        description: 'Payment sent to client wallet!',
+        description: 'Withdraw request accepted! An email was sent to  client.',
         duration: 3000,
         isClosable: true,
       });

@@ -27,7 +27,6 @@ import {
   ClientUpdateByCReducer,
   GetClientProfileByCReducer,
   resetPasswordReducer,
-  FetchRewardByClientReducer,
   WithdrawRequestReducer,
   WithdrawHistoryReducer,
 } from './reducer/ClientReducer';
@@ -45,7 +44,6 @@ const reducer = combineReducers({
   getClientByC: GetClientProfileByCReducer,
   updateClientByC: ClientUpdateByCReducer,
   resetPassword: resetPasswordReducer,
-  getReward: FetchRewardByClientReducer,
   requestWithdraw: WithdrawRequestReducer,
   withdrawRequestGet: GetWithdrawalRequestReducer,
   histtoryWByc: WithdrawHistoryReducer,

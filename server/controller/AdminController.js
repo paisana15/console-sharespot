@@ -7,16 +7,11 @@ import { generateToken } from '../utils/generateToken.js';
 import axios from 'axios';
 import moment from 'moment';
 import WithdrawRequest from '../models/WithdrawRequestModel.js';
-import { WalletClient } from 'proto';
 import WithdrawHistory from '../models/WithdrawHistoryModel.js';
 import ManualWithdrawHistory from '../models/ManualWithdrawHistoryModel.js';
 import nodemailer from 'nodemailer';
 import emailValidator from 'email-validator';
 import _ from 'lodash';
-
-// // creating client
-const target = '139.59.164.172:8888'; // public Ip, we will change it for a local private address later
-const client = new WalletClient(target);
 
 // desc: admin login
 // routes: api/admin/login
@@ -544,140 +539,78 @@ const withdrawalRequestAccept = asyncHandler(async (req, res) => {
     const client_wallet = await Wallet.findById(withdraw_request?.wallet);
 
     // withdraw process start
-    // send payout sample
-    let payoutResponse = await client.sendPayout(
-      `${client_user?.wallet_address}`,
-      withdraw_request?.amount * 1000000000
-    );
-    if (payoutResponse) {
-      const transaction = payoutResponse.getTransactionhash();
-      // if transaction successfull
 
-      // creating withdraw history
-      const wHistory = await WithdrawHistory.create({
-        client: client_user,
-        amount: withdraw_request.amount,
-        transaction: transaction,
-      });
+    // creating withdraw history
+    const wHistory = await WithdrawHistory.create({
+      client: client_user,
+      amount: withdraw_request.amount,
+    });
 
-      // clear pending payment to 0
-      client_wallet.pendingPayment = 0;
-      // update client wallet balance on db
-      client_wallet.totalWithdraw =
-        parseFloat(client_wallet.totalWithdraw) +
-        parseFloat(withdraw_request.amount);
-      client_wallet.wallet_balance =
-        parseFloat(client_wallet.totalRewards) -
-        parseFloat(client_wallet.totalWithdraw);
-      const cWallet = await client_wallet.save();
+    // clear pending payment to 0
+    client_wallet.pendingPayment = 0;
+    // update client wallet balance on db
+    client_wallet.totalWithdraw =
+      parseFloat(client_wallet.totalWithdraw) +
+      parseFloat(withdraw_request.amount);
+    client_wallet.wallet_balance =
+      parseFloat(client_wallet.totalRewards) -
+      parseFloat(client_wallet.totalWithdraw);
+    const cWallet = await client_wallet.save();
 
-      // withdraw request value
-      const wa = withdraw_request.amount;
-      // remove withdraw request
-      const rmWh = await withdraw_request.remove();
+    // withdraw request value
+    const wa = withdraw_request.amount;
+    // remove withdraw request
+    const rmWh = await withdraw_request.remove();
 
-      if (wHistory && cWallet && rmWh) {
-        // seding email
-        const email = client_user.email;
+    if (wHistory && cWallet && rmWh) {
+      // seding email
+      const email = client_user.email;
 
-        const valid_email = emailValidator.validate(email);
+      const valid_email = emailValidator.validate(email);
 
-        if (valid_email) {
-          const transporter = nodemailer.createTransport({
-            host: 'smtp.gmail.com',
-            port: 465,
-            secure: true,
-            auth: {
-              user: process.env.EMAIL, // your email
-              pass: process.env.PASSE, // email pass
-            },
-          });
+      if (valid_email) {
+        const transporter = nodemailer.createTransport({
+          host: 'smtp.gmail.com',
+          port: 465,
+          secure: true,
+          auth: {
+            user: process.env.EMAIL, // your email
+            pass: process.env.PASSE, // email pass
+          },
+        });
 
-          const emailSent = await transporter.sendMail({
-            from: process.env.EMAIL,
-            to: email,
-            subject: 'You have just received a payment!',
-            text: 'Payment Received',
-            html: `Hey ${
-              client_user.firstname + ' ' + client_user.lastname
-            }, You have just received a payment from Sharespot, HNT ${wa}. Have a good day!</p>`,
-          });
-          if (emailSent) {
-            console.log('Email sent!');
-          } else {
-            console.log('Failed to send email!');
-          }
+        const emailSent = await transporter.sendMail({
+          from: process.env.EMAIL,
+          to: email,
+          subject: 'You have just received a payment!',
+          text: 'Payment Received',
+          html: `Hey ${
+            client_user.firstname + ' ' + client_user.lastname
+          }, You have just received a payment from Sharespot Wallet, HNT ${wa}. Have a good day!</p>`,
+        });
+        if (transporter && emailSent) {
+          const wr = await WithdrawRequest.find({})
+            .populate('wallet')
+            .populate('client');
+          res.status(200);
+          res.json(wr);
         } else {
-          console.log('Invalid email');
+          res.status(500);
+          throw new Error('Failed to send email!');
         }
-        const wr = await WithdrawRequest.find({})
-          .populate('wallet')
-          .populate('client');
-        res.status(200);
-        res.json(wr);
       } else {
-        res.status(500);
-        throw new Error('Failed to create withdraw history!');
+        res.status(400);
+        throw new Error('Invalid email');
       }
     } else {
-      if (payoutResponse.error.code === 7) {
-        res.status(500);
-        throw new Error('Wallet locked');
-      } else if (payoutResponse.error.code === 8) {
-        res.status(500);
-        throw new Error('Balance too low');
-      }
+      res.status(500);
+      throw new Error('Failed to create withdraw history!');
     }
   } else {
     res.status(404);
     throw new Error('Withdraw request not found!');
   }
 });
-// const withdrawalRequestAccept = (req, res) => {
-//   const wreqId = req.params.wreqId;
-//   WithdrawRequest.findById(wreqId)
-//     .populate('wallet')
-//     .populate('client')
-//     .then((withdraw_request) => {
-//       Wallet.findById(withdraw_request?.wallet)
-//         .then((client_wallet) => {
-//           const client_user = withdraw_request?.client;
-//           return { client_user, client_wallet };
-//         })
-//         .then(({ client_user, client_wallet }) => {
-//           client.sendPayout(
-//             `13ESLoXiie3eXoyitxryNQNamGAnJjKt2WkiB4gNq95knxAiGEp`,
-//             withdraw_request?.amount * 1000000000,
-//             (err, payoutResponse) => {
-//               if (err) {
-//                 if (err.code === 7) {
-//                   res.status(500);
-//                   throw new Error('wallet is locked');
-//                 } else if (err.code === 8) {
-//                   res.status(500);
-//                   throw new Error('low balance', err.details);
-//                 } else {
-//                   throw new Error();
-//                 }
-//               } else {
-//                 const transaction = payoutResponse.getTransactionhash();
-//                 return transaction;
-//               }
-//             }
-//           );
-//           return { client_user, client_wallet, transaction };
-//         })
-//         .then(({ client_user, client_wallet, transaction }) => {
-//           console.log(client_user, client_wallet);
-//         })
-//         .catch((error) => {
-//           throw new Error(error);
-//         });
-//     })
-//     .catch((error) => {
-//       throw new Error(error);
-//     });
-// };
 
 const withdrawalRequestReject = asyncHandler(async (req, res) => {
   const wreqId = req.params.wreqId;
