@@ -35,7 +35,7 @@ app.use(errorHandler);
 
 // server listening
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, 'api', () => {
+app.listen(PORT, 'localhost', () => {
   console.log(`\n---Server listening on port ${PORT}---`);
   setInterval(async () => {
     try {

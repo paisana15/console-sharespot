@@ -7,10 +7,6 @@ const WithdrawHistorySchema = new mongoose.Schema(
       ref: 'Client',
       required: true,
     },
-    transaction: {
-      type: String,
-      required: true,
-    },
     amount: {
       type: Number,
       required: true,
