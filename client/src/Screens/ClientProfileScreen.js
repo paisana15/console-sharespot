@@ -137,7 +137,7 @@ const ClientProfileScreen = ({ client_details }) => {
               >
                 <Box>
                   <Heading size='sm'>{hotspot?.hotspot_name}</Heading>
-                  <Flex mt='2'>
+                  <Box d={{ sm: 'flex' }} mt='2'>
                     <Text fontSize='xs' mr='1'>
                       Percentage
                     </Text>
@@ -164,7 +164,7 @@ const ClientProfileScreen = ({ client_details }) => {
                         {moment(hotspot?.startDate).format('YYYY-MM-DD')}
                       </Text>
                     </Badge>
-                  </Flex>
+                  </Box>
                 </Box>
                 <Spacer display={{ base: 'none', md: 'block' }} />
                 <Flex

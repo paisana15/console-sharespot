@@ -1,11 +1,11 @@
-import { Box, Container, Flex, Text } from '@chakra-ui/layout';
+import { Box, Container, Flex, Spacer, Text } from '@chakra-ui/layout';
 import React, { useState } from 'react';
 import { Link, useRouteMatch } from 'react-router-dom';
 import { adminLogout } from '../redux/action/AdminAction';
 import { useDispatch } from 'react-redux';
 import Logo from './Logo';
 import { useColorMode } from '@chakra-ui/color-mode';
-import { IconButton } from '@chakra-ui/button';
+import { Button, IconButton } from '@chakra-ui/button';
 
 const MenuItems = ({ children }) => (
   <Text
@@ -34,19 +34,37 @@ const AdminNavbar = () => {
   return (
     <Box color='white' overflow='hidden' bg='#2a2f38' w='100%' p='4'>
       <Container maxW='container.xl'>
-        <Flex as='nav' align='center' justify='space-between' wrap='wrap'>
-          <Box display='flex' alignItems='center'>
-            <Logo />
-            <Text fontSize='xl' fontStyle='oblique' fontWeight='bold' ml='2'>
-              Sharespot Wallet
-            </Text>
-          </Box>
-          <Box
-            onClick={() => setShow(!showMenu)}
-            display={{ base: 'block', md: 'none' }}
-          >
-            <i className='fas fa-bars'></i>
-          </Box>
+        <Box
+          d={{ md: 'flex' }}
+          as='nav'
+          alignItems='center'
+          justify='space-between'
+          wrap='wrap'
+        >
+          <Flex>
+            <Flex alignItems='center'>
+              <Logo />
+              <Text
+                fontSize={{ base: 'md', sm: 'xl' }}
+                fontStyle='oblique'
+                fontWeight='bold'
+                ml='2'
+              >
+                Sharespot Wallet
+              </Text>
+            </Flex>
+            <Spacer />
+            <Box display={{ base: 'block', md: 'none' }}>
+              <Button
+                variant='unstyled'
+                colorScheme='gray'
+                onClick={() => setShow(!showMenu)}
+              >
+                <i className='fas fa-bars'></i>
+              </Button>
+            </Box>
+          </Flex>
+          <Spacer />
           <Box
             display={{ base: showMenu ? 'block' : 'none', md: 'flex' }}
             alignItems='center'
@@ -90,7 +108,7 @@ const AdminNavbar = () => {
               }
             />
           </Box>
-        </Flex>
+        </Box>
       </Container>
     </Box>
   );
