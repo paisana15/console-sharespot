@@ -14,10 +14,6 @@ import {
   CLIENT_WITHDRAW_FAILED,
   CLIENT_WITHDRAW_REQUEST,
   CLIENT_WITHDRAW_SUCCESS,
-  FETCH_REWARD_BY_CLIENT_FAILED,
-  FETCH_REWARD_BY_CLIENT_REQUEST,
-  FETCH_REWARD_BY_CLIENT_RESET,
-  FETCH_REWARD_BY_CLIENT_SUCCESS,
   GET_CLIENT_PROFILE_BYC_REQUEST,
   GET_CLIENT_PROFILE_BYC_SUCCESS,
   GET_SINGLE_CLIENT_FAILED,
@@ -53,8 +49,6 @@ export const GetClientProfileByCReducer = (
         loading: false,
         clientData: action.payload,
       };
-    case FETCH_REWARD_BY_CLIENT_SUCCESS:
-      return { clientData: action.payload };
     case GET_SINGLE_CLIENT_FAILED:
       return { loading: false, error: action.payload };
 
@@ -90,20 +84,7 @@ export const resetPasswordReducer = (state = {}, action) => {
       return state;
   }
 };
-export const FetchRewardByClientReducer = (state = {}, action) => {
-  switch (action.type) {
-    case FETCH_REWARD_BY_CLIENT_REQUEST:
-      return { loading: true };
-    case FETCH_REWARD_BY_CLIENT_SUCCESS:
-      return { loading: false };
-    case FETCH_REWARD_BY_CLIENT_FAILED:
-      return { loading: false, error: action.payload };
-    case FETCH_REWARD_BY_CLIENT_RESET:
-      return {};
-    default:
-      return state;
-  }
-};
+
 export const WithdrawRequestReducer = (state = {}, action) => {
   switch (action.type) {
     case CLIENT_WITHDRAW_REQUEST:
@@ -118,6 +99,7 @@ export const WithdrawRequestReducer = (state = {}, action) => {
       return state;
   }
 };
+
 export const WithdrawHistoryReducer = (state = { wHistories: [] }, action) => {
   switch (action.type) {
     case GET_WITHDRAW_HISTORY_BYC_REQUEST:

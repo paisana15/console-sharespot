@@ -7,7 +7,6 @@ import { generateToken } from '../utils/generateToken.js';
 import axios from 'axios';
 import moment from 'moment';
 import WithdrawRequest from '../models/WithdrawRequestModel.js';
-import { WalletClient } from 'proto';
 import WithdrawHistory from '../models/WithdrawHistoryModel.js';
 import ManualWithdrawHistory from '../models/ManualWithdrawHistoryModel.js';
 import nodemailer from 'nodemailer';

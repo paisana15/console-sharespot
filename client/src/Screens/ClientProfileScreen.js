@@ -8,18 +8,15 @@ import {
   Badge,
   Tooltip,
   useColorMode,
-  Button,
 } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import { useHistory, useRouteMatch } from 'react-router';
 import AlertMessage from '../components/Alert';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import Loader from '../components/Loader';
 import moment from 'moment';
-import { getRewardByClient } from '../redux/action/ClientAction';
 
 const ClientProfileScreen = ({ client_details }) => {
-  const dispatch = useDispatch();
   const { url } = useRouteMatch();
   const { colorMode } = useColorMode();
   const [client, setClient] = useState({});
@@ -35,10 +32,6 @@ const ClientProfileScreen = ({ client_details }) => {
     setClientHotspot(client_details?.client_hotspot);
     setClientWallet(client_details?.clientWallet);
   }, [client_details, history]);
-
-  const getRewardHandler = () => {
-    dispatch(getRewardByClient(client?._id));
-  };
 
   return (
     <>
@@ -219,19 +212,6 @@ const ClientProfileScreen = ({ client_details }) => {
           ) : (
             <AlertMessage status='error' error='No hotspot assigned yet!' />
           )}
-        </Box>
-        <Box mt='4'>
-          <Button
-            w={{ base: '100%', md: 'auto' }}
-            mr={{ md: 2 }}
-            mt={{ base: 2, md: 0 }}
-            onClick={getRewardHandler}
-            colorScheme='orange'
-            variant={colorMode === 'dark' ? 'outline' : 'solid'}
-          >
-            <i style={{ marginRight: 5 }} className='fas fa-download'></i>Fetch
-            Reward
-          </Button>
         </Box>
         {error && (
           <Box mt='2'>
