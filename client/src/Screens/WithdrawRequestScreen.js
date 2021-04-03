@@ -159,7 +159,11 @@ const WithdrawRequestScreen = () => {
                     {moment(data?.createdAt).format('LLL')}
                   </Text>
                   <Text color='blue.500' ml='3' fontSize='xs'>
-                    WA: {data?.client?.wallet_address}
+                    <i
+                      className='fas fa-money-check-alt'
+                      style={{ marginRight: 5 }}
+                    ></i>
+                    {data?.client?.wallet_address}
                   </Text>
                   <Button
                     ml='2'
@@ -223,7 +227,7 @@ const WithdrawRequestScreen = () => {
           ))
         ) : (
           <AlertMessage
-            status='error'
+            status='warning'
             error='No withdrawal requests available!'
           />
         )}

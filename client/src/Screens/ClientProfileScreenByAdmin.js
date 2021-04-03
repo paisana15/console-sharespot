@@ -401,7 +401,7 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
             <ModalHeader>Withdraw History</ModalHeader>
             <ModalCloseButton />
             <ModalBody>
-              <Box>
+              <Box className='assigned_hotspot_wrapper'>
                 {historyLoading ? (
                   <Loader />
                 ) : historyError ? (
@@ -410,7 +410,8 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
                   wHistories.map((data) => (
                     <Flex
                       key={data?._id}
-                      p='4'
+                      p='2'
+                      px='4'
                       borderRadius='lg'
                       mb='3'
                       boxShadow='base'
