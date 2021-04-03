@@ -11,6 +11,15 @@ const WithdrawHistorySchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    status: {
+      type: String,
+      default: 'Pending',
+    },
+    wReqId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'WithdrawRequest',
+      required: true,
+    },
   },
   {
     timestamps: true,

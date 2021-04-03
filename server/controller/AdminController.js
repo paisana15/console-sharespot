@@ -536,75 +536,75 @@ const withdrawalRequestAccept = asyncHandler(async (req, res) => {
     .populate('client');
   if (withdraw_request) {
     const client_user = withdraw_request?.client;
-    const client_wallet = await Wallet.findById(withdraw_request?.wallet);
-
-    // withdraw process start
-
-    // creating withdraw history
-    const wHistory = await WithdrawHistory.create({
-      client: client_user,
-      amount: withdraw_request.amount,
+    const client_wallet = await Wallet.findOne({
+      client_id: withdraw_request?.client,
     });
 
-    // clear pending payment to 0
-    client_wallet.pendingPayment = 0;
-    // update client wallet balance on db
-    client_wallet.totalWithdraw =
-      parseFloat(client_wallet.totalWithdraw) +
-      parseFloat(withdraw_request.amount);
-    client_wallet.wallet_balance =
-      parseFloat(client_wallet.totalRewards) -
-      parseFloat(client_wallet.totalWithdraw);
-    const cWallet = await client_wallet.save();
+    // withdraw process start
+    // finding withdraw hsitory
+    const wHistory = await WithdrawHistory.findOne({
+      wReqId: wreqId,
+    });
 
-    // withdraw request value
-    const wa = withdraw_request.amount;
-    // remove withdraw request
-    const rmWh = await withdraw_request.remove();
+    if (wHistory) {
+      // clear pending payment to 0
+      client_wallet.pendingPayment = 0;
+      const cWallet = await client_wallet.save();
 
-    if (wHistory && cWallet && rmWh) {
-      // seding email
-      const email = client_user.email;
+      // withdraw request value
+      const wa = withdraw_request.amount;
+      // remove withdraw request
+      const rmWh = await withdraw_request.remove();
+      wHistory.status = 'Confirmed';
+      const updatewHistory = await wHistory.save();
 
-      const valid_email = emailValidator.validate(email);
+      if (updatewHistory && cWallet && rmWh) {
+        // seding email
+        const email = client_user.email;
 
-      if (valid_email) {
-        const transporter = nodemailer.createTransport({
-          host: 'smtp.gmail.com',
-          port: 465,
-          secure: true,
-          auth: {
-            user: process.env.EMAIL, // your email
-            pass: process.env.PASSE, // email pass
-          },
-        });
+        const valid_email = emailValidator.validate(email);
 
-        const emailSent = await transporter.sendMail({
-          from: process.env.EMAIL,
-          to: email,
-          subject: 'You have just received a payment!',
-          text: 'Payment Received',
-          html: `Hey ${
-            client_user.firstname + ' ' + client_user.lastname
-          }, You have just received a payment from Sharespot Wallet, HNT ${wa}. Have a good day!</p>`,
-        });
-        if (transporter && emailSent) {
-          const wr = await WithdrawRequest.find({})
-            .populate('wallet')
-            .populate('client');
-          res.status(200);
-          res.json(wr);
+        if (valid_email) {
+          const transporter = nodemailer.createTransport({
+            host: 'smtp.gmail.com',
+            port: 465,
+            secure: true,
+            auth: {
+              user: process.env.EMAIL, // your email
+              pass: process.env.PASSE, // email pass
+            },
+          });
+
+          const emailSent = await transporter.sendMail({
+            from: process.env.EMAIL,
+            to: email,
+            subject: 'You have just received a payment!',
+            text: 'Payment Received',
+            html: `Hey ${
+              client_user.firstname + ' ' + client_user.lastname
+            }, You have just received a payment from Sharespot Wallet, HNT ${wa}. Have a good day!</p>`,
+          });
+          if (transporter && emailSent) {
+            const wr = await WithdrawRequest.find({})
+              .populate('wallet')
+              .populate('client');
+            res.status(200);
+            res.json(wr);
+          } else {
+            res.status(500);
+            throw new Error('Failed to send email!');
+          }
         } else {
-          res.status(500);
-          throw new Error('Failed to send email!');
+          res.status(400);
+          throw new Error('Invalid email');
         }
       } else {
-        res.status(400);
-        throw new Error('Invalid email');
+        res.status(500);
+        throw new Error('Failed accept request!');
       }
     } else {
-      res.status(500);
-      throw new Error('Failed to create withdraw history!');
+      res.status(404);
+      throw new Error('Withdraw history not found!');
     }
   } else {
     res.status(404);
@@ -616,21 +616,43 @@ const withdrawalRequestReject = asyncHandler(async (req, res) => {
   const wreqId = req.params.wreqId;
   const withdraw_request = await WithdrawRequest.findById(wreqId);
   if (withdraw_request) {
-    const client_wallet = await Wallet.findById(withdraw_request.wallet);
-    console.log(client_wallet);
-    client_wallet.pendingPayment = 0;
-    const cw = await client_wallet.save();
-    const rwr = await withdraw_request.remove();
+    const wHistory = await WithdrawHistory.findOne({ wReqId: wreqId });
+    if (wHistory) {
+      // update client wallet
+      const client_wallet = await Wallet.findOne({
+        client_id: withdraw_request.client,
+      });
+      client_wallet.totalWithdraw =
+        parseFloat(client_wallet.totalWithdraw) -
+        parseFloat(withdraw_request.amount);
+      client_wallet.wallet_balance =
+        parseFloat(client_wallet.totalRewards) -
+        parseFloat(client_wallet.totalWithdraw);
+      client_wallet.pendingPayment = 0;
 
-    if (cw && rwr) {
-      const wr = await WithdrawRequest.find({})
-        .populate('wallet')
-        .populate('client');
-      res.status(200);
-      res.json(wr);
+      const cwUpdate = await client_wallet.save();
+
+      if (cwUpdate) {
+        const rwr = await withdraw_request.remove();
+        wHistory.status = 'Rejected';
+        const updatewHistory = await wHistory.save();
+        if (updatewHistory && rwr) {
+          const wr = await WithdrawRequest.find({})
+            .populate('wallet')
+            .populate('client');
+          res.status(200);
+          res.json(wr);
+        } else {
+          res.status(500);
+          throw new Error(`Rejection failed, History update failed!`);
+        }
+      } else {
+        res.status(500);
+        throw new Error('Rejection failed, Wallet update failed!');
+      }
     } else {
-      res.status(500);
-      throw new Error();
+      res.status(404);
+      throw new Error('Rejection failed, WHistory not found!');
     }
   } else {
     res.status(404);
@@ -730,7 +752,9 @@ const addManualWithdraw = asyncHandler(async (req, res) => {
 const getManulaWithdrawHistory = asyncHandler(async (req, res) => {
   const mw_histories = await ManualWithdrawHistory.find({
     client_id: req.params.clientId,
-  }).populate('client_id');
+  })
+    .populate('client_id')
+    .sort({ createdAt: '-1' });
   if (mw_histories) {
     res.status(200).json(mw_histories);
   } else {
@@ -772,28 +796,35 @@ const deleteManualWithdraw = asyncHandler(async (req, res) => {
   }
 });
 
+const PushMWHistory = async (histories, mwhistories) => {
+  const mh = mwhistories.map((data) => {
+    const newObj = {
+      client: data?.client_id,
+      amount: data?.mw_amount,
+      status: 'Manual',
+      wReqId: 'null',
+    };
+    return newObj;
+  });
+  const newHis = [...histories, ...mh];
+  return newHis;
+};
+
 const getWithdrawHistoryByAdmin = asyncHandler(async (req, res) => {
   const clientId = req.params.clientId;
   const client_user = await Client.findById(clientId);
   if (client_user) {
-    const w_reqs = await WithdrawHistory.find({ client: clientId });
+    const w_reqs = await WithdrawHistory.find({ client: clientId }).sort({
+      createdAt: '-1',
+    });
     if (w_reqs) {
       const mw_histories = await ManualWithdrawHistory.find({
         client_id: clientId,
       });
       if (mw_histories.length > 0) {
-        mw_histories.map((data) => {
-          const newObj = {
-            client: data?.client_id,
-            amount: data?.mw_amount,
-            transaction: '',
-          };
-          w_reqs.push(newObj);
-        });
-        setTimeout(() => {
-          res.status(200);
-          res.json(w_reqs);
-        }, 3000);
+        const newH = await PushMWHistory(w_reqs, mw_histories);
+        res.status(200);
+        res.json(newH);
       } else {
         res.status(200);
         res.json(w_reqs);

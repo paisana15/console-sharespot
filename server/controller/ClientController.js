@@ -258,40 +258,68 @@ const clientWithdrawRequest = asyncHandler(async (req, res) => {
   const client_user = await Client.findById(clientId);
   if (client_user) {
     if (client_user._id.equals(req.user?._id)) {
-      const { amount } = req.body;
-      const clientWallet = await Wallet.findOne({
-        client_id: client_user?._id,
+      const hasPendingRequest = await WithdrawRequest.findOne({
+        client: clientId,
       });
-      if (parseFloat(clientWallet.pendingPayment) === 0) {
+      if (hasPendingRequest) {
+        res.status(400);
+        throw new Error(
+          `You already have a pending withdrawal request of HNT ${hasPendingRequest.amount}!`
+        );
+      } else {
+        const { amount } = req.body;
+        const clientWallet = await Wallet.findOne({
+          client_id: client_user?._id,
+        });
         if (parseFloat(amount) > parseFloat(clientWallet?.wallet_balance)) {
           res.status(400);
           throw new Error(
             'Invalid amount! Withdraw amount is greater then wallet balance!'
           );
         } else {
-          clientWallet.pendingPayment = amount;
-          const update = await clientWallet.save();
-          if (update) {
-            const qrCode = await QRCodeForWA(client_user?.wallet_address);
-            const newWithdrawRequest = await WithdrawRequest.create({
-              wallet: clientWallet?._id,
-              client: client_user._id,
-              amount: amount,
-              w_qr_code: qrCode,
-            });
-            if (newWithdrawRequest) {
-              res.status(200).json({ message: 'Withdraw Request Received!' });
+          const qrCode = await QRCodeForWA(client_user?.wallet_address);
+          const newWithdrawRequest = await WithdrawRequest.create({
+            client: client_user._id,
+            amount: amount,
+            w_qr_code: qrCode,
+          });
+
+          if (newWithdrawRequest) {
+            // deduct balance from client wallet
+            clientWallet.totalWithdraw =
+              parseFloat(clientWallet.totalWithdraw) + parseFloat(amount);
+            clientWallet.wallet_balance =
+              parseFloat(clientWallet.totalRewards) -
+              parseFloat(clientWallet.totalWithdraw);
+            clientWallet.pendingPayment = amount;
+
+            const balanceUpdate = await clientWallet.save();
+            if (balanceUpdate) {
+              const newWithdrawHistory = await WithdrawHistory.create({
+                client: clientId,
+                amount: amount,
+                status: 'Pending',
+                wReqId: newWithdrawRequest._id,
+              });
+              if (newWithdrawHistory) {
+                res.status(200).json({ message: 'Withdraw Request Received!' });
+              } else {
+                res.status(500);
+                throw new Error(
+                  'Could not receive withdrawal request! Failed to create history!'
+                );
+              }
             } else {
               res.status(500);
-              throw new Error('Could not receive withdrawal request!');
+              throw new Error('Failed to update wallet balance!');
             }
+          } else {
+            res.status(500);
+            throw new Error(
+              'Failed to create withdraw request! Try again later..'
+            );
           }
         }
-      } else {
-        res.status(400);
-        throw new Error(
-          `You already have a pending withdrawal request for HNT ${clientWallet.pendingPayment}!`
-        );
       }
     } else {
       res.status(400);
@@ -303,28 +331,35 @@ const clientWithdrawRequest = asyncHandler(async (req, res) => {
   }
 });
 
+const PushMWHistory = async (histories, mwhistories) => {
+  const mh = mwhistories.map((data) => {
+    const newObj = {
+      client: data?.client_id,
+      amount: data?.mw_amount,
+      status: 'Manual',
+      wReqId: 'null',
+    };
+    return newObj;
+  });
+  const newHis = [...histories, ...mh];
+  return newHis;
+};
+
 const getWithdrawHistory = asyncHandler(async (req, res) => {
   const clientId = req.params.clientId;
   const client_user = await Client.findById(clientId);
   if (client_user) {
-    const w_reqs = await WithdrawHistory.find({ client: clientId });
+    const w_reqs = await WithdrawHistory.find({ client: clientId }).sort({
+      createdAt: '-1',
+    });
     if (w_reqs) {
       const mw_histories = await ManualWithdrawHistory.find({
         client_id: clientId,
       });
       if (mw_histories.length > 0) {
-        mw_histories.map((data) => {
-          const newObj = {
-            client: data?.client_id,
-            amount: data?.mw_amount,
-            transaction: '',
-          };
-          w_reqs.push(newObj);
-        });
-        setTimeout(() => {
-          res.status(200);
-          res.json(w_reqs);
-        }, 3000);
+        const newH = await PushMWHistory(w_reqs, mw_histories);
+        res.status(200);
+        res.json(newH);
       } else {
         res.status(200);
         res.json(w_reqs);

@@ -417,9 +417,33 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
                       bg={colorMode === 'light' ? '#f4f5f7' : '#303744'}
                     >
                       <Box>
-                        <Heading size='sm'>
+                        <Text fontSize='sm'>
                           {moment(data?.createdAt).format('LLL')}
-                        </Heading>
+                        </Text>
+                        <Box>
+                          <Badge
+                            variant={
+                              colorMode === 'light' ? 'solid' : 'outline'
+                            }
+                            colorScheme={
+                              data?.status === 'Pending'
+                                ? 'orange'
+                                : data?.status === 'Rejected'
+                                ? 'red'
+                                : data?.status === 'Confirmed'
+                                ? 'green'
+                                : 'purple'
+                            }
+                          >
+                            {data?.status === 'Pending'
+                              ? 'Pending'
+                              : data?.status === 'Confirmed'
+                              ? 'Confirmed'
+                              : data?.status === 'Rejected'
+                              ? 'Rejected'
+                              : 'Manual'}
+                          </Badge>
+                        </Box>
                       </Box>
                       <Spacer />
                       <Flex textAlign='right' alignItems='center'>
