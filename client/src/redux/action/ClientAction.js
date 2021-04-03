@@ -223,7 +223,7 @@ export const withdrawRequestByClient = (clientId, amount) => async (
       dispatch({
         type: CLIENT_WITHDRAW_RESET,
       });
-    }, 2000);
+    }, 1000);
   } catch (error) {
     dispatch({
       type: CLIENT_WITHDRAW_FAILED,

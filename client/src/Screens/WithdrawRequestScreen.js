@@ -129,7 +129,7 @@ const WithdrawRequestScreen = () => {
         <title>Withdrawal Request | Admin Dashboard</title>
       </Helmet>
       <Text fontSize='2xl' display='inline-block' className='adminPageHeader'>
-        Withdrawal Requests ({wRequests?.length})
+        Withdrawal Requests ({wRequests ? wRequests?.length : '0'})
       </Text>
       <Box mt='3'>
         {loading ? (
@@ -295,7 +295,7 @@ const WithdrawRequestScreen = () => {
             <ModalHeader>Wallet Address</ModalHeader>
             <ModalCloseButton />
             <ModalBody>
-              <Image margin="auto" src={qrCode} alt='QR Code' />
+              <Image margin='auto' src={qrCode} alt='QR Code' />
               {acceptLoading && <Loader />}
             </ModalBody>
 

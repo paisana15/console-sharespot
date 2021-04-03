@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Badge, Box, Flex, Heading, Spacer, Text } from '@chakra-ui/layout';
+import { Badge, Box, Flex, Spacer, Text } from '@chakra-ui/layout';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 import {
@@ -73,7 +73,7 @@ const WithDrawScreen = ({ client, wallet }) => {
         <title>Withdraw Rewards</title>
       </Helmet>
       <Box d={{ md: 'flex' }} mb='3' alignItems='center'>
-        <Text fontSize='2xl' className='adminPageHeader'>
+        <Text fontSize={{ base: '1xl', sm: '2xl' }} className='adminPageHeader'>
           Withdraw Reward
         </Text>
         <Spacer />
@@ -132,11 +132,14 @@ const WithDrawScreen = ({ client, wallet }) => {
                   </Text>
                 </FormControl>
                 <Button
+                  w={{ base: '100%', md: 'auto' }}
                   isLoading={loading}
                   loadingText='Processing...'
                   mt='3'
                   type='submit'
-                  colorScheme='facebook'
+                  colorScheme='teal'
+                  size='sm'
+                  variant='outline'
                   isDisabled={wallet?.pendingPayment > 0}
                 >
                   Request Withdraw
@@ -146,8 +149,15 @@ const WithDrawScreen = ({ client, wallet }) => {
           </Formik>
         </Box>
         <Spacer />
-        <Box mt={{ base: '3', md: 0 }} w={{ base: '100%', md: '50%' }}>
-          <Text mb='2' fontWeight='bold' fontStyle='oblique'>
+        <Box mt={{ base: '3', md: 0 }} w={{ base: '100%', md: '60%' }}>
+          <Text
+            borderBottom='1px'
+            borderColor='gray.400'
+            mb='2'
+            fontStyle='oblique'
+            paddingBottom='1.5'
+            textColor='#aaa'
+          >
             Withdraw History
           </Text>
           <Box>
@@ -166,9 +176,31 @@ const WithDrawScreen = ({ client, wallet }) => {
                   bg={colorMode === 'light' ? '#f4f5f7' : '#303744'}
                 >
                   <Box>
-                    <Heading size='sm'>
+                    <Text fontSize='sm'>
                       {moment(data?.createdAt).format('LLL')}
-                    </Heading>
+                    </Text>
+                    <Box>
+                      <Badge
+                        variant={colorMode === 'light' ? 'solid' : 'outline'}
+                        colorScheme={
+                          data?.status === 'Pending'
+                            ? 'orange'
+                            : data?.status === 'Rejected'
+                            ? 'red'
+                            : data?.status === 'Confirmed'
+                            ? 'green'
+                            : 'purple'
+                        }
+                      >
+                        {data?.status === 'Pending'
+                          ? 'Pending'
+                          : data?.status === 'Confirmed'
+                          ? 'Confirmed'
+                          : data?.status === 'Rejected'
+                          ? 'Rejected'
+                          : 'Manual'}
+                      </Badge>
+                    </Box>
                   </Box>
                   <Spacer />
                   <Flex textAlign='right' alignItems='center'>

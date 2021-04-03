@@ -2,11 +2,6 @@ import mongoose from 'mongoose';
 
 const WithdrawRequestSchema = new mongoose.Schema(
   {
-    wallet: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Wallet',
-      required: true,
-    },
     client: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Client',
