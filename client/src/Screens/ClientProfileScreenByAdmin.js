@@ -44,6 +44,7 @@ import moment from 'moment';
 import MyTextField from '../components/MyTextField';
 import { Formik } from 'formik';
 import * as yup from 'yup';
+import NumberFormat from 'react-number-format';
 
 const ClientProfileScreenByAdmin = ({ client_details }) => {
   const { url } = useRouteMatch();
@@ -181,7 +182,14 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
         >
           <Heading size='md'>Total Withdrawn</Heading>
           <Text style={{ fontWeight: 'bold' }} fontSize='3xl'>
-            HNT {client_wallet ? client_wallet?.totalWithdraw?.toFixed(2) : '0'}
+            <NumberFormat
+              prefix='HNT '
+              displayType='text'
+              value={
+                client_wallet ? client_wallet?.totalWithdraw?.toFixed(2) : '0'
+              }
+              thousandSeparator={true}
+            />
           </Text>
         </Box>
         <Spacer />
@@ -196,7 +204,14 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
         >
           <Heading size='md'>Total Rewards</Heading>
           <Text style={{ fontWeight: 'bold' }} fontSize='3xl'>
-            HNT {client_wallet ? client_wallet?.totalRewards?.toFixed(2) : '0'}
+            <NumberFormat
+              prefix='HNT '
+              displayType='text'
+              value={
+                client_wallet ? client_wallet?.totalRewards?.toFixed(2) : '0'
+              }
+              thousandSeparator={true}
+            />
           </Text>
         </Box>
         <Spacer />
@@ -211,8 +226,14 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
         >
           <Heading size='md'>Balance</Heading>
           <Text style={{ fontWeight: 'bold' }} fontSize='3xl'>
-            HNT{' '}
-            {client_wallet ? client_wallet?.wallet_balance?.toFixed(2) : '0'}
+            <NumberFormat
+              prefix='HNT '
+              displayType='text'
+              value={
+                client_wallet ? client_wallet?.wallet_balance?.toFixed(2) : '0'
+              }
+              thousandSeparator={true}
+            />
           </Text>
         </Box>
       </Box>
@@ -284,11 +305,16 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
                       Total Earned
                     </Text>
                     <Text
-                      fontWeight='bold'
+                      fontWeight='semibold'
                       color={colorMode === 'light' ? 'grey' : 'orange.200'}
                       fontSize='sm'
                     >
-                      HNT {hotspot?.total_earned.toFixed(2)}
+                      <NumberFormat
+                        prefix='HNT '
+                        displayType='text'
+                        value={hotspot?.total_earned.toFixed(2)}
+                        thousandSeparator={true}
+                      />
                     </Text>
                   </Box>
 
@@ -407,9 +433,9 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
                 ) : historyError ? (
                   <AlertMessage status='error' error={historyError} />
                 ) : wHistories && wHistories?.length > 0 ? (
-                  wHistories.map((data) => (
+                  wHistories.map((data, idx) => (
                     <Flex
-                      key={data?._id}
+                      key={idx}
                       p='2'
                       px='4'
                       borderRadius='lg'
@@ -539,8 +565,8 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
                     </Tr>
                   </Thead>
                   {mw_histories?.length > 0 ? (
-                    mw_histories?.map((data) => (
-                      <Tbody>
+                    <Tbody>
+                      {mw_histories?.map((data) => (
                         <Tr key={data?._id}>
                           <Td>{moment(data?.createdAt).format('LLL')}</Td>
                           <Td textColor='green.400' isNumeric>
@@ -561,8 +587,8 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
                             </Button>
                           </Td>
                         </Tr>
-                      </Tbody>
-                    ))
+                      ))}
+                    </Tbody>
                   ) : (
                     <AlertMessage
                       status='error'

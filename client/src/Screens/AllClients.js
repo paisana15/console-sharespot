@@ -9,7 +9,7 @@ import {
   Thead,
   Tr,
 } from '@chakra-ui/table';
-import { Spacer, Button, useToast } from '@chakra-ui/react';
+import { Spacer, Button, useToast, useColorMode } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -20,12 +20,14 @@ import {
 import Loader from '../components/Loader';
 import AlertMessage from '../components/Alert';
 import { Helmet } from 'react-helmet';
+import NumberFormat from 'react-number-format';
 
 const AllClients = () => {
   const dispatch = useDispatch();
   const toast = useToast();
   const allClientsGet = useSelector((state) => state.allClientsGet);
   const { loading, clients, error } = allClientsGet;
+  const { colorMode } = useColorMode();
 
   const MWSWCWget = useSelector((state) => state.MWSWCWget);
   const { loading: mwLoading, balances, error: mwError } = MWSWCWget;
@@ -81,7 +83,12 @@ const AllClients = () => {
             {mwLoading ? (
               <Loader small />
             ) : (
-              `HNT ${balances ? balances?.mw_balance?.toFixed(2) : '0'}`
+              <NumberFormat
+                prefix='HNT '
+                displayType='text'
+                value={balances ? balances?.mw_balance?.toFixed(2) : '0'}
+                thousandSeparator={true}
+              />
             )}
           </Text>
         </Box>
@@ -100,7 +107,12 @@ const AllClients = () => {
             {mwLoading ? (
               <Loader small />
             ) : (
-              `HNT ${balances ? balances?.cw_balance?.toFixed(2) : '0'}`
+              <NumberFormat
+                prefix='HNT '
+                displayType='text'
+                value={balances ? balances?.cw_balance?.toFixed(2) : '0'}
+                thousandSeparator={true}
+              />
             )}
           </Text>
         </Box>
@@ -119,15 +131,20 @@ const AllClients = () => {
             {mwLoading ? (
               <Loader small />
             ) : (
-              `HNT ${
-                balances
-                  ? (
-                      parseFloat(balances?.mw_balance) +
-                      parseFloat(balances?.sw_balance) -
-                      parseFloat(balances?.cw_balance)
-                    ).toFixed(2)
-                  : '0'
-              }`
+              <NumberFormat
+                prefix='HNT '
+                displayType='text'
+                value={
+                  balances
+                    ? (
+                        parseFloat(balances?.mw_balance) +
+                        parseFloat(balances?.sw_balance) -
+                        parseFloat(balances?.cw_balance)
+                      ).toFixed(2)
+                    : '0'
+                }
+                thousandSeparator={true}
+              />
             )}
           </Text>
         </Box>
@@ -165,7 +182,7 @@ const AllClients = () => {
             <Thead>
               <Tr>
                 <Th>Client Name</Th>
-                <Th isNumeric>Total Hotspot</Th>
+                <Th isNumeric>Wallet Balance</Th>
               </Tr>
             </Thead>
             <Tbody>
@@ -174,11 +191,25 @@ const AllClients = () => {
                 .map((client) => (
                   <Tr key={client?._id}>
                     <Td>
-                      <Link to={`/h/client/${client?._id}`}>
-                        {client?.firstname + ' ' + client?.lastname}
+                      <Link to={`/h/client/${client?.client_id?._id}`}>
+                        {client?.client_id?.firstname +
+                          ' ' +
+                          client?.client_id?.lastname}
                       </Link>
                     </Td>
-                    <Td isNumeric>{client?.total_hotspot}</Td>
+                    <Td isNumeric>
+                      <Text
+                        fontWeight='semibold'
+                        color={colorMode === 'light' ? 'gray.600' : 'green.500'}
+                      >
+                        <NumberFormat
+                          prefix='HNT '
+                          thousandSeparator={true}
+                          displayType='text'
+                          value={client?.wallet_balance}
+                        />
+                      </Text>
+                    </Td>
                   </Tr>
                 ))}
             </Tbody>

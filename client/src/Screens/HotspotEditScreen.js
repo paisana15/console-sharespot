@@ -81,8 +81,6 @@ const HotspotEditScreen = ({ hotspots }) => {
     startDate: yup.string().required('Start date required!'),
   });
 
-  console.log(hotspot?.hotspot_name);
-
   return Object.keys(hotspot).length > 0 ? (
     <Box p='4'>
       <Helmet>
@@ -102,7 +100,6 @@ const HotspotEditScreen = ({ hotspots }) => {
           }}
           validationSchema={fieldValidationSchema}
           onSubmit={(data) => {
-            console.log(data);
             dispatch(updateHotspot(params?.hotspotId, data));
           }}
         >

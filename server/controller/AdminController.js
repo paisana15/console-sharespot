@@ -108,7 +108,7 @@ const deleteClient = asyncHandler(async (req, res) => {
 // access: public
 // method: get
 const getAllClients = asyncHandler(async (req, res) => {
-  const clients = await Client.find({}).select('-password');
+  const clients = await Wallet.find({}).populate('client_id');
   if (clients) {
     res.status(200).json(clients);
   } else {

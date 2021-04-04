@@ -116,8 +116,8 @@ const AddHotspotScreen = () => {
                 >
                   <option> --- </option>
                   {clients?.map((data, idx) => (
-                    <option key={idx} value={data?._id}>
-                      {data?.firstname} {data?.lastname}
+                    <option key={idx} value={data?.client_id?._id}>
+                      {data?.client_id?.firstname} {data?.client_id?.lastname}
                     </option>
                   ))}
                 </Field>

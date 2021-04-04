@@ -13,6 +13,7 @@ import { Link } from 'react-router-dom';
 import { useHistory, useRouteMatch } from 'react-router';
 import AlertMessage from '../components/Alert';
 import moment from 'moment';
+import NumberFormat from 'react-number-format';
 
 const ClientProfileScreen = ({ client_details }) => {
   const { url } = useRouteMatch();
@@ -81,7 +82,14 @@ const ClientProfileScreen = ({ client_details }) => {
         >
           <Heading size='md'>Total Withdrawn</Heading>
           <Text style={{ fontWeight: 'bold' }} fontSize='3xl'>
-            HNT {client_wallet ? client_wallet?.totalWithdraw?.toFixed(2) : '0'}
+            <NumberFormat
+              prefix='HNT '
+              thousandSeparator={true}
+              displayType='text'
+              value={
+                client_wallet ? client_wallet?.totalWithdraw?.toFixed(2) : '0'
+              }
+            />
           </Text>
         </Box>
         <Spacer />
@@ -96,7 +104,14 @@ const ClientProfileScreen = ({ client_details }) => {
         >
           <Heading size='md'>Total Rewards</Heading>
           <Text style={{ fontWeight: 'bold' }} fontSize='3xl'>
-            HNT {client_wallet ? client_wallet?.totalRewards?.toFixed(2) : '0'}
+            <NumberFormat
+              prefix='HNT '
+              thousandSeparator={true}
+              displayType='text'
+              value={
+                client_wallet ? client_wallet?.totalRewards?.toFixed(2) : '0'
+              }
+            />
           </Text>
         </Box>
         <Spacer />
@@ -111,8 +126,14 @@ const ClientProfileScreen = ({ client_details }) => {
         >
           <Heading size='md'>Balance</Heading>
           <Text style={{ fontWeight: 'bold' }} fontSize='3xl'>
-            HNT{' '}
-            {client_wallet ? client_wallet?.wallet_balance?.toFixed(2) : '0'}
+            <NumberFormat
+              prefix='HNT '
+              thousandSeparator={true}
+              displayType='text'
+              value={
+                client_wallet ? client_wallet?.wallet_balance?.toFixed(2) : '0'
+              }
+            />
           </Text>
         </Box>
       </Box>
@@ -177,11 +198,16 @@ const ClientProfileScreen = ({ client_details }) => {
                       Total Earned
                     </Text>
                     <Text
-                      fontWeight='bold'
+                      fontWeight='semibold'
                       color={colorMode === 'light' ? 'grey' : 'orange.200'}
                       fontSize='sm'
                     >
-                      HNT {hotspot?.total_earned.toFixed(2)}
+                      <NumberFormat
+                        prefix='HNT '
+                        thousandSeparator={true}
+                        displayType='text'
+                        value={hotspot?.total_earned.toFixed(2)}
+                      />
                     </Text>
                   </Box>
                 </Flex>
