@@ -34,7 +34,6 @@ router
   .get(verifyAdmin, getSingleClientHotspots);
 router.route('/getAllClients').get(verifyAdmin, getAllClients);
 router.route('/addHotspot').post(verifyAdmin, addHotspotToClient);
-router.route('/getRewards/:clientId').put(getHotspotReward);
 router.route('/getRewardsByServer').put(getHotspotRewardByS);
 router.route('/getRewardsByAdmin').put(verifyAdmin, getHotspotRewardByAdmin);
 router.route('/editClientProfile/:clientId').put(verifyAdmin, editSingleClient);

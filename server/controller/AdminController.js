@@ -14,7 +14,7 @@ import emailValidator from 'email-validator';
 import _ from 'lodash';
 
 // desc: admin login
-// routes: api/admin/login
+// endpoint: host_url/api/admin/login         host_url means '127.0.0.1:5001' (localhost) or 'prod server url' (e.g: api.somthing.likethis)
 // access: private
 // method: post
 const adminLogin = asyncHandler(async (req, res) => {
@@ -32,7 +32,7 @@ const adminLogin = asyncHandler(async (req, res) => {
   }
 });
 // desc: admin add new clients
-// routes: api/admin/addNewClient
+// endpoint: host_url/api/admin/addNewClient
 // access: private
 // method: post
 const addClient = asyncHandler(async (req, res) => {
@@ -52,10 +52,11 @@ const addClient = asyncHandler(async (req, res) => {
   } else {
     const newClient = await Client.create(req.body);
     if (newClient) {
+      // client created successfully
       const client = await Client.findById({ _id: newClient._id }).select(
         '-password'
       );
-      res.status(200).json(client);
+      res.status(201).json(client);
     } else {
       res.status(500);
       throw new Error('Client registration failed!');
@@ -63,17 +64,17 @@ const addClient = asyncHandler(async (req, res) => {
   }
 });
 // desc: admin delete a client
-// routes: api/admin/deleteClient/:clientId
+// endpoint: host_url/api/admin/deleteClient/:clientId
 // access: private
 // method: del
 const deleteClient = asyncHandler(async (req, res) => {
   const clientId = req.params.clientId;
   const client = await Client.findById(clientId);
   if (client) {
-    const del = await client.remove();
     const clientHotspots = await ClientHotspot.find({ client_id: client._id });
     const clientWallets = await Wallet.findOne({ client_id: client._id });
     if (clientHotspots !== null) {
+      // deleting all hostpot assigned to this client
       await ClientHotspot.deleteMany(
         { client_id: clientId },
         (error, result) => {
@@ -84,9 +85,12 @@ const deleteClient = asyncHandler(async (req, res) => {
       );
     }
     if (clientWallets) {
+      // deleting client wallet
       await Wallet.deleteOne({ client_id: client._id });
     }
+    const del = await client.remove();
     if (del) {
+      // client deleted
       res.status(200).json({
         message: 'Client deleted successfully!',
       });
@@ -99,8 +103,8 @@ const deleteClient = asyncHandler(async (req, res) => {
     throw new Error('Clinet not found!');
   }
 });
-// desc: get all client list with name
-// routes: api/admin/getAllClients
+// desc: get all clients list
+// endpoint: host_url/api/admin/getAllClients
 // access: public
 // method: get
 const getAllClients = asyncHandler(async (req, res) => {
@@ -109,11 +113,11 @@ const getAllClients = asyncHandler(async (req, res) => {
     res.status(200).json(clients);
   } else {
     res.status(404);
-    throw new Error('Client fethch failed!');
+    throw new Error('No clients found!');
   }
 });
 // desc: admin add hotspot to client
-// routes: api/admin/addHotspotToClient
+// endpoint: host_url/api/admin/addHotspotToClient
 // access: private
 // method: post
 const addHotspotToClient = asyncHandler(async (req, res) => {
@@ -158,6 +162,7 @@ const addHotspotToClient = asyncHandler(async (req, res) => {
               client_id: client_id,
             });
             if (client_has_wallet === null) {
+              // creating client wallet
               await Wallet.create({
                 client_id: client_id,
                 totalRewards: 0.0,
@@ -165,7 +170,7 @@ const addHotspotToClient = asyncHandler(async (req, res) => {
                 wallet_balance: 0.0,
               });
             }
-            res.status(200).json(newConnection);
+            res.status(201).json(newConnection);
           } else {
             throw new Error();
           }
@@ -186,6 +191,7 @@ const addHotspotToClient = asyncHandler(async (req, res) => {
             client_id: client_id,
           });
           if (client_has_wallet === null) {
+            // creating client wallet
             await Wallet.create({
               client_id: client_id,
               totalRewards: 0.0,
@@ -193,7 +199,7 @@ const addHotspotToClient = asyncHandler(async (req, res) => {
               wallet_balance: 0.0,
             });
           }
-          res.status(200).json(newConnection);
+          res.status(201).json(newConnection);
         } else {
           res.status(500);
           throw new Error('Hotspot adding failed!');
@@ -206,9 +212,9 @@ const addHotspotToClient = asyncHandler(async (req, res) => {
   }
 });
 // desc: admin edit client hotspot
-// routes: api/admin/addHotspotToClient
+// endpoint: host_url/api/admin/addHotspotToClient
 // access: private
-// method: post
+// method: put
 const editHotspotToClient = asyncHandler(async (req, res) => {
   const hotspotId = req.params.hotspotId;
   const hotspot = await ClientHotspot.findById(hotspotId);
@@ -242,7 +248,7 @@ const editHotspotToClient = asyncHandler(async (req, res) => {
   }
 });
 // desc: get clients assigned hotspot
-// routes: api/admin/getClientsHotspot
+// endpoint: host_url/api/admin/getClientsHotspot
 // access: private
 // method: get
 const getClientsHotspot = asyncHandler(async (req, res) => {
@@ -255,7 +261,7 @@ const getClientsHotspot = asyncHandler(async (req, res) => {
   }
 });
 // desc: get single client with hotspot
-// routes: api/admin/getSingleClient/:clientId
+// endpoint: host_url/api/admin/getSingleClient/:clientId
 // access: private
 // method: get
 const getSingleClientHotspots = asyncHandler(async (req, res) => {
@@ -286,9 +292,9 @@ const getSingleClientHotspots = asyncHandler(async (req, res) => {
   }
 });
 // desc: admin edit client profile
-// routes: api/admin/editClientProfile/:clientId
+// endpoint: host_url/api/admin/editClientProfile/:clientId
 // access: private
-// method: get
+// method: put
 const editSingleClient = asyncHandler(async (req, res) => {
   const clientId = req.params.clientId;
   const client = await Client.findById({ _id: clientId });
@@ -342,6 +348,7 @@ const editSingleClient = asyncHandler(async (req, res) => {
   }
 });
 
+// updating client wallet balance, it takes 3 params clientId, updatedBalance, deleteHostpot (true, when deleting a assigned hotspot of client, else false)
 const updateWalletBalance = async (clientId, balance, deleteHotspot) => {
   try {
     const client_wallet = await Wallet.findOne({ client_id: clientId });
@@ -375,6 +382,7 @@ const updateWalletBalance = async (clientId, balance, deleteHotspot) => {
   }
 };
 
+// sum client assigned hotspots reward total and pass the value
 const calHotspotTotal = async (assigned_hotspots) => {
   const responses = await Promise.all(
     assigned_hotspots.map(async (data) => {
@@ -396,7 +404,7 @@ const calHotspotTotal = async (assigned_hotspots) => {
   });
   return clientHotspotsTotal;
 };
-
+// get hotspot reward for multiple clients
 const getHotspotReward = async (clients_list) => {
   try {
     clients_list.forEach(async (clientId) => {
@@ -419,7 +427,10 @@ const getHotspotReward = async (clients_list) => {
     throw new Error(error);
   }
 };
-
+// desc: fetch all clients reward by admin
+// endpoint: host_url/api/admin/getRewardsByAdmin
+// access: private
+// method: put
 const getHotspotRewardByAdmin = asyncHandler(async (req, res) => {
   const clients = await ClientHotspot.find({});
   if (clients.length > 0) {
@@ -447,7 +458,10 @@ const getHotspotRewardByAdmin = asyncHandler(async (req, res) => {
     throw new Error('No hotspot found!');
   }
 });
-
+// desc: fetch all clients reward by server itself
+// endpoint: host_url/api/admin/getRewardsByServer
+// access: private
+// method: put
 const getHotspotRewardByS = asyncHandler(async (req, res) => {
   const clients = await ClientHotspot.find({});
   if (clients.length > 0) {
@@ -475,7 +489,10 @@ const getHotspotRewardByS = asyncHandler(async (req, res) => {
     throw new Error('No hotspot found!');
   }
 });
-
+// desc: delete a assigned hotspot by admin
+// endpoint: host_url/api/admin/deleteHotspot/:hotspotId
+// access: private
+// method: delete
 const deleteHotspot = asyncHandler(async (req, res) => {
   const hotspotId = req.params.hotspotId;
   const clientId = req.params.clientId;
@@ -513,7 +530,10 @@ const deleteHotspot = asyncHandler(async (req, res) => {
     throw new Error('Hotspot not found!');
   }
 });
-
+// desc: get all withdraw requests
+// endpoint: host_url/api/admin/getWithdrawalRequests
+// access: private
+// method: get
 const getWithdrawalRequests = asyncHandler(async (req, res) => {
   const wr = await WithdrawRequest.find({})
     .populate('wallet')
@@ -526,7 +546,10 @@ const getWithdrawalRequests = asyncHandler(async (req, res) => {
     throw new Error('No Withdrawal Request!');
   }
 });
-
+// desc: accept a withdraw request by admin
+// endpoint: host_url/api/admin/withdrawalRequestAccept/:requestId/accept
+// access: private
+// method: put
 const withdrawalRequestAccept = asyncHandler(async (req, res) => {
   const wreqId = req.params.wreqId;
   const withdraw_request = await WithdrawRequest.findById(wreqId)
@@ -1399,7 +1422,10 @@ const withdrawalRequestAccept = asyncHandler(async (req, res) => {
     throw new Error('Withdraw request not found!');
   }
 });
-
+// desc: reject a withdraw request by admin
+// endpoint: host_url/api/admin/withdrawalRequestReject/:requestId/reject
+// access: private
+// method: put
 const withdrawalRequestReject = asyncHandler(async (req, res) => {
   const wreqId = req.params.wreqId;
   const withdraw_request = await WithdrawRequest.findById(wreqId);
@@ -1447,7 +1473,7 @@ const withdrawalRequestReject = asyncHandler(async (req, res) => {
     throw new Error('Withdraw request not found!');
   }
 });
-
+// calculate all clients wallet balance
 const calc_cw_balances = async (arr) => {
   const sum = arr
     .map((data) => data.wallet_balance)
@@ -1456,7 +1482,10 @@ const calc_cw_balances = async (arr) => {
     }, 0);
   return await sum;
 };
-
+// desc: get main and second wallet balances
+// endpoint: host_url/api/admin/getMainSecondWallet
+// access: private
+// method: get
 const getMainSecondWallet = asyncHandler(async (req, res) => {
   const response1 = await axios.get(
     'https://api.helium.io/v1/accounts/13ESLoXiie3eXoyitxryNQNamGAnJjKt2WkiB4gNq95knxAiGEp/stats'
@@ -1491,7 +1520,10 @@ const getMainSecondWallet = asyncHandler(async (req, res) => {
     throw new Error('Failed to fetch data from API!');
   }
 });
-
+// desc: add manula withdraw
+// endpoint: host_url/api/admin/addManualWithdraw/:clietnId
+// access: private
+// method: get
 const addManualWithdraw = asyncHandler(async (req, res) => {
   const clientId = req.params.clientId;
   const client = await Client.findById(clientId);
@@ -1536,7 +1568,10 @@ const addManualWithdraw = asyncHandler(async (req, res) => {
     throw new Error('Client not found!');
   }
 });
-
+// desc: get manual withdraw histories list
+// endpoint: host_url/api/admin/getManulaWithdrawHistory/:clientId
+// access: private
+// method: get
 const getManulaWithdrawHistory = asyncHandler(async (req, res) => {
   const mw_histories = await ManualWithdrawHistory.find({
     client_id: req.params.clientId,
@@ -1550,7 +1585,10 @@ const getManulaWithdrawHistory = asyncHandler(async (req, res) => {
     throw new Error('Not found!');
   }
 });
-
+// desc: delete a manual withdarw history
+// endpoint: host_url/api/admin/deleteManualWithdraw/:historyId
+// access: private
+// method: delete
 const deleteManualWithdraw = asyncHandler(async (req, res) => {
   const history = await ManualWithdrawHistory.findById(req.params.historyId);
   if (history) {
@@ -1583,7 +1621,7 @@ const deleteManualWithdraw = asyncHandler(async (req, res) => {
     throw new Error('History not found!');
   }
 });
-
+// push manual withdraw histories to system withdraw histories
 const PushMWHistory = async (histories, mwhistories) => {
   const mh = mwhistories.map((data) => {
     const newObj = {
@@ -1598,7 +1636,10 @@ const PushMWHistory = async (histories, mwhistories) => {
   const newHis = [...histories, ...mh];
   return newHis;
 };
-
+// desc: get withdraw histories for a single client
+// endpoint: host_url/api/admin/getManulaWithdrawHistory/:clientId
+// access: private
+// method: get
 const getWithdrawHistoryByAdmin = asyncHandler(async (req, res) => {
   const clientId = req.params.clientId;
   const client_user = await Client.findById(clientId);

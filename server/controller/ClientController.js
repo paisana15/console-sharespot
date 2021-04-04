@@ -12,7 +12,7 @@ import ManualWithdrawHistory from '../models/ManualWithdrawHistoryModel.js';
 import QRCode from 'qrcode';
 
 // desc: client login
-// routes: api/client/login
+// routes: host_url/api/client/login              host_url means '127.0.0.1:5001' (localhost) or 'prod server url' (e.g: api.somthing.likethis)
 // access: public
 // method: post
 const clientLogin = asyncHandler(async (req, res) => {
@@ -37,7 +37,7 @@ const clientLogin = asyncHandler(async (req, res) => {
   }
 });
 // desc: get single client with hotspot by client
-// routes: api/client/getClientProfileByClient/:clientId
+// routes: host_url/api/client/getClientProfileByClient/:clientId
 // access: private
 // method: get
 const getClientProfileByClient = asyncHandler(async (req, res) => {
@@ -70,7 +70,7 @@ const getClientProfileByClient = asyncHandler(async (req, res) => {
 // desc: admin edit client profile
 // routes: api/admin/editClientProfile/:clientId
 // access: private
-// method: get
+// method: put
 const editSingleClientByClient = asyncHandler(async (req, res) => {
   const clientId = req.params.clientId;
   const client = await Client.findById({ _id: clientId });
@@ -123,7 +123,7 @@ const editSingleClientByClient = asyncHandler(async (req, res) => {
         throw new Error('Username taken! Try again!');
       }
     } else {
-      res.status(400);
+      res.status(403);
       throw new Error('You are not authorized to edit this information!');
     }
   } else {
@@ -131,11 +131,10 @@ const editSingleClientByClient = asyncHandler(async (req, res) => {
     throw new Error('Client not found!');
   }
 });
-
-// desc: get single client with hotspot by client
-// routes: api/client/getClientProfileByClient/:clientId
+// desc: reset password
+// routes: host_url/api/client/resetPassword/:clientId
 // access: private
-// method: get
+// method: put
 const resetPassword = asyncHandler(async (req, res) => {
   const clientId = req.params.clientId;
   const client = await Client.findById(clientId).select('password');
@@ -172,7 +171,10 @@ const resetPassword = asyncHandler(async (req, res) => {
     throw new Error('Client not found!');
   }
 });
-
+// desc: get hostpot reward by client
+// routes: host_url/api/client/getRewardByClient/:clientId
+// access: private
+// method: get
 const getHotspotRewardByClient = asyncHandler(async (req, res) => {
   const clientId = req.params.clientId;
   const client = await Client.findById(clientId);
@@ -236,7 +238,7 @@ const getHotspotRewardByClient = asyncHandler(async (req, res) => {
         }
       }, 5000);
     } else {
-      res.status(400);
+      res.status(403);
       throw new Error('You are not authorized to do this!');
     }
   } else {
@@ -244,7 +246,7 @@ const getHotspotRewardByClient = asyncHandler(async (req, res) => {
     throw new Error('Client not found!');
   }
 });
-
+// generate a QR code for wallet address
 const QRCodeForWA = async (address) => {
   try {
     const str = await QRCode.toDataURL(address);
@@ -253,6 +255,10 @@ const QRCodeForWA = async (address) => {
     throw new Error(error);
   }
 };
+// desc: send withdraw request by client
+// routes: host_url/api/client/withdrawRequest/:clientId
+// access: private
+// method: post
 const clientWithdrawRequest = asyncHandler(async (req, res) => {
   const clientId = req.params.clientId;
   const client_user = await Client.findById(clientId);
@@ -302,7 +308,7 @@ const clientWithdrawRequest = asyncHandler(async (req, res) => {
                 wReqId: newWithdrawRequest._id,
               });
               if (newWithdrawHistory) {
-                res.status(200).json({ message: 'Withdraw Request Received!' });
+                res.status(201).json({ message: 'Withdraw Request Received!' });
               } else {
                 res.status(500);
                 throw new Error(
@@ -322,7 +328,7 @@ const clientWithdrawRequest = asyncHandler(async (req, res) => {
         }
       }
     } else {
-      res.status(400);
+      res.status(403);
       throw new Error('You are not authorized to perform this action!');
     }
   } else {
@@ -345,7 +351,10 @@ const PushMWHistory = async (histories, mwhistories) => {
   const newHis = [...histories, ...mh];
   return newHis;
 };
-
+// desc: get withdraw history by client
+// routes: host_url/api/client/getWithdrawHistory/:clientId
+// access: private
+// method: get
 const getWithdrawHistory = asyncHandler(async (req, res) => {
   const clientId = req.params.clientId;
   const client_user = await Client.findById(clientId);
