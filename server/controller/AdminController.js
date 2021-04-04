@@ -52,11 +52,23 @@ const addClient = asyncHandler(async (req, res) => {
   } else {
     const newClient = await Client.create(req.body);
     if (newClient) {
+      // creating client wallet
+      const createClientWallet = await Wallet.create({
+        client_id: newClient?._id,
+        totalRewards: 0.0,
+        totalWithdraw: 0.0,
+        wallet_balance: 0.0,
+      });
+      if (createClientWallet) {
+        const client = await Client.findById({ _id: newClient._id }).select(
+          '-password'
+        );
+        res.status(201).json(client);
+      } else {
+        res.status(500);
+        throw new Error('Failed to create client wallet!');
+      }
       // client created successfully
-      const client = await Client.findById({ _id: newClient._id }).select(
-        '-password'
-      );
-      res.status(201).json(client);
     } else {
       res.status(500);
       throw new Error('Client registration failed!');
@@ -157,20 +169,13 @@ const addHotspotToClient = asyncHandler(async (req, res) => {
           });
           if (newConnection) {
             client.total_hotspot = parseInt(client.total_hotspot) + 1;
-            await client.save();
-            const client_has_wallet = await Wallet.findOne({
-              client_id: client_id,
-            });
-            if (client_has_wallet === null) {
-              // creating client wallet
-              await Wallet.create({
-                client_id: client_id,
-                totalRewards: 0.0,
-                totalWithdraw: 0.0,
-                wallet_balance: 0.0,
-              });
+            const update = await client.save();
+            if (update) {
+              res.status(201).json(newConnection);
+            } else {
+              res.status(500);
+              throw new Error('Failed to save client!');
             }
-            res.status(201).json(newConnection);
           } else {
             throw new Error();
           }
@@ -186,20 +191,13 @@ const addHotspotToClient = asyncHandler(async (req, res) => {
         });
         if (newConnection) {
           client.total_hotspot = parseInt(client.total_hotspot) + 1;
-          await client.save();
-          const client_has_wallet = await Wallet.findOne({
-            client_id: client_id,
-          });
-          if (client_has_wallet === null) {
-            // creating client wallet
-            await Wallet.create({
-              client_id: client_id,
-              totalRewards: 0.0,
-              totalWithdraw: 0.0,
-              wallet_balance: 0.0,
-            });
+          const update = await client.save();
+          if (update) {
+            res.status(201).json(newConnection);
+          } else {
+            res.status(500);
+            throw new Error('Failed to save client!');
           }
-          res.status(201).json(newConnection);
         } else {
           res.status(500);
           throw new Error('Hotspot adding failed!');

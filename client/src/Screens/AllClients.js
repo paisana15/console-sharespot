@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Heading, Text } from '@chakra-ui/layout';
 import {
   Table,
@@ -9,7 +9,14 @@ import {
   Thead,
   Tr,
 } from '@chakra-ui/table';
-import { Spacer, Button, useToast, useColorMode } from '@chakra-ui/react';
+import {
+  Spacer,
+  Button,
+  useToast,
+  useColorMode,
+  FormControl,
+  Input,
+} from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -28,6 +35,7 @@ const AllClients = () => {
   const allClientsGet = useSelector((state) => state.allClientsGet);
   const { loading, clients, error } = allClientsGet;
   const { colorMode } = useColorMode();
+  const [clientSearchText, setClientSearchText] = useState('');
 
   const MWSWCWget = useSelector((state) => state.MWSWCWget);
   const { loading: mwLoading, balances, error: mwError } = MWSWCWget;
@@ -62,6 +70,14 @@ const AllClients = () => {
       });
     }
   }, [dispatch, toast, rewardFSuccess, rewardFError]);
+
+  const clientsList = clients?.filter((client) => {
+    return clientSearchText !== ''
+      ? client?.client_id?.firstname
+          .toLowerCase()
+          .includes(clientSearchText.toLowerCase())
+      : client;
+  });
 
   return (
     <Box p='4'>
@@ -155,7 +171,15 @@ const AllClients = () => {
           All Clients
         </Text>
         <Spacer />
-        <Box>
+        <Box d={{ base: 'block', md: 'flex' }}>
+          <FormControl mr={{ md: 3 }}>
+            <Input
+              variant='flushed'
+              size='sm'
+              placeholder='Search client ...'
+              onChange={(e) => setClientSearchText(e.target.value)}
+            />
+          </FormControl>
           <Link to={`/h/add-new-client`}>
             <Button
               variant='outline'
@@ -169,7 +193,7 @@ const AllClients = () => {
           </Link>
         </Box>
       </Box>
-      <Box>
+      <Box className='assigned_hotspot_wrapper'>
         {loading ? (
           <Loader />
         ) : error ? (
@@ -186,8 +210,10 @@ const AllClients = () => {
               </Tr>
             </Thead>
             <Tbody>
-              {clients
-                .sort((a, b) => (a?.firstname > b?.firstname ? 1 : -1))
+              {clientsList
+                .sort((a, b) =>
+                  a?.client_id?.firstname > b?.client_id?.firstname ? 1 : -1
+                )
                 .map((client) => (
                   <Tr key={client?._id}>
                     <Td>
@@ -206,7 +232,7 @@ const AllClients = () => {
                           prefix='HNT '
                           thousandSeparator={true}
                           displayType='text'
-                          value={client?.wallet_balance}
+                          value={client?.wallet_balance.toFixed(2)}
                         />
                       </Text>
                     </Td>

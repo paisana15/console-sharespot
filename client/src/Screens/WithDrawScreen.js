@@ -86,7 +86,7 @@ const WithDrawScreen = ({ client, wallet }) => {
           >
             Available for Withdraw :{' '}
             <Badge ml='2' variant='outline' colorScheme='green'>
-              HNT {wallet?.totalRewards - wallet?.totalWithdraw}
+              HNT {(wallet?.totalRewards - wallet?.totalWithdraw).toFixed(2)}
             </Badge>
           </Text>
         </Box>
@@ -170,7 +170,7 @@ const WithDrawScreen = ({ client, wallet }) => {
                 <Flex
                   key={data?._id}
                   p='2'
-                  px="4"
+                  px='4'
                   borderRadius='lg'
                   mb='3'
                   boxShadow='base'
