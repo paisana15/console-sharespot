@@ -338,6 +338,7 @@ const PushMWHistory = async (histories, mwhistories) => {
       amount: data?.mw_amount,
       status: 'Manual',
       wReqId: 'null',
+      createdAt: data?.createdAt,
     };
     return newObj;
   });

@@ -346,8 +346,6 @@ const updateWalletBalance = async (clientId, balance, deleteHotspot) => {
   try {
     const client_wallet = await Wallet.findOne({ client_id: clientId });
     if (client_wallet) {
-      // console.log(client_wallet.totalRewards + ', ' + 'new reward ' + balance);
-
       if (deleteHotspot) {
         if (client_wallet.totalRewards !== 0) {
           client_wallet.totalRewards =
@@ -1593,6 +1591,7 @@ const PushMWHistory = async (histories, mwhistories) => {
       amount: data?.mw_amount,
       status: 'Manual',
       wReqId: 'null',
+      createdAt: data?.createdAt,
     };
     return newObj;
   });
