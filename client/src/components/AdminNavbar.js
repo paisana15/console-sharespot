@@ -1,11 +1,12 @@
 import { Box, Container, Flex, Spacer, Text } from '@chakra-ui/layout';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useRouteMatch } from 'react-router-dom';
 import { adminLogout } from '../redux/action/AdminAction';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Logo from './Logo';
 import { useColorMode } from '@chakra-ui/color-mode';
 import { Button, IconButton } from '@chakra-ui/button';
+import { getWithdrawalRequets } from '../redux/action/AdminAction';
 
 const MenuItems = ({ children }) => (
   <Text
@@ -28,6 +29,12 @@ const AdminNavbar = () => {
   const [showMenu, setShow] = useState(false);
   const { colorMode, toggleColorMode } = useColorMode();
 
+  const withdrawRequestGet = useSelector((state) => state.withdrawRequestGet);
+  const { wRequests } = withdrawRequestGet;
+
+  useEffect(() => {
+    dispatch(getWithdrawalRequets());
+  }, [dispatch]);
   const logoutHandler = () => {
     dispatch(adminLogout());
   };
@@ -81,7 +88,10 @@ const AdminNavbar = () => {
             </Link>
             <Link to={`${path}/withdrawal-requests`}>
               <MenuItems>
-                <i className='fas fa-bell'></i> Withdrawal Request
+                <i className='fas fa-bell'></i> Withdrawal Request{' '}
+                <span style={{ color: wRequests?.length > 0 && '#ffcc59' }}>
+                  {wRequests?.length > 0 ? `( ${wRequests?.length} )` : `( 0 )`}
+                </span>
               </MenuItems>
             </Link>
             <MenuItems>

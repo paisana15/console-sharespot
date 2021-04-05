@@ -168,7 +168,7 @@ const AllClients = () => {
       {mwError && <AlertMessage status='error' error={mwError} />}
       <Box display={{ sm: 'flex' }} mb='3' alignItems='center'>
         <Text fontSize='2xl' className='adminPageHeader'>
-          All Clients
+          All Clients ({clients ? clients?.length : '0'})
         </Text>
         <Spacer />
         <Box d={{ base: 'block', md: 'flex' }}>
@@ -200,9 +200,7 @@ const AllClients = () => {
           <AlertMessage status='error' error={error} />
         ) : clients && clients?.length > 0 ? (
           <Table shadow='lg' size='sm' variant='striped'>
-            <TableCaption>
-              All client list with their total hotspot.
-            </TableCaption>
+            <TableCaption>All Clients with their Wallet Balance.</TableCaption>
             <Thead>
               <Tr>
                 <Th>Client Name</Th>

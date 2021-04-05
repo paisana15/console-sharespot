@@ -319,61 +319,28 @@ const clientWithdrawRequest = asyncHandler(async (req, res) => {
 
               const emailSent = await transporter.sendMail({
                 from: process.env.EMAIL,
-                to: 'payments@sharespot.pt',
+                to: 'payments@sharespot.pt',          
                 subject: `New withdraw request from ${
                   client_user?.firstname + ' ' + client_user?.lastname
                 }.`,
                 text: '',
                 html: `
-                <!DOCTYPE html>
-                    <html lang="en">
-                      <head>
-                        <style>
-                          table {
-                            border-collapse: collapse;
-                          }
-                          th,
-                          td {
-                            border: 1px solid #dddddd;
-                            text-align: left;
-                            padding: 8px;
-                          }
-                          tr:nth-child(even) {
-                            background-color: #dddddd;
-                          }
-                          th {
-                            text-align: left;
-                          }
-                        </style>
-                      </head>
-                      <body>
-                        <table>
-                          <tr>
-                            <th>Client</th>
-                            <td>${
-                              client_user?.firstname +
-                              ' ' +
-                              client_user?.lastname
-                            }</td>
-                          </tr>
-                          <tr>
-                            <th>Wallet Address</th>
-                            <td>${client_user?.wallet_address}</td>
-                          </tr>
-                          <tr>
-                            <th>Amount</th>
-                            <td>HNT ${amount}</td>
-                          </tr>             
-                          <tr>
-                            <th>Date</th>
-                            <td>${moment(newWithdrawRequest?.createdAt).format(
-                              'LLL'
-                            )}</td>
-                          </tr>
-                        </table>
-                      </body>
-                    </html>
-
+                  <html>
+                    <body>       
+                      <div>
+                      <div>
+                      <h3>Wallet QR Code</h3>
+                      <p>http://api.qrserver.com/v1/create-qr-code/?color=000000&bgcolor=FFFFFF&data=${client_user?.wallet_address}&qzone=1&margin=0&size=400x400&ecc=L</p>                            
+                      </div> 
+                      <div>
+                      <p>Client: ${client_user?.firstname + ' ' + client_user?.lastname}</p>
+                      <p>Wallet Address: ${client_user?.wallet_address}</p>
+                      <p>Amount: HNT ${amount}</p>
+                      <p>Date: ${moment(newWithdrawRequest?.createdAt).format('LLL')}</p>
+                      </div>
+                      </div>               
+                   </body>
+                 </html>
                 `,
               });
               if (transporter && emailSent) {
