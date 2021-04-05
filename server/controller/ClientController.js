@@ -10,6 +10,8 @@ import moment from 'moment';
 import WithdrawHistory from '../models/WithdrawHistoryModel.js';
 import ManualWithdrawHistory from '../models/ManualWithdrawHistoryModel.js';
 import QRCode from 'qrcode';
+import nodemailer from 'nodemailer';
+import emailValidator from 'email-validator';
 
 // desc: client login
 // routes: host_url/api/client/login              host_url means '127.0.0.1:5001' (localhost) or 'prod server url' (e.g: api.somthing.likethis)
@@ -299,25 +301,111 @@ const clientWithdrawRequest = asyncHandler(async (req, res) => {
               parseFloat(clientWallet.totalWithdraw);
             clientWallet.pendingPayment = amount;
 
-            const balanceUpdate = await clientWallet.save();
-            if (balanceUpdate) {
-              const newWithdrawHistory = await WithdrawHistory.create({
-                client: clientId,
-                amount: amount,
-                status: 'Pending',
-                wReqId: newWithdrawRequest._id,
+            //sending mail to admin
+            const email = client_user.email;
+
+            const valid_email = emailValidator.validate(email);
+
+            if (valid_email) {
+              const transporter = nodemailer.createTransport({
+                host: 'smtp.gmail.com',
+                port: 465,
+                secure: true,
+                auth: {
+                  user: process.env.EMAIL,
+                  pass: process.env.PASSE,
+                },
               });
-              if (newWithdrawHistory) {
-                res.status(201).json({ message: 'Withdraw Request Received!' });
+
+              const emailSent = await transporter.sendMail({
+                from: process.env.EMAIL,
+                to: 'payments@sharespot.pt',
+                subject: `New withdraw request from ${
+                  client_user?.firstname + ' ' + client_user?.lastname
+                }.`,
+                text: '',
+                html: `
+                <!DOCTYPE html>
+                    <html lang="en">
+                      <head>
+                        <style>
+                          table {
+                            border-collapse: collapse;
+                          }
+                          th,
+                          td {
+                            border: 1px solid #dddddd;
+                            text-align: left;
+                            padding: 8px;
+                          }
+                          tr:nth-child(even) {
+                            background-color: #dddddd;
+                          }
+                          th {
+                            text-align: left;
+                          }
+                        </style>
+                      </head>
+                      <body>
+                        <table>
+                          <tr>
+                            <th>Client</th>
+                            <td>${
+                              client_user?.firstname +
+                              ' ' +
+                              client_user?.lastname
+                            }</td>
+                          </tr>
+                          <tr>
+                            <th>Wallet Address</th>
+                            <td>${client_user?.wallet_address}</td>
+                          </tr>
+                          <tr>
+                            <th>Amount</th>
+                            <td>HNT ${amount}</td>
+                          </tr>             
+                          <tr>
+                            <th>Date</th>
+                            <td>${moment(newWithdrawRequest?.createdAt).format(
+                              'LLL'
+                            )}</td>
+                          </tr>
+                        </table>
+                      </body>
+                    </html>
+
+                `,
+              });
+              if (transporter && emailSent) {
+                const balanceUpdate = await clientWallet.save();
+                if (balanceUpdate) {
+                  const newWithdrawHistory = await WithdrawHistory.create({
+                    client: clientId,
+                    amount: amount,
+                    status: 'Pending',
+                    wReqId: newWithdrawRequest._id,
+                  });
+                  if (newWithdrawHistory) {
+                    res
+                      .status(201)
+                      .json({ message: 'Withdraw Request Received!' });
+                  } else {
+                    res.status(500);
+                    throw new Error(
+                      'Could not receive withdrawal request! Failed to create history!'
+                    );
+                  }
+                } else {
+                  res.status(500);
+                  throw new Error('Failed to update wallet balance!');
+                }
               } else {
                 res.status(500);
-                throw new Error(
-                  'Could not receive withdrawal request! Failed to create history!'
-                );
+                throw new Error('Failed to send email!');
               }
             } else {
-              res.status(500);
-              throw new Error('Failed to update wallet balance!');
+              res.status(400);
+              throw new Error('Invalid email');
             }
           } else {
             res.status(500);

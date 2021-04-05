@@ -172,7 +172,7 @@ const AllClients = () => {
         </Text>
         <Spacer />
         <Box d={{ base: 'block', md: 'flex' }}>
-          <FormControl mr={{ md: 3 }}>
+          <FormControl mr={{ md: 3 }} mb={{ base: 2, md: 0 }}>
             <Input
               variant='flushed'
               size='sm'
