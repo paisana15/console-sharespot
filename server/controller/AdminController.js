@@ -597,8 +597,8 @@ const withdrawalRequestAccept = asyncHandler(async (req, res) => {
           const emailSent = await transporter.sendMail({
             from: process.env.EMAIL,
             to: email,
-            subject: 'You have just received a payment!',
-            text: 'Payment Received!',
+            subject: 'Sharespot Portugal',
+            text: '',
             html: `
             <!doctype html>
             <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
@@ -1353,16 +1353,8 @@ const withdrawalRequestAccept = asyncHandler(async (req, res) => {
                     <td valign="top" width="600" style="width:600px;">
                     <![endif]-->
                             <table align="left" border="0" cellpadding="0" cellspacing="0" style="max-width:100%; min-width:100%;" width="100%" class="mcnTextContentContainer">
-                                <tbody><tr>
-                                    
-                                    <td valign="top" class="mcnTextContent" style="padding-top:0; padding-right:18px; padding-bottom:9px; padding-left:18px;">
-                                    
-                                        Want to change how you receive these emails?<br>
-            You can <a href="*|UPDATE_PROFILE|*">update your preferences</a> or <a href="*|UNSUB|*">unsubscribe from this list</a>.<br>
-            <br>
-            *|IF:REWARDS|* *|HTML:REWARDS|* *|END:IF|*
-                                    </td>
-                                </tr>
+                                <tbody>
+                                
                             </tbody></table>
                     <!--[if mso]>
                     </td>
