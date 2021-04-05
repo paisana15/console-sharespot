@@ -597,8 +597,8 @@ const withdrawalRequestAccept = asyncHandler(async (req, res) => {
           const emailSent = await transporter.sendMail({
             from: process.env.EMAIL,
             to: email,
-            subject: 'You have just received a payment!',
-            text: 'Payment Received!',
+            subject: 'Sharespot Portugal',
+            text: '',
             html: `
             <!doctype html>
             <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
@@ -608,14 +608,14 @@ const withdrawalRequestAccept = asyncHandler(async (req, res) => {
                     <xml>
                         <o:OfficeDocumentSettings>
                         <o:AllowPNG/>
-                        <o:PixelsPerInch>96</o:PixelsPerInch>
+                        <o:PixelsPerInch></o:PixelsPerInch>
                         </o:OfficeDocumentSettings>
                     </xml>
                     <![endif]-->
                     <meta charset="UTF-8">
                     <meta http-equiv="X-UA-Compatible" content="IE=edge">
                     <meta name="viewport" content="width=device-width, initial-scale=1">
-                    <title>*|MC:SUBJECT|*</title>
+                    <title>Recebeu um pagamento de Sharespot Portugal</title>
                     
                 <style type="text/css">
                 p{
@@ -1146,7 +1146,7 @@ const withdrawalRequestAccept = asyncHandler(async (req, res) => {
             }</style></head>
                 <body>
                     <!--*|IF:MC_PREVIEW_TEXT|*-->
-                    <!--[if !gte mso 9]><!----><span class="mcnPreviewText" style="display:none; font-size:0px; line-height:0px; max-height:0px; max-width:0px; opacity:0; overflow:hidden; visibility:hidden; mso-hide:all;">*|MC_PREVIEW_TEXT|*</span><!--<![endif]-->
+                    <!--[if !gte mso 9]><!----><span class="mcnPreviewText" style="display:none; font-size:0px; line-height:0px; max-height:0px; max-width:0px; opacity:0; overflow:hidden; visibility:hidden; mso-hide:all;">Recebeu um pagamento da Sharespot!</span><!--<![endif]-->
                     <!--*|END:IF|*-->
                     <center>
                         <table align="center" border="0" cellpadding="0" cellspacing="0" height="100%" width="100%" id="bodyTable">
@@ -1208,7 +1208,7 @@ const withdrawalRequestAccept = asyncHandler(async (req, res) => {
                                         }.</span></h1>
             
             <p style="text-align: center; line-height: 125%;"><span style="font-size:13px">Realizamos o pagamento de ${wa} HNT para a tua conta digital.<br>
-            O montande deverá ficar disponível nos próximos minutos.<br>
+            O montante deverá ficar disponível nos próximos minutos.<br>
             <br>
             Acompanha-nos no nosso twitter <a href="https://twitter.com/sharespotPT" target="_blank">@sharespotPT</a><br>
             <br>
@@ -1353,16 +1353,8 @@ const withdrawalRequestAccept = asyncHandler(async (req, res) => {
                     <td valign="top" width="600" style="width:600px;">
                     <![endif]-->
                             <table align="left" border="0" cellpadding="0" cellspacing="0" style="max-width:100%; min-width:100%;" width="100%" class="mcnTextContentContainer">
-                                <tbody><tr>
-                                    
-                                    <td valign="top" class="mcnTextContent" style="padding-top:0; padding-right:18px; padding-bottom:9px; padding-left:18px;">
-                                    
-                                        Want to change how you receive these emails?<br>
-            You can <a href="*|UPDATE_PROFILE|*">update your preferences</a> or <a href="*|UNSUB|*">unsubscribe from this list</a>.<br>
-            <br>
-            *|IF:REWARDS|* *|HTML:REWARDS|* *|END:IF|*
-                                    </td>
-                                </tr>
+                                <tbody>
+                                
                             </tbody></table>
                     <!--[if mso]>
                     </td>
