@@ -1208,7 +1208,7 @@ const withdrawalRequestAccept = asyncHandler(async (req, res) => {
                                         }.</span></h1>
             
             <p style="text-align: center; line-height: 125%;"><span style="font-size:13px">Realizamos o pagamento de ${wa} HNT para a tua conta digital.<br>
-            O montande deverá ficar disponível nos próximos minutos.<br>
+            O montante deverá ficar disponível nos próximos minutos.<br>
             <br>
             Acompanha-nos no nosso twitter <a href="https://twitter.com/sharespotPT" target="_blank">@sharespotPT</a><br>
             <br>
