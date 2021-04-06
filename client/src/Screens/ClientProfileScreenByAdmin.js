@@ -318,6 +318,17 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
                     },
                   ],
                 }}
+                options={{
+                  scales: {
+                    yAxes: [
+                      {
+                        ticks: {
+                          beginAtZero: true,
+                        },
+                      },
+                    ],
+                  },
+                }}
               />
             </>
           ) : null}

@@ -218,15 +218,14 @@ const ClientProfileScreen = ({ client_details }) => {
                   ],
                 }}
                 options={{
-                  plugins: {
-                    plugins: {
-                      legend: {
-                        display: false,
-                        labels: {
-                          color: 'rgb(255, 99, 132)',
+                  scales: {
+                    yAxes: [
+                      {
+                        ticks: {
+                          beginAtZero: true,
                         },
                       },
-                    },
+                    ],
                   },
                 }}
               />
