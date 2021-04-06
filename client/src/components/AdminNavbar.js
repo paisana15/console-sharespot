@@ -7,6 +7,7 @@ import Logo from './Logo';
 import { useColorMode } from '@chakra-ui/color-mode';
 import { Button, IconButton } from '@chakra-ui/button';
 import { getWithdrawalRequets } from '../redux/action/AdminAction';
+import { Collapse } from '@chakra-ui/transition';
 
 const MenuItems = ({ children }) => (
   <Text
@@ -72,52 +73,56 @@ const AdminNavbar = () => {
             </Box>
           </Flex>
           <Spacer />
-          <Box
-            display={{ base: showMenu ? 'block' : 'none', md: 'flex' }}
-            alignItems='center'
-          >
-            <Link to={path}>
+          <Collapse in={showMenu} animateOpacity>
+            <Box
+              display={{ base: showMenu ? 'block' : 'none', md: 'flex' }}
+              alignItems='center'
+            >
+              <Link to={path}>
+                <MenuItems>
+                  <i className='fas fa-users'></i> All Clients
+                </MenuItems>
+              </Link>
+              <Link to={`${path}/add-hotspot`}>
+                <MenuItems>
+                  <i className='fas fa-wifi'></i> Add Hotspot
+                </MenuItems>
+              </Link>
+              <Link to={`${path}/withdrawal-requests`}>
+                <MenuItems>
+                  <i className='fas fa-bell'></i> Withdrawal Request{' '}
+                  <span style={{ color: wRequests?.length > 0 && '#ffcc59' }}>
+                    {wRequests?.length > 0
+                      ? `( ${wRequests?.length} )`
+                      : `( 0 )`}
+                  </span>
+                </MenuItems>
+              </Link>
               <MenuItems>
-                <i className='fas fa-users'></i> All Clients
-              </MenuItems>
-            </Link>
-            <Link to={`${path}/add-hotspot`}>
-              <MenuItems>
-                <i className='fas fa-wifi'></i> Add Hotspot
-              </MenuItems>
-            </Link>
-            <Link to={`${path}/withdrawal-requests`}>
-              <MenuItems>
-                <i className='fas fa-bell'></i> Withdrawal Request{' '}
-                <span style={{ color: wRequests?.length > 0 && '#ffcc59' }}>
-                  {wRequests?.length > 0 ? `( ${wRequests?.length} )` : `( 0 )`}
+                <span onClick={logoutHandler}>
+                  <i
+                    style={{ marginRight: 5 }}
+                    className='fas fa-sign-out-alt'
+                  ></i>
+                  Sign out
                 </span>
               </MenuItems>
-            </Link>
-            <MenuItems>
-              <span onClick={logoutHandler}>
-                <i
-                  style={{ marginRight: 5 }}
-                  className='fas fa-sign-out-alt'
-                ></i>
-                Sign out
-              </span>
-            </MenuItems>
-            <IconButton
-              mt={{ base: 2, md: 0 }}
-              onClick={toggleColorMode}
-              aria-label='Switch Theme'
-              variant='unstyled'
-              icon={
-                <i
-                  style={{
-                    color: colorMode === 'light' ? 'yellow' : '#ffffff',
-                  }}
-                  className='fas fa-cloud-moon'
-                ></i>
-              }
-            />
-          </Box>
+              <IconButton
+                mt={{ base: 2, md: 0 }}
+                onClick={toggleColorMode}
+                aria-label='Switch Theme'
+                variant='unstyled'
+                icon={
+                  <i
+                    style={{
+                      color: colorMode === 'light' ? 'yellow' : '#ffffff',
+                    }}
+                    className='fas fa-cloud-moon'
+                  ></i>
+                }
+              />
+            </Box>
+          </Collapse>
         </Box>
       </Container>
     </Box>
