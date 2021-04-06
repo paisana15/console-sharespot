@@ -94,7 +94,7 @@ const AllClients = () => {
           w={{ base: '100%', md: '30%' }}
           mb={{ base: '3', sm: '3', md: '3' }}
         >
-          <Heading size='md'>Main + Second Wallet Balance</Heading>
+          <Heading size='md'>Main Wallet Balance</Heading>
           <Text style={{ fontWeight: 'bold' }} fontSize='3xl'>
             {mwLoading ? (
               <Loader small />
@@ -118,7 +118,7 @@ const AllClients = () => {
           w={{ base: '100%', md: '30%' }}
           mb={{ base: '3', sm: '3', md: '3' }}
         >
-          <Heading size='md'>All Clients Balance</Heading>
+          <Heading size='md'>Clients Balance</Heading>
           <Text style={{ fontWeight: 'bold' }} fontSize='3xl'>
             {mwLoading ? (
               <Loader small />
@@ -142,7 +142,7 @@ const AllClients = () => {
           w={{ base: '100%', md: '30%' }}
           mb={{ base: '3', sm: '3', md: '3' }}
         >
-          <Heading size='md'>Available Balance (After Paid)</Heading>
+          <Heading size='md'>Available Balance</Heading>
           <Text style={{ fontWeight: 'bold' }} fontSize='3xl'>
             {mwLoading ? (
               <Loader small />
