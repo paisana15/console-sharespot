@@ -8,12 +8,16 @@ import {
   Badge,
   Tooltip,
   useColorMode,
+  FormControl,
+  Select,
 } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import { useHistory, useRouteMatch } from 'react-router';
 import AlertMessage from '../components/Alert';
 import moment from 'moment';
 import NumberFormat from 'react-number-format';
+import axios from 'axios';
+import { Bar as Barchart } from 'react-chartjs-2';
 
 const ClientProfileScreen = ({ client_details }) => {
   const { url } = useRouteMatch();
@@ -22,12 +26,52 @@ const ClientProfileScreen = ({ client_details }) => {
   const [client_hotspot, setClientHotspot] = useState([]);
   const [client_wallet, setClientWallet] = useState({});
   const history = useHistory();
+  const [chartData, setChartData] = useState([]);
+  const [hotspotAddress, setHotspotAddress] = useState('');
+  const [hotspotPercent, setHotpotpercent] = useState('');
 
   useEffect(() => {
     setClient(client_details?.client);
     setClientHotspot(client_details?.client_hotspot);
     setClientWallet(client_details?.clientWallet);
   }, [client_details, history]);
+
+  useEffect(() => {
+    async function fetchChartData() {
+      try {
+        const response = await axios.get(
+          `https://api.helium.wtf/v1/hotspots/${hotspotAddress}/rewards/sum?min_time=-30%20day&bucket=day
+        `
+        );
+        if (response) {
+          const result = response?.data?.data?.map((item) => {
+            const total = (item?.total * hotspotPercent) / 100;
+            const date = moment(item?.timestamp).format('YYYY-MM-DD');
+            return { total, date };
+          });
+
+          if (result?.length > 0) {
+            setChartData(result);
+          } else {
+            throw new Error();
+          }
+        } else {
+          throw new Error('API Failed!');
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchChartData();
+  }, [hotspotAddress, hotspotPercent]);
+
+  const selectHandler = (value) => {
+    setHotspotAddress(value);
+    client_hotspot?.map(
+      (data) =>
+        data?.hotspot_address === value && setHotpotpercent(data?.percentage)
+    );
+  };
 
   return (
     <>
@@ -135,6 +179,59 @@ const ClientProfileScreen = ({ client_details }) => {
               }
             />
           </Text>
+        </Box>
+      </Box>
+      <Box>
+        <Box border='1px' borderColor='blue.500' borderRadius='md' p='3'>
+          <Text fontSize='lg' fontWeight='semibold'>
+            Daily Reward
+          </Text>
+          <Box>
+            <FormControl>
+              <Select
+                value={hotspotAddress}
+                onChange={(e) => selectHandler(e.target.value)}
+                variant='flushed'
+                placeholder='Select hotspot'
+              >
+                {client_hotspot.map((data) => (
+                  <option value={data?.hotspot_address}>
+                    {data?.hotspot_name}
+                  </option>
+                ))}
+              </Select>
+            </FormControl>
+          </Box>
+          {chartData?.length > 0 ? (
+            <>
+              <Barchart
+                data={{
+                  labels: chartData?.map((data) => data?.date),
+                  datasets: [
+                    {
+                      label: 'Total Rewards',
+                      data: chartData?.map((data) => data?.total.toFixed(2)),
+                      backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                      borderColor: 'rgb(153, 102, 255)',
+                      borderWidth: 1,
+                    },
+                  ],
+                }}
+                options={{
+                  plugins: {
+                    plugins: {
+                      legend: {
+                        display: false,
+                        labels: {
+                          color: 'rgb(255, 99, 132)',
+                        },
+                      },
+                    },
+                  },
+                }}
+              />
+            </>
+          ) : null}
         </Box>
       </Box>
       <Box mt='4'>

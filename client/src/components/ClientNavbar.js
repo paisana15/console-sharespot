@@ -6,7 +6,6 @@ import { useDispatch } from 'react-redux';
 import Logo from './Logo';
 import { useColorMode } from '@chakra-ui/color-mode';
 import { Button, IconButton } from '@chakra-ui/button';
-import { Collapse } from '@chakra-ui/transition';
 
 const MenuItems = ({ children }) => (
   <Text
@@ -67,46 +66,44 @@ const ClientNavbar = () => {
             </Box>
           </Flex>
           <Spacer />
-          <Collapse in={showMenu} animateOpacity>
-            <Box
-              display={{ base: showMenu ? 'block' : 'none', md: 'flex' }}
-              alignItems='center'
-            >
-              <Link to={`${path}/profile`}>
-                <MenuItems>
-                  <i className='fas fa-user'></i> My Account
-                </MenuItems>
-              </Link>
-              <Link to={`/c/profile/withdraw`}>
-                <MenuItems>
-                  <i className='fas fa-money-check-alt'></i> Withdraw
-                </MenuItems>
-              </Link>
+          <Box
+            display={{ base: showMenu ? 'block' : 'none', md: 'flex' }}
+            alignItems='center'
+          >
+            <Link to={`${path}/profile`}>
               <MenuItems>
-                <span onClick={logoutHandler}>
-                  <i
-                    style={{ marginRight: 5 }}
-                    className='fas fa-sign-out-alt'
-                  ></i>
-                  Sign out
-                </span>
+                <i className='fas fa-user'></i> My Account
               </MenuItems>
-              <IconButton
-                mt={{ base: 2, md: 0 }}
-                onClick={toggleColorMode}
-                aria-label='Switch Theme'
-                variant='unstyled'
-                icon={
-                  <i
-                    style={{
-                      color: colorMode === 'light' ? 'yellow' : '#ffffff',
-                    }}
-                    className='fas fa-cloud-moon'
-                  ></i>
-                }
-              />
-            </Box>
-          </Collapse>
+            </Link>
+            <Link to={`/c/profile/withdraw`}>
+              <MenuItems>
+                <i className='fas fa-money-check-alt'></i> Withdraw
+              </MenuItems>
+            </Link>
+            <MenuItems>
+              <span onClick={logoutHandler}>
+                <i
+                  style={{ marginRight: 5 }}
+                  className='fas fa-sign-out-alt'
+                ></i>
+                Sign out
+              </span>
+            </MenuItems>
+            <IconButton
+              mt={{ base: 2, md: 0 }}
+              onClick={toggleColorMode}
+              aria-label='Switch Theme'
+              variant='unstyled'
+              icon={
+                <i
+                  style={{
+                    color: colorMode === 'light' ? 'yellow' : '#ffffff',
+                  }}
+                  className='fas fa-cloud-moon'
+                ></i>
+              }
+            />
+          </Box>
         </Box>
       </Container>
     </Box>
