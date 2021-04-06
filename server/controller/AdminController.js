@@ -386,7 +386,7 @@ const calHotspotTotal = async (assigned_hotspots) => {
     assigned_hotspots.map(async (data) => {
       const minDate = moment(data?.startDate).format('YYYY-MM-DD');
       const response = await axios.get(
-        `https://api.helium.io/v1/hotspots/${data?.hotspot_address}/rewards/sum?max_time=2030-08-27&min_time=${minDate}`
+        `https://api.helium.wtf/v1/hotspots/${data?.hotspot_address}/rewards/sum?max_time=2030-08-27&min_time=${minDate}`
       );
       const val = (response?.data?.data?.total * data?.percentage) / 100;
       data.total_earned = val;
@@ -1478,10 +1478,10 @@ const calc_cw_balances = async (arr) => {
 // method: get
 const getMainSecondWallet = asyncHandler(async (req, res) => {
   const response1 = await axios.get(
-    'https://api.helium.io/v1/accounts/13ESLoXiie3eXoyitxryNQNamGAnJjKt2WkiB4gNq95knxAiGEp/stats'
+    'https://api.helium.wtf/v1/accounts/13ESLoXiie3eXoyitxryNQNamGAnJjKt2WkiB4gNq95knxAiGEp/stats'
   );
   const response2 = await axios.get(
-    'https://api.helium.io/v1/accounts/13RUgCB bhLM2jNnzUhY7VRTAgdTi4bUi1o1eW3wV81wquavju7p/stats'
+    'https://api.helium.wtf/v1/accounts/13RUgCB bhLM2jNnzUhY7VRTAgdTi4bUi1o1eW3wV81wquavju7p/stats'
   );
   if (
     Object.keys(response1).length !== 0 &&
