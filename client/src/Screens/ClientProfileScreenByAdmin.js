@@ -25,6 +25,8 @@ import {
   Tbody,
   Td,
   useToast,
+  FormControl,
+  Select,
 } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import { useHistory, useRouteMatch } from 'react-router';
@@ -45,16 +47,21 @@ import MyTextField from '../components/MyTextField';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 import NumberFormat from 'react-number-format';
+import axios from 'axios';
+import { Bar as Barchart } from 'react-chartjs-2';
 
 const ClientProfileScreenByAdmin = ({ client_details }) => {
+  const dispatch = useDispatch();
   const { url } = useRouteMatch();
   const { colorMode } = useColorMode();
   const [client, setClient] = useState({});
   const [client_hotspot, setClientHotspot] = useState([]);
   const [client_wallet, setClientWallet] = useState({});
-  const dispatch = useDispatch();
+  const [chartData, setChartData] = useState([]);
   const history = useHistory();
   const toast = useToast();
+  const [hotspotAddress, setHotspotAddress] = useState('');
+  const [hotspotPercent, setHotpotpercent] = useState('');
 
   const { onOpen, isOpen, onClose } = useDisclosure();
   const {
@@ -88,6 +95,7 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
     setClient(client_details?.client);
     setClientHotspot(client_details?.client_hotspot);
     setClientWallet(client_details?.clientWallet);
+
     if (success) {
       history.push('/h/clients');
     }
@@ -105,6 +113,7 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
     }
   }, [
     client_details,
+    client_hotspot,
     success,
     dispatch,
     toast,
@@ -113,6 +122,34 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
     addMWError,
   ]);
 
+  useEffect(() => {
+    async function fetchChartData() {
+      try {
+        const response = await axios.get(
+          `https://api.helium.wtf/v1/hotspots/${hotspotAddress}/rewards/sum?min_time=-30%20day&bucket=day
+        `
+        );
+        if (response) {
+          const result = response?.data?.data?.map((item) => {
+            const total = (item?.total * hotspotPercent) / 100;
+            const date = moment(item?.timestamp).format('YYYY-MM-DD');
+            return { total, date };
+          });
+
+          if (result?.length > 0) {
+            setChartData(result);
+          } else {
+            throw new Error();
+          }
+        } else {
+          throw new Error('API Failed!');
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchChartData();
+  }, [hotspotAddress, hotspotPercent]);
   const fieldValidationSchema = yup.object({
     m_withdraw: yup
       .number()
@@ -127,6 +164,14 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
   const getClientWHHandler = () => {
     onWHOpen();
     dispatch(getWithdrawHistoryByA(client?._id));
+  };
+
+  const selectHandler = (value) => {
+    setHotspotAddress(value);
+    client_hotspot?.map(
+      (data) =>
+        data?.hotspot_address === value && setHotpotpercent(data?.percentage)
+    );
   };
 
   return (
@@ -237,8 +282,49 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
           </Text>
         </Box>
       </Box>
+      <Box>
+        <Box border='1px' borderColor='blue.500' borderRadius='md' p='3'>
+          <Text fontSize='lg' fontWeight='semibold'>
+            Daily Reward
+          </Text>
+          <Box>
+            <FormControl>
+              <Select
+                value={hotspotAddress}
+                onChange={(e) => selectHandler(e.target.value)}
+                variant='flushed'
+                placeholder='Select hotspot'
+              >
+                {client_hotspot.map((data) => (
+                  <option value={data?.hotspot_address}>
+                    {data?.hotspot_name}
+                  </option>
+                ))}
+              </Select>
+            </FormControl>
+          </Box>
+          {chartData?.length > 0 ? (
+            <>
+              <Barchart
+                data={{
+                  labels: chartData?.map((data) => data?.date),
+                  datasets: [
+                    {
+                      label: 'Total Rewards',
+                      data: chartData?.map((data) => data?.total.toFixed(2)),
+                      backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                      borderColor: 'rgb(153, 102, 255)',
+                      borderWidth: 1,
+                    },
+                  ],
+                }}
+              />
+            </>
+          ) : null}
+        </Box>
+      </Box>
       <Box mt='4'>
-        <Heading mb='3' size='xs'>
+        <Heading mb='3' pl='3' size='xs'>
           Assigned Hotspot ({client?.total_hotspot})
         </Heading>
         <Box

@@ -28,6 +28,9 @@ import Loader from '../components/Loader';
 import AlertMessage from '../components/Alert';
 import { Helmet } from 'react-helmet';
 import NumberFormat from 'react-number-format';
+import { Bar as Barchart } from 'react-chartjs-2';
+import axios from 'axios';
+import moment from 'moment';
 
 const AllClients = () => {
   const dispatch = useDispatch();
@@ -36,6 +39,7 @@ const AllClients = () => {
   const { loading, clients, error } = allClientsGet;
   const { colorMode } = useColorMode();
   const [clientSearchText, setClientSearchText] = useState('');
+  const [chartData, setChartData] = useState([]);
 
   const MWSWCWget = useSelector((state) => state.MWSWCWget);
   const { loading: mwLoading, balances, error: mwError } = MWSWCWget;
@@ -70,6 +74,36 @@ const AllClients = () => {
       });
     }
   }, [dispatch, toast, rewardFSuccess, rewardFError]);
+
+  useEffect(() => {
+    // fetching chart data
+    async function fetchChartData() {
+      try {
+        const response = await axios.get(
+          `https://api.helium.wtf/v1/accounts/13ESLoXiie3eXoyitxryNQNamGAnJjKt2WkiB4gNq95knxAiGEp/rewards/sum?min_time=-30%20day&bucket=day
+        `
+        );
+        if (response) {
+          const result = response?.data?.data?.map((item) => {
+            const total = item?.total;
+            const date = moment(item?.timestamp).format('YYYY-MM-DD');
+            return { total, date };
+          });
+
+          if (result?.length > 0) {
+            setChartData(result);
+          } else {
+            throw new Error();
+          }
+        } else {
+          throw new Error('API Failed!');
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchChartData();
+  }, []);
 
   const clientsList = clients?.filter((client) => {
     return clientSearchText !== ''
@@ -166,7 +200,28 @@ const AllClients = () => {
         </Box>
       </Box>
       {mwError && <AlertMessage status='error' error={mwError} />}
-      <Box display={{ sm: 'flex' }} mb='3' alignItems='center'>
+      <Box border='1px' p='3' borderColor='blue.500' borderRadius='md'>
+        <Text fontWeight='semibold' fontSize='lg'>
+          Last 30 Days Reward
+        </Text>
+        <Box>
+          <Barchart
+            data={{
+              labels: chartData?.map((data) => data?.date),
+              datasets: [
+                {
+                  label: 'Total Rewards',
+                  data: chartData?.map((data) => data?.total.toFixed(2)),
+                  backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                  borderColor: 'rgb(153, 102, 255)',
+                  borderWidth: 1,
+                },
+              ],
+            }}
+          />
+        </Box>
+      </Box>
+      <Box display={{ sm: 'flex' }} mt='3' mb='3' alignItems='center'>
         <Text fontSize='2xl' className='adminPageHeader'>
           All Clients ({clients ? clients?.length : '0'})
         </Text>

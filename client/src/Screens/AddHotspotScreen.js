@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useToast } from '@chakra-ui/toast';
 import { addHotspotToClient } from '../redux/action/AdminAction';
 import { Helmet } from 'react-helmet';
+import AlertMessage from '../components/Alert';
 
 const AddHotspotScreen = () => {
   const toast = useToast();
@@ -18,6 +19,7 @@ const AddHotspotScreen = () => {
 
   const [apiData, setApiData] = useState([]);
   const [clients, setClientss] = useState([]);
+  const [apiError, setApiError] = useState('');
 
   const hotspotClientAdd = useSelector((state) => state.hotspotClientAdd);
   const { loading, success, error } = hotspotClientAdd;
@@ -26,24 +28,19 @@ const AddHotspotScreen = () => {
   const { clients: getClients } = allClientsGet;
 
   useEffect(() => {
-    const request =
-      'https://api.helium.io/v1/accounts/13ESLoXiie3eXoyitxryNQNamGAnJjKt2WkiB4gNq95knxAiGEp/hotspots';
-
-    function fetchData() {
-      axios
-        .all([axios.get(request)])
-        .then(
-          axios.spread((...res) => {
-            if (res) {
-              setApiData(res[0].data.data);
-            } else {
-              throw new Error('Fetch to fail data!');
-            }
-          })
-        )
-        .catch((error) => {
-          console.log(error);
-        });
+    async function fetchData() {
+      try {
+        const res = await axios.get(
+          'https://api.helium.wtf/v1/accounts/13ESLoXiie3eXoyitxryNQNamGAnJjKt2WkiB4gNq95knxAiGEp/hotspots'
+        );
+        if (res.data) {
+          setApiData(res?.data?.data);
+        } else {
+          throw new Error('API Failed!');
+        }
+      } catch (error) {
+        setApiError('Can not fetch hotspots list! Helium API Error!');
+      }
     }
     fetchData();
     setClientss(getClients);
@@ -149,6 +146,7 @@ const AddHotspotScreen = () => {
                     {errors.hotspot_address}
                   </div>
                 )}
+                {apiError && <AlertMessage status='error' error={apiError} />}
               </FormControl>
 
               <FormControl>
