@@ -51,7 +51,7 @@ const ClientProfileScreen = ({ client_details }) => {
           });
 
           if (result?.length > 0) {
-            setChartData(result);
+            setChartData(result?.reverse());
           } else {
             throw new Error();
           }
@@ -182,7 +182,7 @@ const ClientProfileScreen = ({ client_details }) => {
         </Box>
       </Box>
       <Box>
-        <Box border='1px' borderColor='blue.500' borderRadius='md' p='3'>
+        <Box boxShadow='md' borderRadius='md' p='3'>
           <Text fontSize='lg' fontWeight='semibold'>
             Daily Reward
           </Text>

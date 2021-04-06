@@ -91,7 +91,7 @@ const AllClients = () => {
           });
 
           if (result?.length > 0) {
-            setChartData(result);
+            setChartData(result?.reverse());
           } else {
             throw new Error();
           }
@@ -200,7 +200,7 @@ const AllClients = () => {
         </Box>
       </Box>
       {mwError && <AlertMessage status='error' error={mwError} />}
-      <Box border='1px' p='3' borderColor='blue.500' borderRadius='md'>
+      <Box boxShadow='md' p='3' borderRadius='md'>
         <Text fontWeight='semibold' fontSize='lg'>
           Last 30 Days Reward
         </Text>
