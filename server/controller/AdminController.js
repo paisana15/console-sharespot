@@ -91,7 +91,6 @@ const deleteClient = asyncHandler(async (req, res) => {
         { client_id: clientId },
         (error, result) => {
           if (error) {
-            console.log(error);
           }
         }
       );
@@ -370,7 +369,7 @@ const updateWalletBalance = async (clientId, balance, deleteHotspot) => {
       if (!update) {
         throw new Error('wallet update failed!');
       } else {
-        // console.log('wallet update!');
+        //
       }
     } else {
       throw new Error('wallet not found!');
@@ -382,45 +381,68 @@ const updateWalletBalance = async (clientId, balance, deleteHotspot) => {
 
 // sum client assigned hotspots reward total and pass the value
 const calHotspotTotal = async (assigned_hotspots) => {
-  const responses = await Promise.all(
-    assigned_hotspots.map(async (data) => {
-      const minDate = moment(data?.startDate).format('YYYY-MM-DD');
-      const response = await axios.get(
-        `https://api.helium.wtf/v1/hotspots/${data?.hotspot_address}/rewards/sum?max_time=2030-08-27&min_time=${minDate}`
-      );
-      const val = (response?.data?.data?.total * data?.percentage) / 100;
-      data.total_earned = val;
-      await data.save();
-      return response;
-    })
-  );
-  const clientHotspotsTotal = responses.map((response, i) => {
-    return {
-      total:
-        (response?.data?.data?.total * assigned_hotspots[i]?.percentage) / 100,
-    };
-  });
-  return clientHotspotsTotal;
+  try {
+    const responses = await Promise.all(
+      assigned_hotspots?.map(async (data) => {
+        const minDate = moment(data?.startDate).format('YYYY-MM-DD');
+        const response = await axios.get(
+          `https://api.helium.wtf/v1/hotspots/${data?.hotspot_address}/rewards/sum?max_time=2030-08-27&min_time=${minDate}`
+        );
+        if (response?.data) {
+          const val = (response?.data?.data?.total * data?.percentage) / 100;
+          data.total_earned = val;
+          await data.save();
+          return response;
+        } else {
+          throw new Error('Helium API Failed, Try again later...');
+        }
+      })
+    );
+
+    if (responses.length > 0) {
+      const clientHotspotsTotal = responses?.map((response, i) => {
+        return {
+          total:
+            (response?.data?.data?.total * assigned_hotspots[i]?.percentage) /
+            100,
+        };
+      });
+      return clientHotspotsTotal;
+    } else {
+      throw new Error('API Falied');
+    }
+  } catch (error) {
+    throw new Error('Helium API Failed, Try again later...');
+  }
 };
 // get hotspot reward for multiple clients
 const getHotspotReward = async (clients_list) => {
   try {
-    clients_list.forEach(async (clientId) => {
-      const client_assigned_hotspot = await ClientHotspot.find({
-        client_id: clientId,
-      });
-      const clientHotspotsTotal = await calHotspotTotal(
-        client_assigned_hotspot
-      );
+    const results = await Promise.all(
+      clients_list?.map(async (clientId) => {
+        const client_assigned_hotspot = await ClientHotspot.find({
+          client_id: clientId,
+        });
+        const clientHotspotsTotal = await calHotspotTotal(
+          client_assigned_hotspot
+        );
 
-      const total = clientHotspotsTotal
-        .map((data) => data.total)
-        .reduce((acc, curr) => {
-          return acc + curr;
-        }, 0);
-      const totalEarn = total.toFixed(2);
-      await updateWalletBalance(clientId, totalEarn, false);
-    });
+        if (clientHotspotsTotal) {
+          const total = clientHotspotsTotal
+            ?.map((data) => data.total)
+            .reduce((acc, curr) => {
+              return acc + curr;
+            }, 0);
+          const totalEarn = total.toFixed(2);
+          await updateWalletBalance(clientId, totalEarn, false);
+          return true;
+        } else {
+          throw new Error('API Failed!');
+        }
+      })
+    );
+    const status = results.map((data) => (data === false ? false : true));
+    return status;
   } catch (error) {
     throw new Error(error);
   }
@@ -444,7 +466,8 @@ const getHotspotRewardByAdmin = asyncHandler(async (req, res) => {
         clients_list.push(client?.client_id);
       }
     });
-    const data = getHotspotReward(clients_list);
+    const data = await getHotspotReward(clients_list);
+
     if (data) {
       res.status(200).json({ message: 'Reward fetched!' });
     } else {
