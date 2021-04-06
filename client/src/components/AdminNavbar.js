@@ -78,7 +78,7 @@ const AdminNavbar = () => {
           >
             <Link to={path}>
               <MenuItems>
-                <i className='fas fa-users'></i> All CLients
+                <i className='fas fa-users'></i> All Clients
               </MenuItems>
             </Link>
             <Link to={`${path}/add-hotspot`}>
