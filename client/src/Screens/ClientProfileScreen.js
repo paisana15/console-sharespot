@@ -194,8 +194,8 @@ const ClientProfileScreen = ({ client_details }) => {
                 variant='flushed'
                 placeholder='Select hotspot'
               >
-                {client_hotspot.map((data) => (
-                  <option value={data?.hotspot_address}>
+                {client_hotspot.map((data, idx) => (
+                  <option key={idx} value={data?.hotspot_address}>
                     {data?.hotspot_name}
                   </option>
                 ))}

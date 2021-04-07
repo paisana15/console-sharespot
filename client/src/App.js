@@ -53,13 +53,13 @@ const PrivateRoute2 = ({ component: Component, ...rest }) => {
 
 function App() {
   return (
-    <div>
+    <>
       <Route exact path='/' component={WelcomeScreen} />
       <Route path='/admin' component={AdminLogin} />
       <PrivateRoute path='/h' component={AdminDashboard} />
       <Route path='/login' component={ClientLogin} />
       <PrivateRoute2 path='/c' component={ClientDashboard} />
-    </div>
+    </>
   );
 }
 

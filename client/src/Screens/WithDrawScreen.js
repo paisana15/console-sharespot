@@ -166,9 +166,9 @@ const WithDrawScreen = ({ client, wallet }) => {
             ) : historyError ? (
               <AlertMessage status='error' error={historyError} />
             ) : wHistories && wHistories?.length > 0 ? (
-              wHistories.map((data) => (
+              wHistories.map((data, idx) => (
                 <Flex
-                  key={data?._id}
+                  key={idx}
                   p='2'
                   px='4'
                   borderRadius='lg'
