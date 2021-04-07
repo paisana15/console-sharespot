@@ -1,5 +1,5 @@
 import React from 'react';
-import './App.css';
+import './App.scss';
 import { Redirect, Route } from 'react-router';
 import WelcomeScreen from './Screens/WelcomeScreen';
 import AdminLogin from './Screens/AdminLogin';

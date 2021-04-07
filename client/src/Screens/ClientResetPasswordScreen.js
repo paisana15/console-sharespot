@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Text } from '@chakra-ui/layout';
+import {Link} from 'react-router-dom'
+import { Heading, Box } from '@chakra-ui/layout';
 import { Input } from '@chakra-ui/input';
 import { FormControl, FormLabel } from '@chakra-ui/form-control';
 import { Button } from '@chakra-ui/button';
@@ -53,50 +54,71 @@ const ClientResetPasswordScreen = () => {
     dispatch(passwordReset(cInfo?._id, data));
   };
   return (
-    <Box>
+    <Box p='7'>
       <Helmet>
         <title>Reset Password</title>
       </Helmet>
-      <Text fontSize='2xl' display='inline-block' className='adminPageHeader'>
-        Reset Password
-      </Text>
+      <Heading
+        className='heading-dashboard mb-3 mt-2'
+        fontSize='2xl'
+        display='inline-block'
+      >
+        Edit Profile
+        <hr />
+      </Heading>
+      <Box>
       <form onSubmit={submitHandler}>
         <FormControl id='c_password' isRequired>
-          <FormLabel>Current Password</FormLabel>
-          <Input
-            value={preP}
-            onChange={(e) => setPP(e.target.value)}
-            type='password'
-          />
+          <div className='d-flex mt-4 pt-3 mb-4 align-items-center'>
+            <FormLabel className='font-weight-bold'>Current Password</FormLabel>
+            <Input
+              className='input-reset-password'
+              value={preP}
+              onChange={(e) => setPP(e.target.value)}
+              type='password'
+            />
+          </div>
         </FormControl>
         <FormControl id='n_password' isRequired>
-          <FormLabel>New Password</FormLabel>
-          <Input
-            value={newP}
-            onChange={(e) => setNP(e.target.value)}
-            type='password'
-          />
+          <div className='d-flex mb-4 align-items-center'>
+            <FormLabel className='font-weight-bold'>New Password</FormLabel>
+            <Input
+              className='input-reset-password'
+              value={newP}
+              onChange={(e) => setNP(e.target.value)}
+              type='password'
+            />
+          </div>
         </FormControl>
         <FormControl id='nc_password' isRequired>
-          <FormLabel>Confirm Password</FormLabel>
-          <Input
-            value={conP}
-            onChange={(e) => setCP(e.target.value)}
-            type='password'
-          />
+          <div className='d-flex mb-4 align-items-center'>
+            <FormLabel className='font-weight-bold'>Confirm Password</FormLabel>
+            <Input
+              className='input-reset-password'
+              value={conP}
+              onChange={(e) => setCP(e.target.value)}
+              type='password'
+            />
+          </div>
         </FormControl>
-        <Button
-          isLoading={loading}
-          loadingText='Processing...'
-          mt='2'
-          type='submit'
-          variant='outline'
-          colorScheme='blue'
-          color='blue.400'
-        >
-          Reset
-        </Button>
+        <div className='d-flex mt-5 pt-3'>
+          <Button
+            className='primary-btn mr-4 ml-0'
+            isLoading={loading}
+            loadingText='Processing...'
+            mt='2'
+            type='submit'
+          >
+            Reset
+          </Button>
+           <Link to='/c/profile/edit'>
+            <Button className='back-btn ml-0' mt='2'>
+              Back
+            </Button>
+          </Link>
+        </div>
       </form>
+      </Box>
     </Box>
   );
 };
