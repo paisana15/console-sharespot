@@ -327,7 +327,9 @@ const AllClients = () => {
       <Box boxShadow='md' p='3' borderRadius='md'>
         <Box d={{ md: 'flex' }}>
           <Text fontWeight='semibold' fontSize='lg'>
-            Last {chartInitial?.time === '60' ? '7' : '30'} Days Reward
+            {chartInitial?.time === '60'
+              ? 'Rewards per Week'
+              : 'Last 30 Days Reward'}
           </Text>
           <Spacer />
           <Button
@@ -343,7 +345,9 @@ const AllClients = () => {
               }));
             }}
           >
-            Last {chartInitial?.time === '30' ? '7' : '30'} Days Record
+            {chartInitial?.time === '30'
+              ? 'Rewards per Week'
+              : 'Last 30 Days Record'}
           </Button>
         </Box>
         <Box>
