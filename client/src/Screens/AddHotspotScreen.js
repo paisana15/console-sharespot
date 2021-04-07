@@ -42,7 +42,9 @@ const AddHotspotScreen = () => {
         setApiError('Can not fetch hotspots list! Helium API Error!');
       }
     }
-    fetchData();
+    if (apiData && apiData?.length < 1) {
+      fetchData();
+    }
     setClientss(getClients);
     if (success) {
       toast({
@@ -62,7 +64,8 @@ const AddHotspotScreen = () => {
         isClosable: true,
       });
     }
-  }, [success, error, toast, getClients]);
+    return () => {};
+  }, [success, error, toast, getClients, apiData]);
   const fieldValidationSchema = yup.object({
     client_id: yup.string().required('Client id required!'),
     hotspot_address: yup.string().required('Hotspot address required!'),

@@ -20,13 +20,16 @@ import Loader from '../components/Loader';
 import AlertMessage from '../components/Alert';
 import moment from 'moment';
 
-const WithDrawScreen = ({ client, wallet }) => {
+const WithDrawScreen = ({ wallet }) => {
   const dispatch = useDispatch();
   const toast = useToast();
   const { colorMode } = useColorMode();
 
   const requestWithdraw = useSelector((state) => state.requestWithdraw);
   const { loading, success, error } = requestWithdraw;
+
+  const loginClient = useSelector((state) => state.loginClient);
+  const { cInfo } = loginClient;
 
   const histtoryWByc = useSelector((state) => state.histtoryWByc);
   const {
@@ -54,8 +57,10 @@ const WithDrawScreen = ({ client, wallet }) => {
         isClosable: true,
       });
     }
-    dispatch(getWithdrawHistoryByC(client?._id));
-  }, [success, error, toast, client?._id, dispatch]);
+    if (wHistories && wHistories?.length < 1) {
+      dispatch(getWithdrawHistoryByC(cInfo?._id));
+    }
+  }, [success, error, toast, cInfo?._id, dispatch, wHistories]);
   const fieldValidationSchema = yup.object({
     amount: yup
       .number()
@@ -99,7 +104,7 @@ const WithDrawScreen = ({ client, wallet }) => {
             }}
             validationSchema={fieldValidationSchema}
             onSubmit={(data) => {
-              dispatch(withdrawRequestByClient(client?._id, data));
+              dispatch(withdrawRequestByClient(cInfo?._id, data));
             }}
           >
             {({
