@@ -17,15 +17,16 @@ const ClientDashboard = () => {
         <title>Client Dashboard</title>
       </Helmet>
       <ClientNavbar />
-      <Container maxW='container.xl'>
+      <Container
+        maxW='container.xl'
+        backgroundColor={`${colorMode === 'light' ? '#fff' : '#0E0C1C'}`}>
         <Box
           w='100%'
           h='-moz-max-content'
           p='4'
           mt='3'
           borderRadius='md'
-          shadow='md'
-          bg={`${colorMode === 'dark' ? '#2a2f38' : '#ffffff'}`}
+          bg={`${colorMode === 'dark' ? '#0E0C1C' : '#ffffff'}`}
         >
           <Switch>
             <Route path={`${path}/profile`} component={ClientDetails} />

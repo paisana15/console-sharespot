@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Box } from '@chakra-ui/react';
+import { Box, useColorMode } from '@chakra-ui/react';
 
 import { Switch, Route, useRouteMatch, useParams } from 'react-router';
 import ClientProfileScreen from './ClientProfileScreen';
@@ -15,6 +15,8 @@ const ClientDetails = () => {
   const { path } = useRouteMatch();
   const { clientId } = useParams();
 
+  const { colorMode } = useColorMode()
+
   const dispatch = useDispatch();
 
   const getClientByC = useSelector((state) => state.getClientByC);
@@ -28,7 +30,7 @@ const ClientDetails = () => {
   }, [dispatch, clientId, cInfo]);
 
   return (
-    <Box p='4'>
+    <Box p='4' backgroundColor={`${colorMode === 'light' ? '#fff' : '#0E0C1C'}`}>
       <Helmet>
         <title>My Account</title>
       </Helmet>

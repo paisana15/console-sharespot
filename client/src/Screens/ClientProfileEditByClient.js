@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 import MyTextField from '../components/MyTextField';
-import { Heading, Box, Button, useToast } from '@chakra-ui/react';
+import { Heading, Box, Button, useToast, useColorMode } from '@chakra-ui/react';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateClientByClient } from '../redux/action/ClientAction';
 import { useHistory } from 'react-router';
@@ -11,6 +11,7 @@ import { Helmet } from 'react-helmet';
 
 const ClientProfileEditByClient = ({ client_details }) => {
   const dispatch = useDispatch();
+  const { colorMode } = useColorMode();
   const toast = useToast();
   const history = useHistory();
   const updateClientByC = useSelector((state) => state.updateClientByC);
@@ -62,19 +63,22 @@ const ClientProfileEditByClient = ({ client_details }) => {
     wallet_address: yup.string().required('Wallet address required!'),
   });
   return (
-    <Box p='4'>
+    <Box
+      p='4'
+      backgroundColor={`${colorMode === 'light' ? '#fff' : '#0E0C1C'}`}
+    >
       <Helmet>
         <title>Profile Update</title>
       </Helmet>
       <Heading
-        className='heading-dashboard'
+        textColor={`${colorMode === 'light' ? '#0E0C1C' : '#fff'}`}
         fontSize='2xl'
         display='inline-block'
       >
         Edit Profile
         <hr/>
       </Heading>
-      <Box className='mt-5'>
+      <Box className='mt-5' backgroundColor={`${colorMode === 'light' ? '#fff' : '#0E0C1C'}`}>
         <Formik
           initialValues={{
             firstname: client_details?.client?.firstname,
