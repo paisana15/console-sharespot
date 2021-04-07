@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 import MyTextField from '../components/MyTextField';
-import { Box, Button, Text, useToast } from '@chakra-ui/react';
+import { Heading, Box, Button, useToast } from '@chakra-ui/react';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateClientByClient } from '../redux/action/ClientAction';
 import { useHistory } from 'react-router';
@@ -66,10 +66,15 @@ const ClientProfileEditByClient = ({ client_details }) => {
       <Helmet>
         <title>Profile Update</title>
       </Helmet>
-      <Text fontSize='2xl' display='inline-block' className='adminPageHeader'>
+      <Heading
+        className='heading-dashboard'
+        fontSize='2xl'
+        display='inline-block'
+      >
         Edit Profile
-      </Text>
-      <Box mt='3'>
+        <hr/>
+      </Heading>
+      <Box className='mt-5'>
         <Formik
           initialValues={{
             firstname: client_details?.client?.firstname,
@@ -87,57 +92,71 @@ const ClientProfileEditByClient = ({ client_details }) => {
           {({ handleSubmit }) => (
             <form onSubmit={handleSubmit}>
               <MyTextField
-                placeholder='Client first name'
-                type='text'
-                label='First Name'
-                name='firstname'
-              />
-              <MyTextField
-                placeholder='Client last name'
-                type='text'
-                label='Last name'
-                name='lastname'
-              />
-              <MyTextField
-                placeholder='Client email'
-                type='email'
-                label='Email'
-                name='email'
-              />
-              <MyTextField
+                // textColor={`${colorMode === 'light' ? 'gray.600' : '#b3bfd4'}`}
+                className='border-bottom-gray'
                 placeholder='Choose a username'
                 type='text'
                 label='Username'
                 name='username'
               />
               <MyTextField
+                className='border-bottom-gray'
+                placeholder='Client first name'
                 type='text'
-                label='Phone Number'
+                label='First Name'
+                name='firstname'
+              />
+              <MyTextField
+                className='border-bottom-gray'
+                placeholder='Client last name'
+                type='text'
+                label='Last name'
+                name='lastname'
+              />
+              <MyTextField
+                className='border-bottom-gray'
+                placeholder='Client email'
+                type='email'
+                label='Email'
+                name='email'
+              />
+              <MyTextField
+                className='border-bottom-gray'
+                type='text'
+                label='Phone'
                 name='phone_number'
                 placeholder='Client phone number'
               />
-              <MyTextField
-                type='text'
-                label='Wallet Address'
-                name='wallet_address'
-                placeholder='Choose wallet address'
-                disabled
-              />
-
-              <Button
-                mt='2'
-                type='submit'
-                isLoading={loading}
-                loadingText='Updating...'
-                colorScheme='facebook'
-              >
-                Update
-              </Button>
-              <Link to={`/c/reset-password`}>
-                <Button mt='2' ml='2' variant='outline' colorScheme='whatsapp'>
-                  Reset Password
+              <div className='d-flex flex-column'>
+                <MyTextField
+                  className='wallet-address-input mb-0'
+                  type='text'
+                  label='Wallet Address'
+                  name='wallet_address'
+                  placeholder='Choose wallet address'
+                />
+                <div className='d-flex id-container'>
+                  <span className='white-space'></span>
+                  <span className='change-id'>
+                    (if you want to change your wallet ID, please reach us at
+                    support@sharespot.pt)
+                  </span>
+                </div>
+              </div>
+              <div className='d-flex mt-5 pt-3'>
+                <Button
+                  mt='2'
+                  className='primary-btn mr-4 ml-0'
+                  type='submit'
+                  isLoading={loading}
+                  loadingText='Updating...'
+                >
+                  Update
                 </Button>
-              </Link>
+                <Link className='underline-none' to={`/c/reset-password`}>
+                  <Button className='reset-btn mt-3'>reset password</Button>
+                </Link>
+              </div>
             </form>
           )}
         </Formik>

@@ -67,7 +67,9 @@ const ClientLogin = () => {
                 <span>credentials, please reach us.</span>
               </div>
               <br/>
-              <span className='font-weight-bold'>support@sharespot.pt</span>
+              <a href='mailto:hello@storewise.tech' target='_blank' rel='noopener noreferrer'>
+                <span className='font-weight-bold'>support@sharespot.pt</span>
+              </a>
             </div>
           </div>
         }
@@ -117,7 +119,9 @@ const ClientLogin = () => {
           {error && <AlertMessage status='error' error={error} />}
         </Box>
       </div>
-      <span className='sharespot-bottom font-weight-bold'>sharespot.pt</span>
+      <a href='https://sharespot.pt' target='_blank' rel='noopener noreferrer'>
+          <span className='sharespot-bottom font-weight-bold'>sharespot.pt</span>
+      </a>
     </div>
   );
 };

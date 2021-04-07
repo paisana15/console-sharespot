@@ -63,7 +63,7 @@ const ClientResetPasswordScreen = () => {
         fontSize='2xl'
         display='inline-block'
       >
-        Edit Profile
+        Reset Password
         <hr />
       </Heading>
       <Box>

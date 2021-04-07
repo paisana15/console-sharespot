@@ -1,10 +1,8 @@
 import { Box, Container, Flex } from '@chakra-ui/layout';
 import React, { useState } from 'react';
-import { Link, useRouteMatch } from 'react-router-dom';
 import Logo from './Logo';
 
 const NavbarLogin = () => {
-  const { path } = useRouteMatch();
   const [showMenu, setShow] = useState(false);
 
   return (
@@ -28,11 +26,9 @@ const NavbarLogin = () => {
             display={{ base: showMenu ? 'block' : 'none', md: 'flex' }}
             alignItems='center'
           >
-            <Link to={`${path}/profile`}>
-              <span>
-                support@sharespot.pt
-              </span>
-            </Link>
+             <a href="mailto:support@sharespot.pt" target="_blank" rel="noopener noreferrer">
+                <span>support@sharespot.pt</span>
+              </a>
           </Box>
         </Flex>
       </Container>
