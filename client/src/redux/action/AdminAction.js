@@ -719,11 +719,10 @@ export const getRewardByAdmin = () => async (dispatch, getState) => {
     dispatch({
       type: GET_REWARD_BY_ADMIN_SUCCESS,
     });
-    setTimeout(() => {
-      dispatch({
-        type: GET_REWARD_BY_ADMIN_RESET,
-      });
-    }, 2000);
+
+    dispatch({
+      type: GET_REWARD_BY_ADMIN_RESET,
+    });
   } catch (error) {
     dispatch({
       type: GET_REWARD_BY_ADMIN_FAILED,

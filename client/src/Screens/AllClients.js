@@ -52,15 +52,18 @@ const AllClients = () => {
   } = getRewardByA;
 
   useEffect(() => {
-    dispatch(getAllClients());
-    dispatch(getMWSWCWbalances());
-
+    if (clients && clients?.length < 1) {
+      dispatch(getAllClients());
+    }
+    if ((balances && Object.keys(balances)?.length < 1) || rewardFSuccess) {
+      dispatch(getMWSWCWbalances());
+    }
     if (rewardFSuccess) {
       toast({
         status: 'success',
         title: 'Success!',
         description: 'Clients reward fetched!',
-        duration: 3000,
+        duration: 2000,
         isClosable: true,
       });
     }
@@ -69,13 +72,11 @@ const AllClients = () => {
         status: 'error',
         title: 'Failed!',
         description: rewardFError,
-        duration: 3000,
+        duration: 2000,
         isClosable: true,
       });
     }
-  }, [dispatch, toast, rewardFSuccess, rewardFError]);
 
-  useEffect(() => {
     // fetching chart data
     async function fetchChartData() {
       try {
@@ -102,8 +103,18 @@ const AllClients = () => {
         console.log(error);
       }
     }
-    fetchChartData();
-  }, []);
+    if (chartData && chartData?.length < 1) {
+      fetchChartData();
+    }
+  }, [
+    dispatch,
+    toast,
+    rewardFSuccess,
+    rewardFError,
+    clients,
+    chartData,
+    balances,
+  ]);
 
   const clientsList = clients?.filter((client) => {
     return clientSearchText !== ''
