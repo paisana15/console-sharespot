@@ -40,7 +40,7 @@ app.listen(PORT, 'api', () => {
   setInterval(async () => {
     try {
       const getReward = await axios.put(
-        `${process.env.PROD_SERVER}/localhost/admin/getRewardsByServer`
+        `${process.env.PROD_SERVER}/api/admin/getRewardsByServer`
       );
       if (!getReward) {
         console.log('Failed to update clients reward!');
