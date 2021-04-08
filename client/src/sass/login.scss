@@ -99,6 +99,10 @@ $black: #0E0C1C;
   width: 18px;
 }
 
+.text-color-black{
+  color: $black!important;
+}
+
 .justify-content-space-between{
   justify-content: space-between;
 }
@@ -167,7 +171,7 @@ $black: #0E0C1C;
   .title-underline{
     margin-bottom: 4rem;
   }
-  
+
   .login-card{
     width: 498px;
     height: 480px;

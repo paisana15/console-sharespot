@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { FormControl } from '@chakra-ui/form-control';
 import { Input } from '@chakra-ui/input';
-import { Box, Button, Heading, useColorMode, useToast } from '@chakra-ui/react';
+import { Box, Button, Heading, useToast } from '@chakra-ui/react';
 import { useDispatch, useSelector } from 'react-redux';
 import { clientLogin } from '../redux/action/ClientAction';
 import NavbarLogin from '../components/NavbarLogin';
@@ -13,7 +13,6 @@ import HelpIcon from 'mdi-react/HelpIcon';
 const ClientLogin = () => {
   const dispatch = useDispatch();
   const toast = useToast();
-  const { colorMode } = useColorMode();
   const history = useHistory();
 
   const loginClient = useSelector((state) => state.loginClient);
@@ -46,10 +45,9 @@ const ClientLogin = () => {
       <div className='login-card'>
         <div className='d-flex justify-content-space-between'>
           <Heading
-            className='title-underline'
+            className='title-underline text-color-black'
             as='h5'
             size='lg'
-            color={`${colorMode === 'dark' ? '#7e838c' : 'gray.700'}`}
           >
             Client Login
             <hr/>
@@ -60,7 +58,7 @@ const ClientLogin = () => {
         </div>
         {helpInfo && 
           <div className='d-flex flex-column position-relative'>
-            <div className='container-reach text-center align-items-center p-3'>
+            <div className='container-reach text-center align-items-center p-3 text-color-black'>
               <div className='arrow-left'></div>
               <div className='d-flex flex-column'>
                 <span>If you haven't received your</span>
@@ -76,7 +74,7 @@ const ClientLogin = () => {
         <form onSubmit={submitHandler}>
           <FormControl id='first-name' isRequired>
             <Input
-              className='input-field'
+              className='input-field text-color-black'
               onChange={(e) => setUsername(e.target.value)}
               placeholder='user'
             />
@@ -84,7 +82,7 @@ const ClientLogin = () => {
 
           <FormControl isRequired>
             <Input
-            className='input-field'
+              className='input-field text-color-black'
               onChange={(e) => setPassword(e.target.value)}
               pr='4.5rem'
               type='password'
@@ -97,10 +95,10 @@ const ClientLogin = () => {
                 <input type='checkbox' id='checkbox' />
                 <label htmlFor='checkbox'></label>
               </div>
-              <span>save login information</span>
+              <span className='text-color-black'>save login information</span>
             </div>
             <Link className='underline-none ml-3 ml-md-0' to={`/recover-password`}>
-              <Button className='font-weight-lighter font-italic mt-3 mt-md-0' colorScheme='transparent' variant='link'>recover password</Button>
+              <Button className='font-weight-lighter font-italic mt-3 mt-md-0 text-color-black' colorScheme='transparent' variant='link'>recover password</Button>
             </Link>
           </div>
           <Button

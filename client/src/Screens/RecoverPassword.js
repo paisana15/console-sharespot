@@ -10,12 +10,12 @@ const RecoverPassword = () => {
       <NavbarLogin />
       <div className='login-card'>
         <div className='d-flex justify-content-space-between'>
-          <Heading className='title-underline' as='h5' size='lg'>
+          <Heading className='title-underline text-color-black' as='h5' size='lg'>
             Recover Password
             <hr />
           </Heading>
         </div>
-        <div className='d-flex flex-column align-items-center mt-5 mt-md-3'>
+        <div className='d-flex flex-column align-items-center mt-5 mt-md-3 text-color-black'>
           <span>In order to recover your</span>
           <span>password please reach out.</span>
 
