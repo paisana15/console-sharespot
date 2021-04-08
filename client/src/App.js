@@ -1,7 +1,6 @@
 import React from 'react';
 import './App.scss';
 import { Redirect, Route, Switch } from 'react-router';
-import WelcomeScreen from './Screens/WelcomeScreen';
 import AdminLogin from './Screens/AdminLogin';
 import AdminDashboard from './Screens/AdminDashboard';
 import { useSelector } from 'react-redux';
