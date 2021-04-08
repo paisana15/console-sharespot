@@ -1,17 +1,13 @@
 import React from 'react';
-import { Text } from '@chakra-ui/layout';
 import { Link } from 'react-router-dom';
-import { Image } from '@chakra-ui/react';
 import logo from '../assets/images/logo.png';
 
 const Logo = () => {
   return (
     <div>
-      <Text fontSize='xl'>
         <Link to='/'>
-          <Image w='10' h='10' src={logo} />
+          <img height='100' width='100' src={logo} alt='Sharespot Logo'/>
         </Link>
-      </Text>
     </div>
   );
 };

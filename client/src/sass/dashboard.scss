@@ -1,0 +1,157 @@
+.navbar-dashboard{
+    background: $black!important;
+    opacity: 0.9;
+}
+
+.wallet-container{
+    border-left: 1px solid white;
+    padding-left:2rem;
+    margin-left: 2rem;
+    height:50px;
+    display: flex;
+    align-items: center;
+}
+
+.total-text{
+    text-transform: uppercase;
+}
+
+.total-rewards{
+    border: 1px solid #4AAAE3;
+    border-radius: 13px;
+    padding: 0.3rem 1.2rem;
+    font-size: 25px!important;
+}
+
+.total-withdrawn{
+    border: 1px solid #F9183E;
+    border-radius: 13px;
+    padding: 0.3rem 1.2rem;
+}
+
+.available-container{
+    background-color: $primary-color;
+    padding: 0.5rem 1rem;
+    color: white;
+    border-radius: 13px;
+    justify-content: center;
+    width: 40%;
+    margin-bottom: 1rem;
+}
+
+.dashboard-card{
+    box-shadow: none!important;
+    padding-left: 5rem!important;
+    padding-right: 5rem!important;
+}
+
+.dashboard-subcard{
+    background-color: #FAFAFA;
+    border-radius: 15px;
+    padding:2rem;
+    box-shadow: none!important;
+}
+
+.hotspot{
+    background: #F3F3F3!important;
+    padding: 0!important;
+    border-radius: 20px;
+    margin-bottom: 1.5rem!important;
+}
+
+.total-earned-singular{
+    background-color: #313131;
+    border-radius: 0px 20px 20px 0px!important;
+    color: white;
+    padding: 2rem 1rem;
+    padding-left: 2rem;
+}
+
+.badge-relation-type{
+    background-color: #F99918!important;
+    border-radius: 24px!important;
+    padding: 0.6rem 0.8rem!important;
+}
+
+.badge-percentage {
+    padding: 0.6rem 0.8rem!important;
+    border-radius: 24px!important;
+}
+
+.badge-date{
+    background-color: #F3F3F3;
+    border: 2px solid #003E9A;
+    padding: 0.6rem 0.8rem!important;
+    border-radius: 24px!important;
+}
+
+.button-wrapper{
+    display: flex;
+    justify-content: flex-end;
+}
+
+.rewards-withdrawn-wrapper{
+    width:84%;
+    margin-bottom: 1rem;
+}
+
+.container-total{
+    margin-top: -2.2rem;
+}
+
+.reset-btn{
+    background-color: transparent!important;
+    border-bottom: 1px solid $secondary-color!important;
+    border-radius: 0!important;
+    color: $secondary-color!important;
+    font-weight: lighter!important;
+    &:focus{
+        box-shadow: none!important;
+    }
+}
+
+.underline-none{
+    text-decoration: none!important;
+    &:focus{
+        outline: 0!important;
+    }
+}
+
+.border-bottom-gray{
+    border-top:0!important;
+    border-right:0!important;
+    border-left:0!important;
+    border-bottom: 1px solid $secondary-color!important;
+}
+
+.wallet-address-input{
+    color: #abaaaf!important;
+    border:0!important;
+}
+
+.change-id{
+    width:76%;
+}
+
+.white-space{
+    width:23%;
+}
+
+.id-container{
+    margin-top:-1rem;
+}
+
+hr{
+    margin-top:15px!important;
+    width: 55px!important;
+    border-bottom: 3px solid $primary-color!important;
+}
+
+.wrapper-badges{
+    width:70%;
+    margin-left: auto;
+}
+
+.info-user-dashboard{
+    color: rgba(14, 12, 28, 0.5);
+}

@@ -1,0 +1,16 @@
+.chakra-input{
+    border-radius: 0!important;
+
+    &:focus{
+        outline: 0!important;
+        box-shadow: none!important;
+    }
+}
+
+.chakra-stack{
+    align-items: baseline!important;
+    .chakra-form__label{
+        font-weight: bold !important;
+        width: 25%!important;
+    }
+}

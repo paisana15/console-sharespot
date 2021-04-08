@@ -1,3 +1,29 @@
+// Login Styles
+@import "./sass/login.scss";
+
+//Dashboard Styles
+@import "./sass/dashboard.scss";
+
+//Edit profile Styles
+@import "./sass/editProfile.scss";
+
+//Reset Password Styles
+@import "./sass/resetPassword.scss";
+
+html, body .root{
+  height:100%;
+  // font-family: 'Source Code Pro', monospace!important;
+  font-family: 'Source Sans Pro', sans-serif;
+}
+
+body{
+  font-family: 'Source Sans Pro', sans-serif!important;
+}
+
+.chakra-ui-dark{
+    background: $black!important;
+}
+
 .admin_navlink {
   margin-left: 8px;
   color: rgb(150 150 150);
@@ -33,3 +59,7 @@
   -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
   background-color: #303744;
 }
+
+
+
+
