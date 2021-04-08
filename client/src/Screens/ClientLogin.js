@@ -7,8 +7,7 @@ import { clientLogin } from '../redux/action/ClientAction';
 import NavbarLogin from '../components/NavbarLogin';
 import AlertMessage from '../components/Alert';
 import { useHistory } from 'react-router';
-// import AlertCircleIcon from 'mdi-react/AlertCircleIcon';
-// import HelpCircleIcon from 'mdi-react/HelpCircleOutlineIcon';
+import { Link } from 'react-router-dom';
 import HelpIcon from 'mdi-react/HelpIcon';
 
 const ClientLogin = () => {
@@ -53,6 +52,7 @@ const ClientLogin = () => {
             color={`${colorMode === 'dark' ? '#7e838c' : 'gray.700'}`}
           >
             Client Login
+            <hr/>
           </Heading>
           <button className='circle-help' onClick = {() => setHelpInfo(!helpInfo)}>
             <HelpIcon className='help-icon font-weight-bold' size={20} />
@@ -61,13 +61,13 @@ const ClientLogin = () => {
         {helpInfo && 
           <div className='d-flex flex-column position-relative'>
             <div className='container-reach text-center align-items-center p-3'>
-              <div class='arrow-left'></div>
+              <div className='arrow-left'></div>
               <div className='d-flex flex-column'>
                 <span>If you haven't received your</span>
                 <span>credentials, please reach us.</span>
               </div>
               <br/>
-              <a href='mailto:hello@storewise.tech' target='_blank' rel='noopener noreferrer'>
+              <a href='mailto:support@sharespot.pt' target='_blank' rel='noopener noreferrer'>
                 <span className='font-weight-bold'>support@sharespot.pt</span>
               </a>
             </div>
@@ -91,7 +91,7 @@ const ClientLogin = () => {
               placeholder='password'
             />
           </FormControl>
-          <div className='row container-login justify-content-space-between pb-3'>
+          <div className='d-sm-flex flex-sm-column d-md-flex flex-md-row container-login justify-content-space-between pb-3 mt-2 mt-md-0'>
             <div className='row'>
               <div className='round'>
                 <input type='checkbox' id='checkbox' />
@@ -99,18 +99,15 @@ const ClientLogin = () => {
               </div>
               <span>save login information</span>
             </div>
-            <div>
-            <span className='font-weight-lighter'>
-              recover password
-            </span>
-            </div>
+            <Link className='underline-none ml-3 ml-md-0' to={`/recover-password`}>
+              <Button className='font-weight-lighter font-italic mt-3 mt-md-0' colorScheme='transparent' variant='link'>recover password</Button>
+            </Link>
           </div>
           <Button
-            className='primary-btn ml-auto mr-auto'
+            className='primary-btn ml-auto mr-auto mt-4 mt-md-3'
             type='submit'
             isLoading={loading}
             loadingText='Signing in...'
-            mt='5'
           >
             Sign in
           </Button>

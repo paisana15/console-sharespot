@@ -7,6 +7,7 @@ import AdminDashboard from './Screens/AdminDashboard';
 import { useSelector } from 'react-redux';
 import ClientDashboard from './Screens/ClientDashboard';
 import ClientLogin from './Screens/ClientLogin';
+import RecoverPassword from './Screens/RecoverPassword';
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
   const loginAdmin = useSelector((state) => state.loginAdmin);
@@ -58,6 +59,7 @@ function App() {
       <Route path='/admin' component={AdminLogin} />
       <PrivateRoute path='/h' component={AdminDashboard} />
       <Route path='/login' component={ClientLogin} />
+      <Route path='/recover-password' component={RecoverPassword} />
       <PrivateRoute2 path='/c' component={ClientDashboard} />
     </>
   );
