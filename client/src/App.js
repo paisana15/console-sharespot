@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.scss';
-import { Redirect, Route } from 'react-router';
+import { Redirect, Route, Switch } from 'react-router';
 import WelcomeScreen from './Screens/WelcomeScreen';
 import AdminLogin from './Screens/AdminLogin';
 import AdminDashboard from './Screens/AdminDashboard';
@@ -55,12 +55,14 @@ const PrivateRoute2 = ({ component: Component, ...rest }) => {
 function App() {
   return (
     <>
-      <Route exact path='/' component={WelcomeScreen} />
-      <Route path='/admin' component={AdminLogin} />
-      <PrivateRoute path='/h' component={AdminDashboard} />
-      <Route path='/login' component={ClientLogin} />
-      <Route path='/recover-password' component={RecoverPassword} />
-      <PrivateRoute2 path='/c' component={ClientDashboard} />
+      <Switch>
+        <Route path='/admin' component={AdminLogin} />
+        <PrivateRoute path='/h' component={AdminDashboard} />
+        <Route path='/login' component={ClientLogin} />
+        <Route path='/recover-password' component={RecoverPassword} />
+        <PrivateRoute2 path='/c' component={ClientDashboard} />
+        <Redirect to='/login' />
+      </Switch>
     </>
   );
 }
