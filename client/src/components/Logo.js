@@ -6,7 +6,7 @@ const Logo = () => {
   return (
     <div>
         <Link to='/'>
-          <img height='100' width='100' src={logo} alt='Sharespot Logo'/>
+          <img height='150' width='150' src={logo} alt='Sharespot Logo'/>
         </Link>
     </div>
   );
