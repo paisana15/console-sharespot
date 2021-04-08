@@ -11,6 +11,7 @@ const NavbarLogin = () => {
         <Flex as='nav' align='center' justify='space-between' wrap='wrap'>
           <Box display='flex' alignItems='center'>
             <Logo />
+            <span className="border-white-left"/>
             <h3 className='font-weight-lighter'>
               wallet
               <span className='font-weight-bold'>dashboard</span>
