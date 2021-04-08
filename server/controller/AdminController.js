@@ -12,6 +12,7 @@ import ManualWithdrawHistory from '../models/ManualWithdrawHistoryModel.js';
 import nodemailer from 'nodemailer';
 import emailValidator from 'email-validator';
 import _ from 'lodash';
+import MwSwBalance from '../models/MwSwBalancesModel.js';
 
 // desc: admin login
 // endpoint: host_url/api/admin/login         host_url means '127.0.0.1:5001' (localhost) or 'prod server url' (e.g: api.somthing.likethis)
@@ -469,6 +470,17 @@ const getHotspotRewardByAdmin = asyncHandler(async (req, res) => {
     const data = await getHotspotReward(clients_list);
 
     if (data) {
+      const response1 = await axios.get(
+        'https://api.helium.wtf/v1/accounts/13ESLoXiie3eXoyitxryNQNamGAnJjKt2WkiB4gNq95knxAiGEp/stats'
+      );
+      const response2 = await axios.get(
+        'https://api.helium.wtf/v1/accounts/13RUgCB bhLM2jNnzUhY7VRTAgdTi4bUi1o1eW3wV81wquavju7p/stats'
+      );
+      const mw_b = response1?.data?.data?.last_day[0]?.balance * 0.00000001;
+      const sw_b = response2?.data?.data?.last_day[0]?.balance * 0.00000001;
+      const mwsw = await MwSwBalance.find({});
+      mwsw[0].mw_balance = mw_b + sw_b;
+      await mwsw[0].save();
       res.status(200).json({ message: 'Reward fetched!' });
     } else {
       res.status(500);
@@ -1488,49 +1500,39 @@ const withdrawalRequestReject = asyncHandler(async (req, res) => {
 });
 // calculate all clients wallet balance
 const calc_cw_balances = async (arr) => {
-  const sum = arr
+  const wallet_balance = arr
     .map((data) => data.wallet_balance)
     .reduce((acc, curr) => {
       return parseFloat(acc) + parseFloat(curr);
     }, 0);
-  return await sum;
+  const pending_wBalance = arr
+    .map((data) => data.pendingPayment)
+    .reduce((acc, curr) => {
+      return parseFloat(acc) + parseFloat(curr);
+    }, 0);
+  return (await wallet_balance) + pending_wBalance;
 };
 // desc: get main and second wallet balances
 // endpoint: host_url/api/admin/getMainSecondWallet
 // access: private
 // method: get
 const getMainSecondWallet = asyncHandler(async (req, res) => {
-  const response1 = await axios.get(
-    'https://api.helium.wtf/v1/accounts/13ESLoXiie3eXoyitxryNQNamGAnJjKt2WkiB4gNq95knxAiGEp/stats'
-  );
-  const response2 = await axios.get(
-    'https://api.helium.wtf/v1/accounts/13RUgCB bhLM2jNnzUhY7VRTAgdTi4bUi1o1eW3wV81wquavju7p/stats'
-  );
-  if (
-    Object.keys(response1).length !== 0 &&
-    Object.keys(response2).length !== 0
-  ) {
-    const mw_balance = response1?.data?.data?.last_day[0]?.balance * 0.00000001;
-    const sw_balance = response2?.data?.data?.last_day[0]?.balance * 0.00000001;
-
-    const client_wallets = await Wallet.find({});
-    if (client_wallets) {
-      const cw_balance = await calc_cw_balances(client_wallets);
-      if (cw_balance) {
-        res.status(200).json({ mw_balance, sw_balance, cw_balance });
-      } else {
-        res.status(500);
-        throw new Error(
-          'Failed to calculate cw_balances! Client balances is 0!'
-        );
-      }
+  const client_wallets = await Wallet.find({});
+  if (client_wallets) {
+    const cw_balance = await calc_cw_balances(client_wallets);
+    const mwsw = await MwSwBalance.find({});
+    if (cw_balance) {
+      res.status(200).json({
+        mw_balance: mwsw[0]?.mw_balance,
+        cw_balance,
+      });
     } else {
       res.status(500);
-      throw new Error('Failed to fetch client wallet balances!');
+      throw new Error('Failed to calculate cw_balances! Client balances is 0!');
     }
   } else {
     res.status(500);
-    throw new Error('Failed to fetch data from API!');
+    throw new Error('Failed to fetch client wallet balances!');
   }
 });
 // desc: add manula withdraw

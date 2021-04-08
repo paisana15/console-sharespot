@@ -57,10 +57,9 @@ const WithDrawScreen = ({ wallet }) => {
         isClosable: true,
       });
     }
-    if (wHistories && wHistories?.length < 1) {
-      dispatch(getWithdrawHistoryByC(cInfo?._id));
-    }
-  }, [success, error, toast, cInfo?._id, dispatch, wHistories]);
+
+    dispatch(getWithdrawHistoryByC(cInfo?._id));
+  }, [success, error, toast, cInfo?._id, dispatch]);
   const fieldValidationSchema = yup.object({
     amount: yup
       .number()

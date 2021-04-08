@@ -104,9 +104,7 @@ const WithdrawRequestScreen = () => {
         isClosable: true,
       });
     }
-    if (wRequests && wRequests?.length < 1) {
-      dispatch(getWithdrawalRequets());
-    }
+    dispatch(getWithdrawalRequets());
   }, [
     dispatch,
     rejectSuccess,
@@ -116,7 +114,6 @@ const WithdrawRequestScreen = () => {
     onAClose,
     acceptError,
     acceptSuccess,
-    wRequests,
   ]);
 
   const rejectHandler = () => {

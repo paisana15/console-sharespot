@@ -356,7 +356,15 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
                 bg={colorMode === 'light' ? '#f4f5f7' : '#303744'}
               >
                 <Box>
-                  <Heading size='sm'>{hotspot?.hotspot_name}</Heading>
+                  <Heading size='sm'>
+                    <a
+                      target='_blank'
+                      rel='noreferrer'
+                      href={`https://explorer.helium.com/hotspots/${hotspot?.hotspot_address}`}
+                    >
+                      {hotspot?.hotspot_name}
+                    </a>
+                  </Heading>
                   <Box d={{ sm: 'flex' }} mt='2'>
                     <Text fontSize='xs' mr='1'>
                       Percentage

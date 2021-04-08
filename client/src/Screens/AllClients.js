@@ -244,8 +244,7 @@ const AllClients = () => {
                 value={
                   balances
                     ? (
-                        parseFloat(balances?.mw_balance) +
-                        parseFloat(balances?.sw_balance) -
+                        parseFloat(balances?.mw_balance) -
                         parseFloat(balances?.cw_balance)
                       ).toFixed(2)
                     : '0'
