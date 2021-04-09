@@ -327,7 +327,7 @@ const ClientProfileScreen = ({ client_details }) => {
                 bg={colorMode === 'light' ? '#f4f5f7' : '#303744'}
               >
                 <Box d={{ md: 'flex' }}>
-                  <Box className="d-flex align-items-center ml-3">
+                  <Box className='d-flex align-items-center ml-3'>
                     <IconButton
                       mr={{ md: 2 }}
                       color='blue.400'
