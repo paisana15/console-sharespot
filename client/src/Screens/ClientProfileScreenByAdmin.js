@@ -8,6 +8,7 @@ import {
   Badge,
   Tooltip,
   useColorMode,
+  IconButton,
   Button,
   Modal,
   ModalOverlay,
@@ -25,8 +26,6 @@ import {
   Tbody,
   Td,
   useToast,
-  FormControl,
-  Select,
 } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import { useHistory, useRouteMatch } from 'react-router';
@@ -62,6 +61,9 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
   const toast = useToast();
   const [hotspotAddress, setHotspotAddress] = useState('');
   const [hotspotPercent, setHotpotpercent] = useState('');
+  const [thirtDR, setThirtDR] = useState('');
+  const [sevenDR, setSevenDR] = useState('');
+  const [lastDR, setlastDR] = useState('');
 
   const { onOpen, isOpen, onClose } = useDisclosure();
   const {
@@ -166,12 +168,37 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
     dispatch(getWithdrawHistoryByA(client?._id));
   };
 
-  const selectHandler = (value) => {
+  const selectHandler = async (value) => {
     setHotspotAddress(value);
     client_hotspot?.map(
       (data) =>
         data?.hotspot_address === value && setHotpotpercent(data?.percentage)
     );
+    try {
+      // 30 days reward
+      const request1 = await axios.get(
+        `https://api.helium.wtf/v1/hotspots/${value}/rewards/sum?min_time=-30%20day`
+      );
+      // 7 days reward
+      const request2 = await axios.get(
+        `https://api.helium.wtf/v1/hotspots/${value}/rewards/sum?min_time=-7%20day`
+      );
+      // 24 hours reward
+      const request3 = await axios.get(
+        `https://api.helium.wtf/v1/hotspots/${value}/rewards/sum?min_time=-1%20day`
+      );
+      const responses = await axios.all([request1, request2, request3]);
+
+      if (responses) {
+        setThirtDR(responses[0]?.data?.data?.total);
+        setSevenDR(responses[1]?.data?.data?.total);
+        setlastDR(responses[2]?.data?.data?.total);
+      } else {
+        throw new Error('Failed to fetch APIs Data!');
+      }
+    } catch (error) {
+      throw new Error(error);
+    }
   };
 
   return (
@@ -284,27 +311,11 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
       </Box>
       <Box>
         <Box boxShadow='md' borderRadius='md' p='3'>
-          <Text fontSize='lg' fontWeight='semibold'>
-            Daily Reward
-          </Text>
-          <Box>
-            <FormControl>
-              <Select
-                value={hotspotAddress}
-                onChange={(e) => selectHandler(e.target.value)}
-                variant='flushed'
-                placeholder='Select hotspot'
-              >
-                {client_hotspot.map((data, idx) => (
-                  <option key={idx} value={data?.hotspot_address}>
-                    {data?.hotspot_name}
-                  </option>
-                ))}
-              </Select>
-            </FormControl>
-          </Box>
           {chartData?.length > 0 ? (
-            <>
+            <Box p='3'>
+              <Text fontSize='lg' fontWeight='semibold'>
+                Daily Reward
+              </Text>
               <Barchart
                 data={{
                   labels: chartData?.map((data) => data?.date),
@@ -330,7 +341,24 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
                   },
                 }}
               />
-            </>
+              <Box pb='2' d={{ md: 'flex' }} mt='3'>
+                <Badge variant='outline' colorScheme='green'>
+                  Last 30 Days Reward : HNT{' '}
+                  {thirtDR ? thirtDR.toFixed(2) : 'Loading...'}
+                </Badge>
+                <Spacer />
+                <Badge variant='outline' colorScheme='blue'>
+                  Last 7 Days Reward : HNT{' '}
+                  {sevenDR ? sevenDR.toFixed(2) : 'Loading...'}
+                </Badge>
+                <Spacer />
+
+                <Badge variant='outline' colorScheme='orange'>
+                  Last 24 Hours Reward : HNT{' '}
+                  {lastDR ? lastDR.toFixed(2) : 'Loading...'}
+                </Badge>
+              </Box>
+            </Box>
           ) : null}
         </Box>
       </Box>
@@ -355,48 +383,54 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
                 boxShadow='base'
                 bg={colorMode === 'light' ? '#f4f5f7' : '#303744'}
               >
-                <Box>
-                  <Heading size='sm'>
-                    <a
-                      target='_blank'
-                      rel='noreferrer'
-                      href={`https://explorer.helium.com/hotspots/${hotspot?.hotspot_address}`}
-                    >
-                      {hotspot?.hotspot_name}
-                    </a>
-                  </Heading>
-                  <Box d={{ sm: 'flex' }} mt='2'>
-                    <Text fontSize='xs' mr='1'>
-                      Percentage
-                    </Text>
-                    <Badge colorScheme={'green'}>
-                      <Text fontSize='xs'>{hotspot?.percentage + '%'}</Text>
-                    </Badge>
-                    <Badge
-                      ml='10px'
-                      colorScheme={
-                        hotspot?.relation_type === 'host'
-                          ? 'purple'
-                          : hotspot?.relation_type === 'referrer'
-                          ? 'red'
-                          : 'pink'
-                      }
-                    >
-                      <Text fontSize='xs'>{hotspot?.relation_type}</Text>
-                    </Badge>
-                    <Text
-                      display={{ base: 'block', md: 'inline-block' }}
-                      fontSize='xs'
-                      ml='2'
-                      mr='1'
-                    >
-                      From
-                    </Text>
-                    <Badge colorScheme='blue'>
-                      <Text fontSize='xs'>
-                        {moment(hotspot?.startDate).format('YYYY-MM-DD')}
+                <Box d={{ md: 'flex' }}>
+                  <Box>
+                    <IconButton
+                      mr={{ md: 2 }}
+                      color='blue.400'
+                      aria-label='Search database'
+                      icon={<i className='far fa-chart-bar'></i>}
+                      onClick={() => selectHandler(hotspot?.hotspot_address)}
+                    />
+                  </Box>
+                  <Box>
+                    <Heading size='sm'>
+                      <a
+                        target='_blank'
+                        rel='noreferrer'
+                        href={`https://explorer.helium.com/hotspots/${hotspot?.hotspot_address}`}
+                      >
+                        {hotspot?.hotspot_name}
+                      </a>
+                    </Heading>
+                    <Box d={{ sm: 'flex' }} mt='2'>
+                      <Text fontSize='xs' mr='1'>
+                        Percentage
                       </Text>
-                    </Badge>
+                      <Badge colorScheme={'green'}>
+                        <Text fontSize='xs'>{hotspot?.percentage + '%'}</Text>
+                      </Badge>
+                      <Badge
+                        ml='10px'
+                        colorScheme={
+                          hotspot?.relation_type === 'host'
+                            ? 'purple'
+                            : hotspot?.relation_type === 'referrer'
+                            ? 'red'
+                            : 'pink'
+                        }
+                      >
+                        <Text fontSize='xs'>{hotspot?.relation_type}</Text>
+                      </Badge>
+                      <Text fontSize='xs' ml='2' mr='1'>
+                        From
+                      </Text>
+                      <Badge colorScheme='blue'>
+                        <Text fontSize='xs'>
+                          {moment(hotspot?.startDate).format('YYYY-MM-DD')}
+                        </Text>
+                      </Badge>
+                    </Box>
                   </Box>
                 </Box>
                 <Spacer display={{ base: 'none', md: 'block' }} />
