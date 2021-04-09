@@ -6,13 +6,12 @@ import {
   Heading,
   Spacer,
   Badge,
-  Tooltip,
   useColorMode,
   IconButton,
   Button
 } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
-import { useHistory, useRouteMatch } from 'react-router';
+import { useHistory } from 'react-router';
 import AlertMessage from '../components/Alert';
 import moment from 'moment';
 import NumberFormat from 'react-number-format';
@@ -21,7 +20,6 @@ import { Bar as Barchart } from 'react-chartjs-2';
 import Loader from '../components/Loader';
 
 const ClientProfileScreen = ({ client_details }) => {
-  const { url } = useRouteMatch();
   const { colorMode } = useColorMode();
   const [client, setClient] = useState({});
   const [client_hotspot, setClientHotspot] = useState([]);
@@ -119,18 +117,9 @@ const ClientProfileScreen = ({ client_details }) => {
             {client?.firstname + ' ' + client?.lastname}
             <hr />
           </Heading>
-          <Tooltip hasArrow label='Edit Profile' bg='gray.300' color='black'>
-            <span
-              style={{ color: '#8594af', marginLeft: 5, cursor: 'pointer' }}
-            >
-              <Link to={`${url}/edit`}>
-                <i className='fas fa-edit'></i>
-              </Link>
-            </span>
-          </Tooltip>
         </Flex>
-        <div className='d-flex justify-content-space-between mb-5'>
-          <div className='d-flex flex-column mt-4 w-50'>
+        <div className='d-flex flex-column d-md-flex flex-md-row justify-content-space-between'>
+          <div className='d-flex flex-column mt-0 mt-md-4 w-50 mb-5'>
             <div className='d-flex align-items-baseline mb-3'>
               <span className='info-user-dashboard mr-2'>
                 <i className='fas fa-user mr-1'></i>
@@ -145,14 +134,14 @@ const ClientProfileScreen = ({ client_details }) => {
                 {client?.email}
               </span>
             </div>
-            <span className='d-flex info-user-dashboard'>
+            <span className='d-flex info-user-dashboard word-break align-items-center'>
               <i className='fas fa-wallet'></i>
               {client?.wallet_address}
             </span>
           </div>
           <div className='d-flex w-50 container-total '>
             <div className='d-flex flex-column justify-content-around'>
-              <div className='d-flex align-items-baseline'>
+              <div className='d-flex align-items-center'>
                 <h5 className='total-text'>Total Rewards</h5>
                 <div className='total-rewards'>
                   <Text style={{ fontWeight: 'bold' }} fontSize='lg'>
@@ -208,7 +197,7 @@ const ClientProfileScreen = ({ client_details }) => {
         </div>
       </Box>
       <Box>
-      <div className='button-wrapper mt-5'>
+      <div className='button-wrapper'>
           <Link to={`/c/profile/withdraw`}>
             <Button
               className='button-dashboard bg-blue'
@@ -231,7 +220,7 @@ const ClientProfileScreen = ({ client_details }) => {
               </div>
             </Button>
           </Link>
-          <Button
+          {/* <Button
             className='button-dashboard bg-purple ml-3'
             w={{ base: '100%', md: 'auto' }}
             mr={{ md: 2 }}
@@ -250,9 +239,9 @@ const ClientProfileScreen = ({ client_details }) => {
                 </span>
               </div>
             </div> 
-          </Button>
+          </Button> */}
         </div>
-        <Box borderRadius='md' p='3' >
+        <Box borderRadius='md'>
           {chartData?.length > 0 ? (
             <Box p='3'>
               <Text fontSize='lg' fontWeight='semibold'>

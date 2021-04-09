@@ -11,7 +11,7 @@ import DashboardSelected from '../assets/icons/dashboard-icon-selected.svg';
 
 const MenuItems = ({ children }) => (
   <Text
-    className='d-flex'
+    className='d-flex align-items-center'
     color='white'
     fontWeight='normal'
     letterSpacing=''
@@ -64,14 +64,14 @@ const ClientNavbar = () => {
                 Dashboard
               </MenuItems>
             </Link>
-            <Link to={`/c/profile/edit`}>
-              <MenuItems>
-                <i className='fas fa-money-check-alt'></i> My account
-              </MenuItems>
-            </Link>
             <Link to={`/c/profile/withdraw`}>
               <MenuItems>
-                <i className='fas fa-money-check-alt'></i> Withdraw
+                <i className='fas fa-money-check-alt mr-2'></i> Withdraw
+              </MenuItems>
+            </Link>
+             <Link to={`/c/profile/edit`}>
+              <MenuItems>
+                <i className='fas fa-cog mr-2'></i> My account
               </MenuItems>
             </Link>
           </Box>

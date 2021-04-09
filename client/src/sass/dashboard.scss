@@ -11,9 +11,8 @@
     align-items: center;
 }
 
-.container-total{
-    margin-top: -1rem;
-    justify-content: space-between;
+.assigned_hotspot_wrapper{
+    overflow-y: scroll;
 }
 
 .border-white-left-dashboard{
@@ -47,7 +46,12 @@
     color: white;
     border-radius: 13px;
     justify-content: center;
-    width: 40%;
+    width: 100%;
+    margin-left: 3rem;
+}
+
+.word-break{
+    word-break: break-all;
 }
 
 .dashboard-card{
@@ -115,15 +119,12 @@
 .button-wrapper{
     display: flex;
     justify-content: flex-end;
+    margin-top: 2rem;
 }
 
 .rewards-withdrawn-wrapper{
     width:84%;
     margin-bottom: 1rem;
-}
-
-.container-total{
-    margin-top: -2.2rem;
 }
 
 .reset-btn{
@@ -180,5 +181,36 @@ hr{
 // }
 
 .info-user-dashboard{
-    color: rgba(14, 12, 28, 0.5);
+    color: #86858e;
+}
+
+
+@media (min-width: 576px) { 
+  
+}
+
+@media (min-width: 768px) {
+    .container-total{
+        margin-top: -3.2rem;
+        margin-bottom: 3rem;
+        justify-content: space-around;
+    }
+
+    .available-container{
+        width: 40%;
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .button-wrapper{
+        display: flex;
+        justify-content: flex-end;
+        margin-top: -1rem;
+    }
+}
+
+@media (min-width: 992px) {
+}
+
+@media (min-width: 1200px) {
 }
