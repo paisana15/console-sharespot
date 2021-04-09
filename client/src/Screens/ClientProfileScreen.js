@@ -284,16 +284,16 @@ const ClientProfileScreen = ({ client_details }) => {
         <div className='button-wrapper mt-5'>
           <Link to={`/c/profile/withdraw`}>
             <Button
-              className="button-dashboard bg-blue"
+              className='button-dashboard bg-blue'
               w={{ base: '100%'}}
               mr={{ md: 2 }}
               mt={{ base: 2, md: 0 }}
               // onClick={getRewardHandler}
               variant={colorMode === 'dark' ? 'outline' : 'solid'}
             >
-              <div className="d-flex">
+              <div className='d-flex'>
                 <i style={{ marginRight: 5 }} className='fas fa-download'></i>
-                <div className="d-flex flex-column">
+                <div className='d-flex flex-column'>
                   <span>
                     Request
                   </span>
@@ -305,16 +305,16 @@ const ClientProfileScreen = ({ client_details }) => {
             </Button>
           </Link>
           <Button
-            className="button-dashboard bg-purple ml-3"
+            className='button-dashboard bg-purple ml-3'
             w={{ base: '100%', md: 'auto' }}
             mr={{ md: 2 }}
             mt={{ base: 2, md: 0 }}
             // onClick={getRewardHandler}
             variant={colorMode === 'dark' ? 'outline' : 'solid'}
           >
-            <div className="d-flex">
+            <div className='d-flex'>
               <i style={{ marginRight: 5 }} className='fas fa-redo'></i>
-              <div className="d-flex flex-column">
+              <div className='d-flex flex-column'>
                 <span>
                   Update
                 </span>
@@ -427,7 +427,7 @@ const ClientProfileScreen = ({ client_details }) => {
           )}
         </div>
       </div>
-      <Box className="mb-5">
+      <Box className='mb-5'>
         <Box boxShadow='md' borderRadius='md' p='3'>
           <Text fontSize='lg' fontWeight='semibold'>
             Daily Reward
