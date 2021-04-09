@@ -50,7 +50,7 @@ const ClientLogin = () => {
             size='lg'
           >
             Client Login
-            <hr/>
+            <hr />
           </Heading>
           <button className='circle-help' onClick = {() => setHelpInfo(!helpInfo)}>
             <HelpIcon className='help-icon font-weight-bold' size={20} />

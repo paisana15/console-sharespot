@@ -110,11 +110,13 @@ const ClientProfileScreen = ({ client_details }) => {
       <Box>
         <Flex alignItems='center'>
           <Heading
+            className='heading-dashboard'
             textColor={`${colorMode === 'light' ? 'gray.600' : '#b3bfd4'}`}
             size='lg'
             mb='1'
           >
-            {client?.firstname + ' ' + client?.lastname}
+            {client?.firstname + ' ' + client?.lastname} Wallet
+            <hr />
           </Heading>
           <Tooltip hasArrow label='Edit Profile' bg='gray.300' color='black'>
             <span
@@ -279,16 +281,59 @@ const ClientProfileScreen = ({ client_details }) => {
         </Box>
       </Box>
       <Box mt='4'>
+        <div className='button-wrapper mt-5'>
+          <Link to={`/c/profile/withdraw`}>
+            <Button
+              className="button-dashboard bg-blue"
+              w={{ base: '100%'}}
+              mr={{ md: 2 }}
+              mt={{ base: 2, md: 0 }}
+              // onClick={getRewardHandler}
+              variant={colorMode === 'dark' ? 'outline' : 'solid'}
+            >
+              <div className="d-flex">
+                <i style={{ marginRight: 5 }} className='fas fa-download'></i>
+                <div className="d-flex flex-column">
+                  <span>
+                    Request
+                  </span>
+                  <span>
+                    Withdraw
+                  </span>
+                </div>
+              </div>
+            </Button>
+          </Link>
+          <Button
+            className="button-dashboard bg-purple ml-3"
+            w={{ base: '100%', md: 'auto' }}
+            mr={{ md: 2 }}
+            mt={{ base: 2, md: 0 }}
+            // onClick={getRewardHandler}
+            variant={colorMode === 'dark' ? 'outline' : 'solid'}
+          >
+            <div className="d-flex">
+              <i style={{ marginRight: 5 }} className='fas fa-redo'></i>
+              <div className="d-flex flex-column">
+                <span>
+                  Update
+                </span>
+                <span>
+                  Rewards
+                </span>
+              </div>
+            </div> 
+          </Button>
+        </div>
+      </Box>
+      <div className='dashboard-subcard'>
         <Heading size='xs'>Assigned Hotspot ({client?.total_hotspot})</Heading>
-        <Box
-          boxShadow='md'
-          borderRadius='md'
-          p='5'
-          className='assigned_hotspot_wrapper'
-        >
+        <div className='d-flex justify-content-end mr-4 mb-3'>Total Earned</div>
+        <div p='5' className='assigned_hotspot_wrapper'>
           {client_hotspot?.length > 0 ? (
             client_hotspot.map((hotspot) => (
               <Box
+                className='hotspot justify-content-between'
                 display={{ md: 'flex' }}
                 key={hotspot?._id}
                 p='4'
@@ -358,13 +403,11 @@ const ClientProfileScreen = ({ client_details }) => {
                   textAlign='right'
                   alignItems='center'
                 >
-                  <Box mr='2'>
-                    <Text fontSize='sm' color='grey'>
-                      Total Earned
-                    </Text>
+                  <Box>
                     <Text
+                      className='total-earned-singular'
                       fontWeight='semibold'
-                      color={colorMode === 'light' ? 'grey' : 'orange.200'}
+                      color={colorMode === 'light' ? 'white' : ''}
                       fontSize='sm'
                     >
                       <NumberFormat
@@ -377,10 +420,63 @@ const ClientProfileScreen = ({ client_details }) => {
                   </Box>
                 </Flex>
               </Box>
+              
             ))
           ) : (
             <AlertMessage status='error' error='No hotspot assigned yet!' />
           )}
+        </div>
+      </div>
+      <Box className="mb-5">
+        <Box boxShadow='md' borderRadius='md' p='3'>
+          <Text fontSize='lg' fontWeight='semibold'>
+            Daily Reward
+          </Text>
+          <Box>
+            <FormControl>
+              <Select
+                value={hotspotAddress}
+                onChange={(e) => selectHandler(e.target.value)}
+                variant='flushed'
+                placeholder='Select hotspot'
+              >
+                {client_hotspot.map((data, idx) => (
+                  <option key={idx} value={data?.hotspot_address}>
+                    {data?.hotspot_name}
+                  </option>
+                ))}
+              </Select>
+            </FormControl>
+          </Box>
+          {chartData?.length > 0 ? (
+            <>
+              <Barchart
+                data={{
+                  labels: chartData?.map((data) => data?.date),
+                  datasets: [
+                    {
+                      label: 'Total Rewards',
+                      data: chartData?.map((data) => data?.total.toFixed(2)),
+                      backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                      borderColor: 'rgb(153, 102, 255)',
+                      borderWidth: 1,
+                    },
+                  ],
+                }}
+                options={{
+                  scales: {
+                    yAxes: [
+                      {
+                        ticks: {
+                          beginAtZero: true,
+                        },
+                      },
+                    ],
+                  },
+                }}
+              />
+            </>
+          ) : null}
         </Box>
       </Box>
     </>
