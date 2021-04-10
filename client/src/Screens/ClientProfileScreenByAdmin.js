@@ -85,7 +85,11 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
   const { mw_histories } = getMWHistories;
 
   const addMWHistory = useSelector((state) => state.addMWHistory);
-  const { error: addMWError } = addMWHistory;
+  const {
+    loading: addMWLoading,
+    success: addMWSuccess,
+    error: addMWError,
+  } = addMWHistory;
 
   const histtoryWBya = useSelector((state) => state.histtoryWBya);
   const {
@@ -681,12 +685,14 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
                     m_withdraw: '',
                   }}
                   validationSchema={fieldValidationSchema}
-                  onSubmit={(data, { resetForm }) => {
+                  onSubmit={(data, actions) => {
                     dispatch(
                       addManulaWithdrawHistory(client?._id, data?.m_withdraw)
                     );
-                    if (success) {
-                      resetForm();
+                    if (addMWSuccess) {
+                      actions.resetForm({
+                        m_withdraw: '',
+                      });
                     }
                   }}
                 >
@@ -704,10 +710,18 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
                           colorScheme='blue'
                           onClick={onWClose}
                           mr='2'
+                          size='sm'
                         >
                           Close
                         </Button>
-                        <Button mt='2' type='submit' colorScheme='facebook'>
+                        <Button
+                          mt='2'
+                          isLoading={addMWLoading}
+                          loadingText={'Adding...'}
+                          type='submit'
+                          colorScheme='facebook'
+                          size='sm'
+                        >
                           Add
                         </Button>
                       </Box>
@@ -724,9 +738,9 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
                       <Th isNumeric>Amount</Th>
                     </Tr>
                   </Thead>
-                  {mw_histories?.length > 0 ? (
-                    <Tbody>
-                      {mw_histories?.map((data) => (
+                  <Tbody>
+                    {mw_histories?.length > 0 &&
+                      mw_histories?.map((data) => (
                         <Tr key={data?._id}>
                           <Td>{moment(data?.createdAt).format('LLL')}</Td>
                           <Td textColor='green.400' isNumeric>
@@ -748,14 +762,14 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
                           </Td>
                         </Tr>
                       ))}
-                    </Tbody>
-                  ) : (
-                    <AlertMessage
-                      status='error'
-                      error='No history for this user!'
-                    />
-                  )}
+                  </Tbody>
                 </Table>
+                {mw_histories?.length < 1 && (
+                  <AlertMessage
+                    status='error'
+                    error='No history for this user!'
+                  />
+                )}
               </Box>
             </ModalBody>
           </ModalContent>
