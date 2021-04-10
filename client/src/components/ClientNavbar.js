@@ -96,6 +96,7 @@ const ClientNavbar = () => {
               </MenuItems>
             </Link>
              <Link to={`/c/profile/edit`}>
+             
               <MenuItems>
                 {location.pathname === '/c/profile/edit' ? 
                   <>
