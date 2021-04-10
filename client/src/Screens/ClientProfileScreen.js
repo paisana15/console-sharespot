@@ -42,7 +42,7 @@ const ClientProfileScreen = ({ client_details }) => {
     async function fetchChartData() {
       try {
         const response = await axios.get(
-          `https://api.helium.wtf/v1/hotspots/${hotspotAddress}/rewards/sum?min_time=-30%20day&bucket=day
+          `https://api.helium.wtf/v1/hotspots/${hotspotAddress}/rewards/sum?min_time=-60%20day&bucket=week
         `
         );
         if (response) {
