@@ -54,6 +54,7 @@ const ClientDetails = () => {
             )}
           />
           <Route
+            exact
             path={`${path}/withdraw`}
             component={() => (
               <WithDrawScreen

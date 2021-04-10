@@ -1,6 +1,6 @@
 import { Box, Container, Flex, Text } from '@chakra-ui/layout';
 import React, { useState } from 'react';
-import { Link, useRouteMatch } from 'react-router-dom';
+import { Link, useRouteMatch, useLocation } from 'react-router-dom';
 import { clientLogout } from '../redux/action/ClientAction';
 import { useDispatch } from 'react-redux';
 import Logo from './Logo';
@@ -29,6 +29,9 @@ const ClientNavbar = () => {
   const dispatch = useDispatch();
   const { path } = useRouteMatch();
   const [showMenu, setShow] = useState(false);
+
+  const location = useLocation();
+  console.log(location.pathname);
 
   const { colorMode, toggleColorMode } = useColorMode();
 
@@ -66,10 +69,20 @@ const ClientNavbar = () => {
             </Link>
             <Link to={`/c/profile/withdraw`}>
               <MenuItems>
-                <i className='fas fa-money-check-alt mr-2'></i> Withdraw
+                {location.pathname === '/c/profile/withdraw' ? 
+                  <>
+                    <i className='fas fa-money-check-alt mr-2'></i> 
+                  </>
+                  :   
+                  <>
+                    <i className='fas fa-cog mr-2'></i> 
+                  </>
+                }
+                Withdraw
               </MenuItems>
             </Link>
              <Link to={`/c/profile/edit`}>
+             
               <MenuItems>
                 <i className='fas fa-cog mr-2'></i> My account
               </MenuItems>
