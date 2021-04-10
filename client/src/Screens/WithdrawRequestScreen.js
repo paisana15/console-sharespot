@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Heading, Spacer, Text } from '@chakra-ui/layout';
+import { Badge, Box, Flex, Heading, Spacer, Text } from '@chakra-ui/layout';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   getWithdrawalRequets,
@@ -26,6 +26,7 @@ import {
 } from '@chakra-ui/modal';
 import { useDisclosure } from '@chakra-ui/hooks';
 import { Image } from '@chakra-ui/image';
+import axios from 'axios';
 
 const WithdrawRequestScreen = () => {
   const dispatch = useDispatch();
@@ -33,6 +34,8 @@ const WithdrawRequestScreen = () => {
   const toast = useToast();
   const [wrId, setwrId] = useState('');
   const [qrCode, setQRCode] = useState('');
+  const [pendingTransactions, setPendingTransaction] = useState([]);
+  const [pendingTLoading, setPendingLoading] = useState(true);
 
   const { onOpen, isOpen, onClose } = useDisclosure();
   const {
@@ -105,6 +108,23 @@ const WithdrawRequestScreen = () => {
       });
     }
     dispatch(getWithdrawalRequets());
+
+    async function fetPendinTransactionData() {
+      try {
+        const response = await axios.get(
+          `https://api.helium.io/v1/accounts/13ESLoXiie3eXoyitxryNQNamGAnJjKt2WkiB4gNq95knxAiGEp/pending_transactions`
+        );
+        if (response) {
+          setPendingTransaction(response?.data?.data);
+          setPendingLoading(false);
+        } else {
+          throw new Error('Api Failed!');
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetPendinTransactionData();
   }, [
     dispatch,
     rejectSuccess,
@@ -231,6 +251,70 @@ const WithdrawRequestScreen = () => {
             error='No withdrawal requests available!'
           />
         )}
+        <Box mt='3'>
+          <Text borderBottom='1px' borderColor='gray.400' pb='1'>
+            Pending Transaction{' '}
+          </Text>
+          <Box p='2' className='assigned_hotspot_wrapper' mt='2'>
+            {pendingTLoading ? (
+              <Loader />
+            ) : pendingTransactions?.length > 0 ? (
+              pendingTransactions.map((data) => (
+                <Box p='3' boxShadow='md' borderRadius='md'>
+                  <Flex>
+                    <Text>Payee : </Text>
+                    <Text color='blue.500' ml='2'>
+                      {data?.txn?.payments[0]?.payee}
+                    </Text>
+                  </Flex>
+                  <Flex>
+                    <Text> Amount : </Text>
+                    <Text color='blue.500' ml='2'>
+                      {data?.txn?.payments[0]?.amount / 100000000}
+                    </Text>
+                  </Flex>
+                  <Flex>
+                    <Text fontSize='sm'>Status :</Text>
+                    <Badge
+                      variant='outline'
+                      colorScheme={data?.status === 'cleared' ? 'green' : 'red'}
+                    >
+                      {data?.status}
+                    </Badge>
+                  </Flex>
+                  <Flex>
+                    <Text>Hash : </Text>
+                    <Text color='blue.500' ml='2'>
+                      {data?.hash}
+                    </Text>
+                  </Flex>
+                  {data?.failed_reason && (
+                    <Flex>
+                      <Text>Failed Reason : </Text>
+                      <Text color='blue.500' ml='2'>
+                        {data?.failed_reason}
+                      </Text>
+                    </Flex>
+                  )}
+                  <Flex>
+                    <Text>Created At : </Text>
+                    <Text color='blue.500' ml='2'>
+                      {moment(data?.created_at).format('LLL')}
+                    </Text>
+                  </Flex>
+                  <Flex>
+                    <Text>Updated At : </Text>
+                    <Text color='blue.500' ml='2'>
+                      {moment(data?.updated_at).format('LLL')}
+                    </Text>
+                  </Flex>
+                </Box>
+              ))
+            ) : (
+              <AlertMessage status='warning' error='No pending transaction!' />
+            )}
+          </Box>
+        </Box>
         <Modal isOpen={isOpen} onClose={onClose}>
           <ModalOverlay />
           <ModalContent>
