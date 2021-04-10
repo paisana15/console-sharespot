@@ -60,10 +60,11 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
   const history = useHistory();
   const toast = useToast();
   const [hotspotAddress, setHotspotAddress] = useState('');
-  const [hotspotPercent, setHotpotpercent] = useState('');
+  const [hotspotPercent, setHotpotpercent] = useState(0);
   const [thirtDR, setThirtDR] = useState('');
   const [sevenDR, setSevenDR] = useState('');
   const [lastDR, setlastDR] = useState('');
+  const [chartDaysLoading, setChartLoading] = useState(true);
 
   const { onOpen, isOpen, onClose } = useDisclosure();
   const {
@@ -168,31 +169,34 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
     dispatch(getWithdrawHistoryByA(client?._id));
   };
 
-  const selectHandler = async (value) => {
-    setHotspotAddress(value);
-    client_hotspot?.map(
-      (data) =>
-        data?.hotspot_address === value && setHotpotpercent(data?.percentage)
-    );
+  const selectHandler = async (address, percentage) => {
+    setHotspotAddress(address);
+    setHotpotpercent(percentage);
     try {
+      setChartLoading(true);
       // 30 days reward
       const request1 = await axios.get(
-        `https://api.helium.wtf/v1/hotspots/${value}/rewards/sum?min_time=-30%20day`
+        `https://api.helium.wtf/v1/hotspots/${address}/rewards/sum?min_time=-30%20day`
       );
       // 7 days reward
       const request2 = await axios.get(
-        `https://api.helium.wtf/v1/hotspots/${value}/rewards/sum?min_time=-7%20day`
+        `https://api.helium.wtf/v1/hotspots/${address}/rewards/sum?min_time=-7%20day`
       );
       // 24 hours reward
       const request3 = await axios.get(
-        `https://api.helium.wtf/v1/hotspots/${value}/rewards/sum?min_time=-1%20day`
+        `https://api.helium.wtf/v1/hotspots/${address}/rewards/sum?min_time=-1%20day`
       );
       const responses = await axios.all([request1, request2, request3]);
 
       if (responses) {
-        setThirtDR(responses[0]?.data?.data?.total);
-        setSevenDR(responses[1]?.data?.data?.total);
-        setlastDR(responses[2]?.data?.data?.total);
+        const res1 = responses[0]?.data?.data?.total;
+        const res2 = responses[1]?.data?.data?.total;
+        const res3 = responses[2]?.data?.data?.total;
+
+        setThirtDR((res1 * percentage) / 100);
+        setSevenDR((res2 * percentage) / 100);
+        setlastDR((res3 * percentage) / 100);
+        setChartLoading(false);
       } else {
         throw new Error('Failed to fetch APIs Data!');
       }
@@ -344,18 +348,30 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
               <Box pb='2' d={{ md: 'flex' }} mt='3'>
                 <Badge variant='outline' colorScheme='green'>
                   Last 30 Days Reward : HNT{' '}
-                  {thirtDR ? thirtDR.toFixed(2) : 'Loading...'}
+                  {chartDaysLoading ? (
+                    <Loader xs />
+                  ) : (
+                    thirtDR && thirtDR.toFixed(2)
+                  )}
                 </Badge>
                 <Spacer />
                 <Badge variant='outline' colorScheme='blue'>
                   Last 7 Days Reward : HNT{' '}
-                  {sevenDR ? sevenDR.toFixed(2) : 'Loading...'}
+                  {chartDaysLoading ? (
+                    <Loader xs />
+                  ) : (
+                    sevenDR && sevenDR.toFixed(2)
+                  )}
                 </Badge>
                 <Spacer />
 
                 <Badge variant='outline' colorScheme='orange'>
                   Last 24 Hours Reward : HNT{' '}
-                  {lastDR ? lastDR.toFixed(2) : 'Loading...'}
+                  {chartDaysLoading ? (
+                    <Loader xs />
+                  ) : (
+                    lastDR && lastDR.toFixed(2)
+                  )}
                 </Badge>
               </Box>
             </Box>
@@ -390,7 +406,12 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
                       color='blue.400'
                       aria-label='Search database'
                       icon={<i className='far fa-chart-bar'></i>}
-                      onClick={() => selectHandler(hotspot?.hotspot_address)}
+                      onClick={() =>
+                        selectHandler(
+                          hotspot?.hotspot_address,
+                          hotspot?.percentage
+                        )
+                      }
                     />
                   </Box>
                   <Box>
