@@ -259,23 +259,26 @@ const WithdrawRequestScreen = () => {
             {pendingTLoading ? (
               <Loader />
             ) : pendingTransactions?.length > 0 ? (
-              pendingTransactions.map((data) => (
-                <Box p='3' boxShadow='md' borderRadius='md'>
+              pendingTransactions?.map((data, idx) => (
+                <Box key={idx} p='3' boxShadow='md' borderRadius='md'>
                   <Flex>
                     <Text>Payee : </Text>
                     <Text color='blue.500' ml='2'>
-                      {data?.txn?.payments[0]?.payee}
+                      {data?.txn?.payments?.[0]?.payee}
                     </Text>
                   </Flex>
                   <Flex>
                     <Text> Amount : </Text>
                     <Text color='blue.500' ml='2'>
-                      {data?.txn?.payments[0]?.amount / 100000000}
+                      {data?.txn?.payments?.[0]?.amount
+                        ? data?.txn?.payments?.[0]?.amount / 100000000
+                        : 0}
                     </Text>
                   </Flex>
                   <Flex>
                     <Text fontSize='sm'>Status :</Text>
                     <Badge
+                      ml='2'
                       variant='outline'
                       colorScheme={data?.status === 'cleared' ? 'green' : 'red'}
                     >
