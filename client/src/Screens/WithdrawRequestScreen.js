@@ -253,66 +253,124 @@ const WithdrawRequestScreen = () => {
         )}
         <Box mt='3'>
           <Text borderBottom='1px' borderColor='gray.400' pb='1'>
-            Pending Transaction{' '}
+            Pending Transaction (
+            {pendingTransactions ? pendingTransactions?.length : '0'}){' '}
           </Text>
           <Box p='2' className='assigned_hotspot_wrapper' mt='2'>
             {pendingTLoading ? (
               <Loader />
             ) : pendingTransactions?.length > 0 ? (
-              pendingTransactions?.map((data, idx) => (
-                <Box key={idx} p='3' boxShadow='md' borderRadius='md'>
-                  <Flex>
-                    <Text>Payee : </Text>
-                    <Text color='blue.500' ml='2'>
-                      {data?.txn?.payments?.[0]?.payee}
-                    </Text>
-                  </Flex>
-                  <Flex>
-                    <Text> Amount : </Text>
-                    <Text color='blue.500' ml='2'>
-                      {data?.txn?.payments?.[0]?.amount
-                        ? data?.txn?.payments?.[0]?.amount / 100000000
-                        : 0}
-                    </Text>
-                  </Flex>
-                  <Flex>
-                    <Text fontSize='sm'>Status :</Text>
-                    <Badge
-                      ml='2'
-                      variant='outline'
-                      colorScheme={data?.status === 'cleared' ? 'green' : 'red'}
-                    >
-                      {data?.status}
-                    </Badge>
-                  </Flex>
-                  <Flex>
-                    <Text>Hash : </Text>
-                    <Text color='blue.500' ml='2'>
-                      {data?.hash}
-                    </Text>
-                  </Flex>
-                  {data?.failed_reason && (
+              pendingTransactions?.map((data, idx) =>
+                data?.txn?.type === 'payment_v2' ? (
+                  <Box key={idx} p='3' boxShadow='md' borderRadius='md'>
                     <Flex>
-                      <Text>Failed Reason : </Text>
+                      <Text>Payee : </Text>
                       <Text color='blue.500' ml='2'>
-                        {data?.failed_reason}
+                        {data?.txn?.payments?.[0]?.payee}
                       </Text>
                     </Flex>
-                  )}
-                  <Flex>
-                    <Text>Created At : </Text>
-                    <Text color='blue.500' ml='2'>
-                      {moment(data?.created_at).format('LLL')}
-                    </Text>
-                  </Flex>
-                  <Flex>
-                    <Text>Updated At : </Text>
-                    <Text color='blue.500' ml='2'>
-                      {moment(data?.updated_at).format('LLL')}
-                    </Text>
-                  </Flex>
-                </Box>
-              ))
+                    <Flex>
+                      <Text> Amount : </Text>
+                      <Text color='blue.500' ml='2'>
+                        {data?.txn?.payments?.[0]?.amount
+                          ? data?.txn?.payments?.[0]?.amount / 100000000
+                          : 0}
+                      </Text>
+                    </Flex>
+                    <Flex>
+                      <Text fontSize='sm'>Status :</Text>
+                      <Badge
+                        ml='2'
+                        variant='outline'
+                        colorScheme={
+                          data?.status === 'cleared' ? 'green' : 'red'
+                        }
+                      >
+                        {data?.status}
+                      </Badge>
+                    </Flex>
+                    <Flex>
+                      <Text>Hash : </Text>
+                      <Text color='blue.500' ml='2'>
+                        {data?.hash}
+                      </Text>
+                    </Flex>
+                    {data?.failed_reason && (
+                      <Flex>
+                        <Text>Failed Reason : </Text>
+                        <Text color='blue.500' ml='2'>
+                          {data?.failed_reason}
+                        </Text>
+                      </Flex>
+                    )}
+                    <Flex>
+                      <Text>Created At : </Text>
+                      <Text color='blue.500' ml='2'>
+                        {moment(data?.created_at).format('LLL')}
+                      </Text>
+                    </Flex>
+                    <Flex>
+                      <Text>Updated At : </Text>
+                      <Text color='blue.500' ml='2'>
+                        {moment(data?.updated_at).format('LLL')}
+                      </Text>
+                    </Flex>
+                  </Box>
+                ) : (
+                  <Box key={idx} p='3' boxShadow='md' borderRadius='md'>
+                    <Flex>
+                      <Text>Buyer : </Text>
+                      <Text color='blue.500' ml='2'>
+                        {data?.txn?.buyer}
+                      </Text>
+                    </Flex>
+                    <Flex>
+                      <Text>Seller : </Text>
+                      <Text color='blue.500' ml='2'>
+                        {data?.txn?.seller}
+                      </Text>
+                    </Flex>
+                    <Flex>
+                      <Text fontSize='sm'>Status :</Text>
+                      <Badge
+                        ml='2'
+                        variant='outline'
+                        colorScheme={
+                          data?.status === 'cleared' ? 'green' : 'red'
+                        }
+                      >
+                        {data?.status}
+                      </Badge>
+                    </Flex>
+                    <Flex>
+                      <Text>Hash : </Text>
+                      <Text color='blue.500' ml='2'>
+                        {data?.hash}
+                      </Text>
+                    </Flex>
+                    {data?.failed_reason && (
+                      <Flex>
+                        <Text>Failed Reason : </Text>
+                        <Text color='blue.500' ml='2'>
+                          {data?.failed_reason}
+                        </Text>
+                      </Flex>
+                    )}
+                    <Flex>
+                      <Text>Created At : </Text>
+                      <Text color='blue.500' ml='2'>
+                        {moment(data?.created_at).format('LLL')}
+                      </Text>
+                    </Flex>
+                    <Flex>
+                      <Text>Updated At : </Text>
+                      <Text color='blue.500' ml='2'>
+                        {moment(data?.updated_at).format('LLL')}
+                      </Text>
+                    </Flex>
+                  </Box>
+                )
+              )
             ) : (
               <AlertMessage status='warning' error='No pending transaction!' />
             )}
