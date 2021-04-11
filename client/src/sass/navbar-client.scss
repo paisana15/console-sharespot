@@ -1,0 +1,17 @@
+.selected-item-navbar{
+    margin-top: 3px;
+    width: 30px!important;
+    border-bottom: 1px solid $primary-color!important;
+    display: flex;
+    margin-left: 25%;
+}
+
+.item-navbar{
+    margin-top: 6px;
+}
+
+a{
+    &:hover{
+        text-decoration: none!important;
+    }
+}

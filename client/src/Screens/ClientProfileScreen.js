@@ -18,6 +18,10 @@ import NumberFormat from 'react-number-format';
 import axios from 'axios';
 import { Bar as Barchart } from 'react-chartjs-2';
 import Loader from '../components/Loader';
+import UserIcon from '../assets/icons/user-icon.svg';
+import PhoneIcon from '../assets/icons/phone-icon.svg';
+import MailIcon from '../assets/icons/mail-icon.svg';
+import WalletUserIcon from '../assets/icons/wallet-user-icon.svg';
 
 const ClientProfileScreen = ({ client_details }) => {
   const { colorMode } = useColorMode();
@@ -121,21 +125,21 @@ const ClientProfileScreen = ({ client_details }) => {
         <div className='d-flex flex-column d-md-flex flex-md-row justify-content-space-between'>
           <div className='d-flex flex-column mt-0 mt-md-4 w-50 mb-5'>
             <div className='d-flex align-items-baseline mb-3'>
-              <span className='info-user-dashboard mr-2'>
-                <i className='fas fa-user mr-1'></i>
+              <span className='info-user-dashboard mr-3'>
+                <img className='mr-2' src={UserIcon} alt='User icon' height='20' width='20'/>
                 {client?.username}
               </span>
-              <span className='info-user-dashboard mr-2'>
-                <i className='fas fa-phone-alt mr-1'></i>
+              <span className='info-user-dashboard mr-3'>
+                <img className='mr-2' src={PhoneIcon} alt='Phone icon' height='14' width='14'/>
                 {client?.phone_number}
               </span>
               <span className='info-user-dashboard'>
-                <i className='fas fa-at mr-1'></i>
+                <img className='mr-2' src={MailIcon} alt='Mail icon' height='23' width='23'/>
                 {client?.email}
               </span>
             </div>
             <span className='d-flex info-user-dashboard word-break align-items-center'>
-              <i className='fas fa-wallet'></i>
+              <img className='mr-2' src={WalletUserIcon} alt='Wallet User icon' height='23' width='23'/>
               {client?.wallet_address}
             </span>
           </div>

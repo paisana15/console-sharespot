@@ -7,7 +7,11 @@ import Logo from './Logo';
 import { useColorMode } from '@chakra-ui/color-mode';
 import { IconButton } from '@chakra-ui/button';
 import DashboardSelected from '../assets/icons/dashboard-icon-selected.svg';
-// import DashboardNotSelected from '../assets/icons/dashboard-icon-not-selected.svg'
+import DashboardNotSelected from '../assets/icons/dashboard-icon-not-selected.svg';
+import WithdrawSelected from '../assets/icons/withdraw-icon-selected.svg';
+import WithdrawNotSelected from '../assets/icons/withdraw-icon-not-selected.svg';
+import AccountSelected from '../assets/icons/account-icon-selected.svg';
+import AccountNotSelected from '../assets/icons/account-icon-not-selected.svg';
 
 const MenuItems = ({ children }) => (
   <Text
@@ -63,28 +67,47 @@ const ClientNavbar = () => {
           >
             <Link to={`${path}/profile`}>
               <MenuItems>
-                <img className='mr-2' src={DashboardSelected} alt='dashboard icon' height='25' width='25'/>
-                Dashboard
+              {location.pathname === '/c/profile' ? 
+                  <>
+                    <img className='mr-2' src={DashboardSelected} alt='Dashboard icon' height='20' width='20'/>
+                    <span className='item-navbar'>Dashboard<span className='selected-item-navbar'/></span>
+                  </>
+                  :   
+                  <>
+                    <img className='mr-2' src={DashboardNotSelected} alt='Dashboard icon' height='20' width='20'/>
+                    <span>Dashboard</span>
+                  </>
+                }
               </MenuItems>
             </Link>
             <Link to={`/c/profile/withdraw`}>
               <MenuItems>
                 {location.pathname === '/c/profile/withdraw' ? 
                   <>
-                    <i className='fas fa-money-check-alt mr-2'></i> 
+                    <img className='mr-2' src={WithdrawSelected} alt='Withdraw icon' height='20' width='20'/>
+                    <span className='item-navbar'>Withdraw<span className='selected-item-navbar'/></span>
                   </>
                   :   
                   <>
-                    <i className='fas fa-cog mr-2'></i> 
+                    <img className='mr-2' src={WithdrawNotSelected} alt='Withdraw icon' height='20' width='20'/>
+                    <span>Withdraw</span>
                   </>
                 }
-                Withdraw
               </MenuItems>
             </Link>
              <Link to={`/c/profile/edit`}>
-             
               <MenuItems>
-                <i className='fas fa-cog mr-2'></i> My account
+                {location.pathname === '/c/profile/edit' ? 
+                  <>
+                   <img className='mr-2' src={AccountSelected} alt='Account icon' height='20' width='20'/>
+                   <span className='item-navbar'>My Account<span className='selected-item-navbar'/></span>
+                  </>
+                  :   
+                  <>
+                    <img className='mr-2' src={AccountNotSelected} alt='Account icon' height='20' width='20'/>
+                    <span>My Account</span>
+                  </>
+                } 
               </MenuItems>
             </Link>
           </Box>
