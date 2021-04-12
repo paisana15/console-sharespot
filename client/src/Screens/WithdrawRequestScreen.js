@@ -302,7 +302,7 @@ const WithdrawRequestScreen = () => {
                         <Td>{data?.txn?.payments?.[0]?.payee}</Td>
                         <Td textAlign='center'>
                           {(
-                            data?.txn?.payments?.[0]?.amount / 1000000000
+                            data?.txn?.payments?.[0]?.amount / 100000000
                           ).toFixed(2)}
                         </Td>
                         <Td>
