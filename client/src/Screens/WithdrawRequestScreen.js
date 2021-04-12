@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Badge, Box, Flex, Heading, Spacer, Text } from '@chakra-ui/layout';
+import { Badge, Box, Heading, Spacer, Text } from '@chakra-ui/layout';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   getWithdrawalRequets,
   rejectWithdrawRequest,
   acceptWithdrawRequest,
+  getAllClients,
 } from '../redux/action/AdminAction';
 import moment from 'moment';
 import { useColorMode } from '@chakra-ui/color-mode';
@@ -27,6 +28,7 @@ import {
 import { useDisclosure } from '@chakra-ui/hooks';
 import { Image } from '@chakra-ui/image';
 import axios from 'axios';
+import { Table, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/table';
 
 const WithdrawRequestScreen = () => {
   const dispatch = useDispatch();
@@ -67,6 +69,7 @@ const WithdrawRequestScreen = () => {
   } = withdrawAccept;
 
   useEffect(() => {
+    dispatch(getAllClients());
     if (rejectSuccess) {
       onClose();
       toast({
@@ -108,7 +111,6 @@ const WithdrawRequestScreen = () => {
       });
     }
     dispatch(getWithdrawalRequets());
-
     async function fetPendinTransactionData() {
       try {
         const response = await axios.get(
@@ -148,7 +150,11 @@ const WithdrawRequestScreen = () => {
       <Helmet>
         <title>Withdrawal Request | Admin Dashboard</title>
       </Helmet>
-      <Text fontSize='2xl' display='inline-block' className='adminPageHeader'>
+      <Text
+        fontSize={{ base: 'md', md: '2xl' }}
+        display='inline-block'
+        className='adminPageHeader'
+      >
         Withdrawal Requests ({wRequests ? wRequests?.length : '0'})
       </Text>
       <Box mt='3'>
@@ -253,124 +259,75 @@ const WithdrawRequestScreen = () => {
         )}
         <Box mt='3'>
           <Text borderBottom='1px' borderColor='gray.400' pb='1'>
-            Pending Transaction (
+            Transaction Activity (
             {pendingTransactions ? pendingTransactions?.length : '0'}){' '}
           </Text>
           <Box p='2' className='assigned_hotspot_wrapper' mt='2'>
             {pendingTLoading ? (
               <Loader />
             ) : pendingTransactions?.length > 0 ? (
-              pendingTransactions?.map((data, idx) =>
-                data?.txn?.type === 'payment_v2' ? (
-                  <Box key={idx} p='3' boxShadow='md' borderRadius='md'>
-                    <Flex>
-                      <Text>Payee : </Text>
-                      <Text color='blue.500' ml='2'>
-                        {data?.txn?.payments?.[0]?.payee}
-                      </Text>
-                    </Flex>
-                    <Flex>
-                      <Text> Amount : </Text>
-                      <Text color='blue.500' ml='2'>
-                        {data?.txn?.payments?.[0]?.amount
-                          ? data?.txn?.payments?.[0]?.amount / 100000000
-                          : 0}
-                      </Text>
-                    </Flex>
-                    <Flex>
-                      <Text fontSize='sm'>Status :</Text>
-                      <Badge
-                        ml='2'
-                        variant='outline'
-                        colorScheme={
-                          data?.status === 'cleared' ? 'green' : 'red'
-                        }
-                      >
-                        {data?.status}
-                      </Badge>
-                    </Flex>
-                    <Flex>
-                      <Text>Hash : </Text>
-                      <Text color='blue.500' ml='2'>
-                        {data?.hash}
-                      </Text>
-                    </Flex>
-                    {data?.failed_reason && (
-                      <Flex>
-                        <Text>Failed Reason : </Text>
-                        <Text color='blue.500' ml='2'>
-                          {data?.failed_reason}
-                        </Text>
-                      </Flex>
-                    )}
-                    <Flex>
-                      <Text>Created At : </Text>
-                      <Text color='blue.500' ml='2'>
-                        {moment(data?.created_at).format('LLL')}
-                      </Text>
-                    </Flex>
-                    <Flex>
-                      <Text>Updated At : </Text>
-                      <Text color='blue.500' ml='2'>
-                        {moment(data?.updated_at).format('LLL')}
-                      </Text>
-                    </Flex>
-                  </Box>
-                ) : (
-                  <Box key={idx} p='3' boxShadow='md' borderRadius='md'>
-                    <Flex>
-                      <Text>Buyer : </Text>
-                      <Text color='blue.500' ml='2'>
-                        {data?.txn?.buyer}
-                      </Text>
-                    </Flex>
-                    <Flex>
-                      <Text>Seller : </Text>
-                      <Text color='blue.500' ml='2'>
-                        {data?.txn?.seller}
-                      </Text>
-                    </Flex>
-                    <Flex>
-                      <Text fontSize='sm'>Status :</Text>
-                      <Badge
-                        ml='2'
-                        variant='outline'
-                        colorScheme={
-                          data?.status === 'cleared' ? 'green' : 'red'
-                        }
-                      >
-                        {data?.status}
-                      </Badge>
-                    </Flex>
-                    <Flex>
-                      <Text>Hash : </Text>
-                      <Text color='blue.500' ml='2'>
-                        {data?.hash}
-                      </Text>
-                    </Flex>
-                    {data?.failed_reason && (
-                      <Flex>
-                        <Text>Failed Reason : </Text>
-                        <Text color='blue.500' ml='2'>
-                          {data?.failed_reason}
-                        </Text>
-                      </Flex>
-                    )}
-                    <Flex>
-                      <Text>Created At : </Text>
-                      <Text color='blue.500' ml='2'>
-                        {moment(data?.created_at).format('LLL')}
-                      </Text>
-                    </Flex>
-                    <Flex>
-                      <Text>Updated At : </Text>
-                      <Text color='blue.500' ml='2'>
-                        {moment(data?.updated_at).format('LLL')}
-                      </Text>
-                    </Flex>
-                  </Box>
-                )
-              )
+              <Table>
+                <Thead>
+                  <Tr>
+                    <Th>Type</Th>
+                    <Th>Payee / Buyer</Th>
+                    <Th>Amount (HNT)</Th>
+                    <Th>Status</Th>
+                  </Tr>
+                </Thead>
+                <Tbody>
+                  {pendingTransactions?.map((data, idx) =>
+                    data?.txn?.type === 'payment_v2' ? (
+                      <Tr key={idx}>
+                        <Td>Payment</Td>
+                        <Td>{data?.txn?.payments?.[0]?.payee}</Td>
+                        <Td textAlign='center'>
+                          {(
+                            data?.txn?.payments?.[0]?.amount / 1000000000
+                          ).toFixed(2)}
+                        </Td>
+                        <Td>
+                          <Badge
+                            variant='outline'
+                            colorScheme={
+                              data?.status === 'cleared' ? 'green' : 'red'
+                            }
+                          >
+                            {data?.status}
+                          </Badge>
+                        </Td>
+                      </Tr>
+                    ) : (
+                      <Tr key={idx}>
+                        <Td>Hotspot Ownership Transfer</Td>
+                        <Td>
+                          <p>
+                            <span style={{ color: 'blueviolet' }}>Buyer: </span>
+                            {data?.txn?.buyer}
+                          </p>
+                          <p>
+                            <span style={{ color: 'blueviolet' }}>
+                              Seller:{' '}
+                            </span>
+                            {data?.txn?.seller}
+                          </p>
+                        </Td>
+                        <Td textAlign='center'>-</Td>
+                        <Td>
+                          <Badge
+                            variant='outline'
+                            colorScheme={
+                              data?.status === 'cleared' ? 'green' : 'red'
+                            }
+                          >
+                            {data?.status}
+                          </Badge>
+                        </Td>
+                      </Tr>
+                    )
+                  )}
+                </Tbody>
+              </Table>
             ) : (
               <AlertMessage status='warning' error='No pending transaction!' />
             )}

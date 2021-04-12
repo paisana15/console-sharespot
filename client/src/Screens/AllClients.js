@@ -14,8 +14,9 @@ import {
   Button,
   useToast,
   useColorMode,
-  FormControl,
   Input,
+  InputGroup,
+  InputLeftElement,
 } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -31,12 +32,11 @@ import NumberFormat from 'react-number-format';
 import { Bar as Barchart } from 'react-chartjs-2';
 import axios from 'axios';
 import moment from 'moment';
+import { SearchIcon } from '@chakra-ui/icons';
 
 const AllClients = () => {
   const dispatch = useDispatch();
   const toast = useToast();
-  const allClientsGet = useSelector((state) => state.allClientsGet);
-  const { loading, clients, error } = allClientsGet;
   const { colorMode } = useColorMode();
   const [clientSearchText, setClientSearchText] = useState('');
   const [chartData, setChartData] = useState([]);
@@ -47,6 +47,9 @@ const AllClients = () => {
     time: '30',
     bucket: 'day',
   });
+
+  const allClientsGet = useSelector((state) => state.allClientsGet);
+  const { loading, clients, error } = allClientsGet;
 
   const MWSWCWget = useSelector((state) => state.MWSWCWget);
   const { loading: mwLoading, balances, error: mwError } = MWSWCWget;
@@ -383,14 +386,20 @@ const AllClients = () => {
         </Text>
         <Spacer />
         <Box d={{ base: 'block', md: 'flex' }}>
-          <FormControl mr={{ md: 3 }} mb={{ base: 2, md: 0 }}>
+          <InputGroup mr={{ md: 3 }} mb={{ base: 2, md: 0 }}>
+            <InputLeftElement
+              pointerEvents='none'
+              children={<SearchIcon color='gray.300' />}
+            />
             <Input
               variant='flushed'
               size='sm'
+              type='text'
               placeholder='Search client ...'
               onChange={(e) => setClientSearchText(e.target.value)}
             />
-          </FormControl>
+          </InputGroup>
+
           <Link to={`/h/add-new-client`}>
             <Button
               variant='outline'
