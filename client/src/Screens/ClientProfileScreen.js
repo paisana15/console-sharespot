@@ -123,14 +123,14 @@ const ClientProfileScreen = ({ client_details }) => {
             <hr />
           </Heading>
         </Flex>
-        <div className='d-flex flex-column d-md-flex flex-md-row justify-content-space-between'>
+        <div className='d-flex flex-column d-lg-flex flex-lg-row justify-content-space-between'>
           <div className='d-flex flex-column mt-0 mt-md-4 w-50 mb-5'>
             <div className='d-flex align-items-baseline mb-4'>
-              <span className='info-user-dashboard mr-3'>
+              <span className='info-user-dashboard mr-4'>
                 <img className='mr-2' src={UserIcon} alt='User icon' height='20' width='20'/>
                 {client?.username}
               </span>
-              <span className='info-user-dashboard mr-3'>
+              <span className='info-user-dashboard mr-4'>
                 <img className='mr-2' src={PhoneIcon} alt='Phone icon' height='14' width='14'/>
                 {client?.phone_number}
               </span>
@@ -144,9 +144,9 @@ const ClientProfileScreen = ({ client_details }) => {
               {client?.wallet_address}
             </span>
           </div>
-          <div className='d-flex w-50 container-total '>
+          <div className='d-flex flex-column w-50 container-total flex-md-row'>
             <div className='d-flex flex-column justify-content-around'>
-              <div className='d-flex align-items-center justify-content-space-between'>
+              <div className='d-flex align-items-center justify-content-space-between mb-4'>
                 <h5 className='total-text text-nowrap'>Total Rewards</h5>
                 <div className='total-rewards text-nowrap'>
                   <Text style={{ fontWeight: 'bold' }} fontSize='lg'>
@@ -181,7 +181,7 @@ const ClientProfileScreen = ({ client_details }) => {
                 </div>
               </div>
             </div>
-            <div className='d-flex flex-column available-container'>
+            <div className='d-flex flex-column available-container mt-5 mt-md-3'>
             <div className='mx-auto'>
               <h5 className='total-text'>Available</h5>
               <Box
@@ -321,10 +321,17 @@ const ClientProfileScreen = ({ client_details }) => {
         </Box>
         <Box mt='4'>
           <Heading className='ml-4 d-flex' size='md'>
-            <div className="d-flex">
-              <span className='rectangle-hotspot'>
-                 <span className='circle-hotspot'/>
-              </span>
+            <div className='d-flex align-items-center'>
+              <Text
+                className='rectangle-hotspot mr-2' 
+                border='2px'
+                borderColor={colorMode === 'light' ? 'black' : 'white'}
+              >
+                 <Text className='circle-hotspot'
+                  border='2px'
+                  borderColor={colorMode === 'light' ? 'black' : 'white'}
+                />
+              </Text>
             </div>
             Assigned Hotspot ({client?.total_hotspot})&#x0003A;</Heading>
           <div className='d-flex justify-content-end mr-5'>total earned</div>
