@@ -30,14 +30,17 @@
 .total-rewards{
     border: 1px solid #4AAAE3;
     border-radius: 13px;
-    padding: 0.3rem 1.2rem;
-    font-size: 25px!important;
+    padding: 0.5rem 1.5rem;
 }
 
 .total-withdrawn{
     border: 1px solid #F9183E;
     border-radius: 13px;
-    padding: 0.3rem 1.2rem;
+    padding: 0.5rem 1.5rem;
+}
+
+.position-request{
+    margin-top: -2rem;
 }
 
 .available-container{
@@ -94,7 +97,7 @@
     background-color: #313131;
     border-radius: 0px 20px 20px 0px!important;
     color: white;
-    padding: 2rem 1rem;
+    padding: 3rem 1.2rem;
     font-size: 17px!important;
 }
 
@@ -102,11 +105,41 @@
     background-color: #F99918!important;
     border-radius: 24px!important;
     padding: 0.6rem 0.8rem!important;
+    display: flex!important;
+    justify-content: center!important;
+    align-items: center!important;
 }
 
 .badge-percentage {
     padding: 0.6rem 0.8rem!important;
     border-radius: 24px!important;
+    display: flex!important;
+    justify-content: center!important;
+    align-items: center!important;
+}
+
+.rectangle-hotspot{
+    height: 50px;
+    width: 50px;
+    border: 1px solid black;
+    border-radius: 8px;
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.circle-hotspot{
+    position: absolute;
+    height: 30px;
+    width: 30px;
+    border: 1px solid black;
+    border-radius: 50%;
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .badge-date{
@@ -114,6 +147,9 @@
     border: 2px solid #003E9A;
     padding: 0.6rem 0.8rem!important;
     border-radius: 24px!important;
+    display: flex!important;
+    justify-content: center!important;
+    align-items: center!important;
 }
 
 .button-wrapper{
@@ -175,14 +211,38 @@ hr{
     border-bottom: 3px solid $primary-color!important;
 }
 
-// .wrapper-badges{
-//     width:70%;
-//     margin-left: auto;
-// }
+.wrapper-badges{
+    width:70%;
+    margin-left: auto;
+}
+
+.wallet-circle{
+    height: 60px;
+    width: 60px;
+    border: 2px solid $primary-color;
+    background-color: white;
+    top: -16px;
+    right: -16px;
+    position: absolute;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.bg-light-gray{
+    background-color: #fafafa;
+    border-radius: 15px;
+}
 
 .info-user-dashboard{
     display: flex;
     color: #86858e;
+}
+
+.text-black{
+    color: $black!important;
 }
 
 
@@ -192,7 +252,7 @@ hr{
 
 @media (min-width: 768px) {
     .container-total{
-        margin-top: -3.2rem;
+        margin-top: -4rem;
         margin-bottom: 3rem;
         justify-content: space-around;
     }
@@ -201,6 +261,7 @@ hr{
         width: 40%;
         margin-top: 1rem;
         margin-bottom: 1rem;
+        position: relative;
     }
 
     .button-wrapper{
