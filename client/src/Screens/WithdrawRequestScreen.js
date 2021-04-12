@@ -5,7 +5,6 @@ import {
   getWithdrawalRequets,
   rejectWithdrawRequest,
   acceptWithdrawRequest,
-  getAllClients,
 } from '../redux/action/AdminAction';
 import moment from 'moment';
 import { useColorMode } from '@chakra-ui/color-mode';
@@ -38,6 +37,7 @@ const WithdrawRequestScreen = () => {
   const [qrCode, setQRCode] = useState('');
   const [pendingTransactions, setPendingTransaction] = useState([]);
   const [pendingTLoading, setPendingLoading] = useState(true);
+  const [refresh, setRefresh] = useState(false);
 
   const { onOpen, isOpen, onClose } = useDisclosure();
   const {
@@ -69,7 +69,6 @@ const WithdrawRequestScreen = () => {
   } = withdrawAccept;
 
   useEffect(() => {
-    dispatch(getAllClients());
     if (rejectSuccess) {
       onClose();
       toast({
@@ -111,6 +110,20 @@ const WithdrawRequestScreen = () => {
       });
     }
     dispatch(getWithdrawalRequets());
+    return () => {};
+  }, [
+    dispatch,
+    rejectSuccess,
+    rejectError,
+    toast,
+    onClose,
+    onAClose,
+    acceptError,
+    acceptSuccess,
+  ]);
+
+  useEffect(() => {
+    console.log('sd')
     async function fetPendinTransactionData() {
       try {
         const response = await axios.get(
@@ -126,17 +139,11 @@ const WithdrawRequestScreen = () => {
         console.log(error);
       }
     }
-    fetPendinTransactionData();
-  }, [
-    dispatch,
-    rejectSuccess,
-    rejectError,
-    toast,
-    onClose,
-    onAClose,
-    acceptError,
-    acceptSuccess,
-  ]);
+    if (refresh || !refresh) {
+      fetPendinTransactionData();
+    }
+    return () => {};
+  }, [refresh]);
 
   const rejectHandler = () => {
     dispatch(rejectWithdrawRequest(wrId));
@@ -258,10 +265,22 @@ const WithdrawRequestScreen = () => {
           />
         )}
         <Box mt='3'>
-          <Text borderBottom='1px' borderColor='gray.400' pb='1'>
-            Transaction Activity (
-            {pendingTransactions ? pendingTransactions?.length : '0'}){' '}
-          </Text>
+          <Box d={{ md: 'flex' }}>
+            <Text borderBottom='1px' borderColor='gray.400' pb='1'>
+              Transaction Activity (
+              {pendingTransactions ? pendingTransactions?.length : '0'}){' '}
+            </Text>
+            <Spacer />
+            <Button
+              colorScheme='green'
+              leftIcon={<i className='fas fa-sync-alt'></i>}
+              variant='outline'
+              size='xs'
+              onClick={() => setRefresh(!refresh)}
+            >
+              Refresh
+            </Button>
+          </Box>
           <Box p='2' className='assigned_hotspot_wrapper' mt='2'>
             {pendingTLoading ? (
               <Loader />
@@ -302,13 +321,11 @@ const WithdrawRequestScreen = () => {
                         <Td>Hotspot Ownership Transfer</Td>
                         <Td>
                           <p>
-                            <span style={{ color: 'blueviolet' }}>Buyer: </span>
+                            <span style={{ color: 'blueviolet' }}>To : </span>
                             {data?.txn?.buyer}
                           </p>
                           <p>
-                            <span style={{ color: 'blueviolet' }}>
-                              Seller:{' '}
-                            </span>
+                            <span style={{ color: 'blueviolet' }}>From : </span>
                             {data?.txn?.seller}
                           </p>
                         </Td>
