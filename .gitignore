@@ -3,3 +3,6 @@ node_modules
 /hotspot-reward.iml
 mail.js
 /dashboard.iml
+
+# Local Netlify folder
+.netlify

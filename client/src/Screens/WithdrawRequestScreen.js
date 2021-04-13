@@ -123,7 +123,6 @@ const WithdrawRequestScreen = () => {
   ]);
 
   useEffect(() => {
-    console.log('sd')
     async function fetPendinTransactionData() {
       try {
         const response = await axios.get(
@@ -298,7 +297,15 @@ const WithdrawRequestScreen = () => {
                   {pendingTransactions?.map((data, idx) =>
                     data?.txn?.type === 'payment_v2' ? (
                       <Tr key={idx}>
-                        <Td>Payment</Td>
+                        <Td>
+                          <a
+                            target='_blank'
+                            rel='noreferrer'
+                            href={`https://explorer.helium.com/txns/${data?.hash}`}
+                          >
+                            Payment
+                          </a>
+                        </Td>
                         <Td>{data?.txn?.payments?.[0]?.payee}</Td>
                         <Td textAlign='center'>
                           {(
@@ -318,7 +325,15 @@ const WithdrawRequestScreen = () => {
                       </Tr>
                     ) : (
                       <Tr key={idx}>
-                        <Td>Hotspot Ownership Transfer</Td>
+                        <Td>
+                          <a
+                            target='_blank'
+                            rel='noreferrer'
+                            href={`https://explorer.helium.com/txns/${data?.hash}`}
+                          >
+                            Hotspot Ownership Transfer
+                          </a>
+                        </Td>
                         <Td>
                           <p>
                             <span style={{ color: 'blueviolet' }}>To : </span>
