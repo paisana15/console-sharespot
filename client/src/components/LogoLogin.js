@@ -2,14 +2,14 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import logo from '../assets/images/logo.png';
 
-const Logo = () => {
+const LogoLogin = () => {
   return (
     <div>
         <Link to='/'>
-          <img height='110' width='110' src={logo} alt='Sharespot Logo'/>
+          <img height='150' width='150' src={logo} alt='Sharespot Logo'/>
         </Link>
     </div>
   );
 };
 
-export default Logo;
+export default LogoLogin;
