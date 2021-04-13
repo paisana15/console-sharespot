@@ -48,12 +48,14 @@ const ClientDetails = () => {
             )}
           />
           <Route
+            exact
             path={`${path}/edit`}
             component={() => (
               <ClientProfileEditByClient client_details={clientData} />
             )}
           />
           <Route
+            exact
             path={`${path}/withdraw`}
             component={() => (
               <WithDrawScreen

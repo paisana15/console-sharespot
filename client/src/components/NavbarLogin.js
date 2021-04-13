@@ -1,6 +1,6 @@
 import { Box, Container, Flex } from '@chakra-ui/layout';
 import React, { useState } from 'react';
-import Logo from './Logo';
+import LogoLogin from './LogoLogin';
 
 const NavbarLogin = () => {
   const [showMenu, setShow] = useState(false);
@@ -10,8 +10,8 @@ const NavbarLogin = () => {
       <Container maxW='container.xl'>
         <Flex as='nav' align='center' justify='space-between' wrap='wrap'>
           <Box display='flex' alignItems='center'>
-            <Logo />
-            <span className="border-white-left"/>
+            <LogoLogin />
+            <span className='border-white-left'/>
             <h3 className='font-weight-lighter'>
               wallet
               <span className='font-weight-bold'>dashboard</span>
@@ -27,7 +27,7 @@ const NavbarLogin = () => {
             display={{ base: showMenu ? 'block' : 'none', md: 'flex' }}
             alignItems='center'
           >
-             <a href="mailto:support@sharespot.pt" target="_blank" rel="noopener noreferrer">
+             <a href='mailto:support@sharespot.pt' target='_blank' rel='noopener noreferrer'>
                 <span>support@sharespot.pt</span>
               </a>
           </Box>

@@ -1,5 +1,7 @@
 $primary-color: #44BBA4;
 $secondary-color: #707070;
+$blue: #4AAAE3;
+$purple: #5e4aab;
 $black: #0E0C1C;
 
 .navbar-login{
@@ -44,6 +46,10 @@ $black: #0E0C1C;
     margin-left: 1.5rem;
     border-left: 1px solid white;
     height: 50px;
+}
+
+hr{
+  border-top: 0!important;
 }
 
 .circle-help{
@@ -169,6 +175,10 @@ $black: #0E0C1C;
   transform: translate(-50%, -50%);
   margin: 0 auto;
   color: white;
+}
+
+.text-red{
+  color:#e53e3e!important;
 }
 
 @media (min-width: 576px) { 

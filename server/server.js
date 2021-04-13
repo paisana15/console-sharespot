@@ -34,7 +34,7 @@ app.use(notFound);
 app.use(errorHandler);
 
 // server listening
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5001;
 app.listen(PORT, 'api', () => {
   console.log(`\n---Server listening on port ${PORT}---`);
   setInterval(async () => {

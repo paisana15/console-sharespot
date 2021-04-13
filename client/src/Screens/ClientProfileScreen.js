@@ -6,21 +6,25 @@ import {
   Heading,
   Spacer,
   Badge,
-  Tooltip,
   useColorMode,
   IconButton,
+  Button,
 } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
-import { useHistory, useRouteMatch } from 'react-router';
+import { useHistory } from 'react-router';
 import AlertMessage from '../components/Alert';
 import moment from 'moment';
 import NumberFormat from 'react-number-format';
 import axios from 'axios';
 import { Bar as Barchart } from 'react-chartjs-2';
 import Loader from '../components/Loader';
+import UserIcon from '../assets/icons/user-icon.svg';
+import PhoneIcon from '../assets/icons/phone-icon.svg';
+import MailIcon from '../assets/icons/mail-icon.svg';
+import WalletUserIcon from '../assets/icons/wallet-user-icon.svg';
+import WalletCircleIcon from '../assets/icons/wallet-circle-icon.svg';
 
 const ClientProfileScreen = ({ client_details }) => {
-  const { url } = useRouteMatch();
   const { colorMode } = useColorMode();
   const [client, setClient] = useState({});
   const [client_hotspot, setClientHotspot] = useState([]);
@@ -107,280 +111,369 @@ const ClientProfileScreen = ({ client_details }) => {
 
   return (
     <>
-      <Box>
-        <Flex alignItems='center'>
+      <Box className='mt-4'>
+        <Flex alignItems='center' className='mb-lg-4'>
           <Heading
-            textColor={`${colorMode === 'light' ? 'gray.600' : '#b3bfd4'}`}
+            className='title-underline'
+            textColor={`${colorMode === 'light' ? '#0E0C1C' : 'white'}`}
             size='lg'
             mb='1'
           >
             {client?.firstname + ' ' + client?.lastname}
+            &nbsp;Wallet
+            <hr />
           </Heading>
-          <Tooltip hasArrow label='Edit Profile' bg='gray.300' color='black'>
-            <span
-              style={{ color: '#8594af', marginLeft: 5, cursor: 'pointer' }}
-            >
-              <Link to={`${url}/edit`}>
-                <i className='fas fa-edit'></i>
-              </Link>
-            </span>
-          </Tooltip>
         </Flex>
-        <Box display={{ md: 'flex' }}>
-          <Text color='gray.500' fontSize='sm'>
-            <i className='fas fa-user'></i> Username : {client?.username}
-          </Text>
-          <Spacer />
-          <Text color='gray.500' fontSize='sm'>
-            <i className='fas fa-at'></i> Email : {client?.email}
-          </Text>
-        </Box>
-        <Box display={{ md: 'flex' }}>
-          <Text color='gray.500' fontSize='sm'>
-            <i className='fas fa-phone-alt'></i> Phone : {client?.phone_number}
-          </Text>
-          <Spacer />
-          <Text color='gray.500' fontSize='sm'>
-            <i className='fas fa-wallet'></i> Wallet Address :{' '}
-            {client?.wallet_address}
-          </Text>
-        </Box>
-      </Box>
-      <Box d={{ md: 'flex' }} color='white' mt='3'>
-        <Box
-          boxShadow='base'
-          textAlign='center'
-          p='4'
-          borderRadius='lg'
-          bg='red.400'
-          w={{ base: '100%', md: '30%' }}
-          mb={{ base: '3', sm: '3', md: '3' }}
-        >
-          <Heading size='md'>Total Withdrawn</Heading>
-          <Text style={{ fontWeight: 'bold' }} fontSize='3xl'>
-            <NumberFormat
-              prefix='HNT '
-              thousandSeparator={true}
-              displayType='text'
-              value={
-                client_wallet ? client_wallet?.totalWithdraw?.toFixed(2) : '0'
-              }
-            />
-          </Text>
-        </Box>
-        <Spacer />
-        <Box
-          boxShadow='base'
-          textAlign='center'
-          p='4'
-          borderRadius='lg'
-          bg='green.400'
-          w={{ base: '100%', md: '30%' }}
-          mb={{ base: '3', sm: '3', md: '3' }}
-        >
-          <Heading size='md'>Total Rewards</Heading>
-          <Text style={{ fontWeight: 'bold' }} fontSize='3xl'>
-            <NumberFormat
-              prefix='HNT '
-              thousandSeparator={true}
-              displayType='text'
-              value={
-                client_wallet ? client_wallet?.totalRewards?.toFixed(2) : '0'
-              }
-            />
-          </Text>
-        </Box>
-        <Spacer />
-        <Box
-          boxShadow='base'
-          textAlign='center'
-          p='4'
-          borderRadius='lg'
-          bg='blue.400'
-          w={{ base: '100%', md: '30%' }}
-          mb={{ base: '3', sm: '3', md: '3' }}
-        >
-          <Heading size='md'>Balance</Heading>
-          <Text style={{ fontWeight: 'bold' }} fontSize='3xl'>
-            <NumberFormat
-              prefix='HNT '
-              thousandSeparator={true}
-              displayType='text'
-              value={
-                client_wallet ? client_wallet?.wallet_balance?.toFixed(2) : '0'
-              }
-            />
-          </Text>
-        </Box>
-      </Box>
-      <Box>
-        <Box boxShadow='md' borderRadius='md' p='3'>
-          {chartData?.length > 0 ? (
-            <Box p='3'>
-              <Text fontSize='lg' fontWeight='semibold'>
-                Daily Reward
-              </Text>
-              <Barchart
-                data={{
-                  labels: chartData?.map((data) => data?.date),
-                  datasets: [
-                    {
-                      label: 'Total Rewards',
-                      data: chartData?.map((data) => data?.total.toFixed(2)),
-                      backgroundColor: 'rgba(153, 102, 255, 0.2)',
-                      borderColor: 'rgb(153, 102, 255)',
-                      borderWidth: 1,
-                    },
-                  ],
-                }}
-                options={{
-                  scales: {
-                    yAxes: [
-                      {
-                        ticks: {
-                          beginAtZero: true,
-                        },
-                      },
-                    ],
-                  },
-                }}
+        <div className='d-flex flex-column d-lg-flex flex-lg-row justify-content-space-between'>
+        <div className='mb-4'>
+          <div className='d-flex flex-column flex-lg-row mb-0 mb-lg-4'>
+          <div className='col-12 col-lg-3 p-0 mb-3 mt-4 mt-lg-0 mb-lg-0 mr-4'> 
+            <span className='info-user-dashboard'>
+              <img
+                className='mr-2'
+                src={UserIcon}
+                alt='User icon'
+                height='20'
+                width='20'
               />
-              <Box pb='2' d={{ md: 'flex' }} mt='3'>
-                <Badge variant='outline' colorScheme='green'>
-                  Last 30 Days Reward : HNT{' '}
-                  {chartDaysLoading ? (
-                    <Loader xs />
-                  ) : (
-                    thirtDR && thirtDR.toFixed(2)
-                  )}
-                </Badge>
-                <Spacer />
-                <Badge variant='outline' colorScheme='blue'>
-                  Last 7 Days Reward : HNT{' '}
-                  {chartDaysLoading ? (
-                    <Loader xs />
-                  ) : (
-                    sevenDR && sevenDR.toFixed(2)
-                  )}
-                </Badge>
-                <Spacer />
-
-                <Badge variant='outline' colorScheme='orange'>
-                  Last 24 Hours Reward : HNT{' '}
-                  {chartDaysLoading ? (
-                    <Loader xs />
-                  ) : (
-                    lastDR && lastDR.toFixed(2)
-                  )}
-                </Badge>
-              </Box>
-            </Box>
-          ) : null}
-        </Box>
-      </Box>
-      <Box mt='4'>
-        <Heading size='xs'>Assigned Hotspot ({client?.total_hotspot})</Heading>
-        <Box
-          boxShadow='md'
-          borderRadius='md'
-          p='5'
-          className='assigned_hotspot_wrapper'
-        >
-          {client_hotspot?.length > 0 ? (
-            client_hotspot.map((hotspot) => (
-              <Box
-                display={{ md: 'flex' }}
-                key={hotspot?._id}
-                p='4'
-                borderRadius='lg'
-                mb='3'
-                boxShadow='base'
-                bg={colorMode === 'light' ? '#f4f5f7' : '#303744'}
-              >
-                <Box d={{ md: 'flex' }}>
-                  <Box>
-                    <IconButton
-                      mr={{ md: 2 }}
-                      color='blue.400'
-                      aria-label='Search database'
-                      icon={<i className='far fa-chart-bar'></i>}
-                      onClick={() =>
-                        selectHandler(
-                          hotspot?.hotspot_address,
-                          hotspot?.percentage
-                        )
+              {client?.username}
+            </span>
+            </div>
+            <div className='col-12 col-lg-3 p-0 mb-3 mb-lg-0 mr-md-4'>
+            <span className='info-user-dashboard '>
+              <img
+                className='mr-2'
+                src={PhoneIcon}
+                alt='Phone icon'
+                height='14'
+                width='14'
+              />
+              {client?.phone_number}
+            </span>
+            </div>
+            <div className='col-12 col-lg-3 p-0 mb-3 mb-lg-0'>
+            <span className='info-user-dashboard'>
+              <img
+                className='mr-2'
+                src={MailIcon}
+                alt='Mail icon'
+                height='23'
+                width='23'
+              />
+              {client?.email}
+            </span>
+            </div>
+            </div>
+            <div className='col-12 col-lg-12 p-0 mb-3 mb-lg-0'>
+            <span className='d-flex info-user-dashboard word-break align-items-center'>
+              <img
+                className='mr-2'
+                src={WalletUserIcon}
+                alt='Wallet User icon'
+                height='23'
+                width='23'
+              />
+              {client?.wallet_address}
+            </span>
+            </div>
+          </div>
+          <div className='d-flex flex-column container-total flex-md-row'>
+            <div className='total-wrapper d-flex flex-column'>
+              <div className='d-flex align-items-center justify-content-space-between mb-4 mb-md-0'>
+                <h5 className='total-text text-nowrap'>Total Rewards</h5>
+                <div className='total-rewards text-nowrap mb-md-3 mb-lg-0'>
+                  <Text style={{ fontWeight: 'bold' }} fontSize='lg'>
+                    <NumberFormat
+                      suffix=' HNT'
+                      thousandSeparator={true}
+                      displayType='text'
+                      value={
+                        client_wallet
+                          ? client_wallet?.totalRewards?.toFixed(0)
+                          : '0'
                       }
                     />
-                  </Box>
-                  <Box>
-                    <Heading size='sm'>
-                      <a
-                        target='_blank'
-                        rel='noreferrer'
-                        href={`https://explorer.helium.com/hotspots/${hotspot?.hotspot_address}`}
-                      >
-                        {hotspot?.hotspot_name}
-                      </a>
-                    </Heading>
-                    <Box d={{ sm: 'flex' }} mt='2'>
-                      <Text fontSize='xs' mr='1'>
-                        Percentage
-                      </Text>
-                      <Badge colorScheme={'green'}>
-                        <Text fontSize='xs'>{hotspot?.percentage + '%'}</Text>
-                      </Badge>
-                      <Badge
-                        ml='10px'
-                        colorScheme={
-                          hotspot?.relation_type === 'host'
-                            ? 'purple'
-                            : hotspot?.relation_type === 'referrer'
-                            ? 'red'
-                            : 'pink'
+                  </Text>
+                </div>
+              </div>
+              <div className='d-flex align-items-center justify-content-space-between'>
+                <h5 className='total-text text-nowrap'>Total Withdrawn</h5>
+                <div className='total-withdrawn text-nowrap'>
+                  <Text style={{ fontWeight: 'bold' }} fontSize='lg'>
+                    <NumberFormat
+                      suffix=' HNT'
+                      thousandSeparator={true}
+                      displayType='text'
+                      value={
+                        client_wallet
+                          ? client_wallet?.totalWithdraw?.toFixed(0)
+                          : '0'
+                      }
+                    />
+                  </Text>
+                </div>
+              </div>
+            </div>
+            <div className='d-flex flex-column available-container mt-5 mt-md-0 mt-lg-2'>
+              <div className='mx-auto'>
+                <h5 className='total-text'>Available</h5>
+                <Box
+                  className='wallet-circle'
+                  bg={colorMode === 'light' ? '#fff' : '#0E0C1C'}
+                >
+                  <img
+                    src={WalletCircleIcon}
+                    height='28'
+                    width='28'
+                    alt='Wallet Circle'
+                  />
+                </Box>
+                <Text style={{ fontWeight: 'bold' }} fontSize='2xl'>
+                  <NumberFormat
+                    suffix=' HNT'
+                    thousandSeparator={true}
+                    displayType='text'
+                    value={
+                      client_wallet
+                        ? client_wallet?.wallet_balance?.toFixed(2)
+                        : '0'
+                    }
+                  />
+                </Text>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Box>
+      <Box
+        className='spacing-dashboard pl-md-4'
+        backgroundColor='#fafafa'
+        borderRadius='15px'
+        bg={colorMode === 'light' ? '#fafafa' : '#1D1A30'}
+      >
+        <Box>
+          <div className='button-wrapper'>
+            <Link className='position-request' to={`/c/profile/withdraw`}>
+              <Button
+                className='button-dashboard bg-blue'
+                w={{ base: '100%' }}
+                mr={{ md: 2 }}
+                mt={{ base: 2, md: 0 }}
+                // onClick={getRewardHandler}
+                variant={colorMode === 'dark' ? 'outline' : 'solid'}
+              >
+                <div className='d-flex'>
+                  <i style={{ marginRight: 5 }} className='fas fa-download'></i>
+                  <div className='d-flex flex-column'>
+                    <span>Request</span>
+                    <span>Withdraw</span>
+                  </div>
+                </div>
+              </Button>
+            </Link>
+            {/* <Button
+              className='button-dashboard bg-purple ml-3'
+              w={{ base: '100%', md: 'auto' }}
+              mr={{ md: 2 }}
+              mt={{ base: 2, md: 0 }}
+              // onClick={getRewardHandler}
+              variant={colorMode === 'dark' ? 'outline' : 'solid'}
+            >
+              <div className='d-flex'>
+                <i style={{ marginRight: 5 }} className='fas fa-redo'></i>
+                <div className='d-flex flex-column'>
+                  <span>
+                    Update
+                  </span>
+                  <span>
+                    Rewards
+                  </span>
+                </div>
+              </div> 
+            </Button> */}
+          </div>
+          <Box borderRadius='md'>
+            {chartData?.length > 0 ? (
+              <Box p='3'>
+                <Heading className='ml-4' size='md'>
+                  Daily Rewards
+                </Heading>
+                <Barchart
+                  data={{
+                    labels: chartData?.map((data) => data?.date),
+                    datasets: [
+                      {
+                        label: 'Total Rewards',
+                        data: chartData?.map((data) => data?.total.toFixed(2)),
+                        backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                        borderColor: 'rgb(153, 102, 255)',
+                        borderWidth: 1,
+                      },
+                    ],
+                  }}
+                  options={{
+                    scales: {
+                      yAxes: [
+                        {
+                          ticks: {
+                            beginAtZero: true,
+                          },
+                        },
+                      ],
+                    },
+                  }}
+                />
+                <Box pb='2' d={{ md: 'flex' }} mt='3'>
+                  <Badge variant='outline' colorScheme='green'>
+                    Last 30 Days Reward : HNT{' '}
+                    {chartDaysLoading ? (
+                      <Loader xs />
+                    ) : (
+                      thirtDR && thirtDR.toFixed(2)
+                    )}
+                  </Badge>
+                  <Spacer />
+                  <Badge variant='outline' colorScheme='blue'>
+                    Last 7 Days Reward : HNT{' '}
+                    {chartDaysLoading ? (
+                      <Loader xs />
+                    ) : (
+                      sevenDR && sevenDR.toFixed(2)
+                    )}
+                  </Badge>
+                  <Spacer />
+
+                  <Badge variant='outline' colorScheme='orange'>
+                    Last 24 Hours Reward : HNT{' '}
+                    {chartDaysLoading ? (
+                      <Loader xs />
+                    ) : (
+                      lastDR && lastDR.toFixed(2)
+                    )}
+                  </Badge>
+                </Box>
+              </Box>
+            ) : null}
+          </Box>
+        </Box>
+        <Box className='mt-5 mt-lg-4'>
+          <Heading className='ml-4 mb-4 d-flex align-items-center' size='md'>
+            <div className='d-flex'>
+              <Text
+                className='rectangle-hotspot mr-2'
+                border='2px'
+                borderColor={colorMode === 'light' ? 'black' : 'white'}
+              >
+                <Text
+                  className='circle-hotspot'
+                  border='2px'
+                  borderColor={colorMode === 'light' ? 'black' : 'white'}
+                />
+              </Text>
+            </div>
+            Assigned Hotspot ({client?.total_hotspot})&#x0003A;
+          </Heading>
+          <div className='justify-content-end mr-5 d-none d-md-flex'>
+            total earned
+          </div>
+          <Box borderRadius='md' p='5' className='assigned_hotspot_wrapper'>
+            {client_hotspot?.length > 0 ? (
+              client_hotspot.map((hotspot) => (
+                <Box
+                  className='mb-4'
+                  display={{ md: 'flex' }}
+                  key={hotspot?._id}
+                  borderRadius='15px'
+                  bg={colorMode === 'light' ? '#f3f3f3' : '#0E0C1C'}
+                >
+                  <Box d={{ md: 'flex' }}>
+                    <Box className='d-flex align-items-center ml-3 pt-3 pt-md-0'>
+                      <IconButton
+                        mr={{ md: 2 }}
+                        color='blue.400'
+                        aria-label='Search database'
+                        icon={<i className='far fa-chart-bar'></i>}
+                        onClick={() =>
+                          selectHandler(
+                            hotspot?.hotspot_address,
+                            hotspot?.percentage
+                          )
                         }
-                      >
-                        <Text fontSize='xs'>{hotspot?.relation_type}</Text>
-                      </Badge>
-                      <Text fontSize='xs' ml='2' mr='1'>
-                        From
-                      </Text>
-                      <Badge colorScheme='blue'>
-                        <Text fontSize='xs'>
-                          {moment(hotspot?.startDate).format('YYYY-MM-DD')}
-                        </Text>
-                      </Badge>
+                      />
+                    </Box>
+                    <Box className='d-flex flex-column ml-2 justify-content-center w-100 pb-3 pl-3 pr-3 pt-0 p-md-3'>
+                      <Heading size='md' className='mb-3 mt-4 mt-md-0'>
+                        <a
+                          target='_blank'
+                          rel='noreferrer'
+                          href={`https://explorer.helium.com/hotspots/${hotspot?.hotspot_address}`}
+                        >
+                          {hotspot?.hotspot_name}
+                        </a>
+                      </Heading>
+                      <Box d={{ sm: 'flex' }}>
+                        <Flex className='wrapper-badges' d={{ sm: 'flex' }}>
+                          <Badge
+                            className='badge-relation-type mr-1 mr-md-3 ml-0'
+                            ml='10px'
+                            colorScheme={
+                              hotspot?.relation_type === 'host'
+                                ? '#F99918'
+                                : hotspot?.relation_type === 'referrer'
+                                ? '#4AAAE3'
+                                : 'pink'
+                            }
+                          >
+                            <span className='text-white'>
+                              {hotspot?.relation_type}
+                            </span>
+                          </Badge>
+                          <Badge
+                            className='badge-percentage mr-1 mr-md-3'
+                            color={'#fff'}
+                            backgroundColor={'#44BBA4'}
+                          >
+                            <Text fontSize='xs'>
+                              {hotspot?.percentage + '%'}
+                            </Text>
+                          </Badge>
+                          <Badge
+                            className='badge-date'
+                            backgroundColor={'transparent'}
+                          >
+                            <Text fontSize='xs'>
+                              {moment(hotspot?.startDate).format('YYYY-MM-DD')}
+                            </Text>
+                          </Badge>
+                        </Flex>
+                      </Box>
                     </Box>
                   </Box>
+                  <Spacer display={{ base: 'none', md: 'block' }} />
+                  <div className='text-center mt-3 mt-md-0'>
+                    <Box>
+                      <Text
+                        className='total-earned-singular'
+                        fontWeight='semibold'
+                        bg={colorMode === 'light' ? '#313131' : '#292446'}
+                        color={colorMode === 'light' ? 'white' : ''}
+                        fontSize='sm'
+                      >
+                        <NumberFormat
+                          prefix='HNT '
+                          thousandSeparator={true}
+                          displayType='text'
+                          value={hotspot?.total_earned.toFixed(2)}
+                        />
+                      </Text>
+                    </Box>
+                  </div>
                 </Box>
-                <Spacer display={{ base: 'none', md: 'block' }} />
-                <Flex
-                  mt={{ base: '3', md: '0' }}
-                  textAlign='right'
-                  alignItems='center'
-                >
-                  <Box mr='2'>
-                    <Text fontSize='sm' color='grey'>
-                      Total Earned
-                    </Text>
-                    <Text
-                      fontWeight='semibold'
-                      color={colorMode === 'light' ? 'grey' : 'orange.200'}
-                      fontSize='sm'
-                    >
-                      <NumberFormat
-                        prefix='HNT '
-                        thousandSeparator={true}
-                        displayType='text'
-                        value={hotspot?.total_earned.toFixed(2)}
-                      />
-                    </Text>
-                  </Box>
-                </Flex>
-              </Box>
-            ))
-          ) : (
-            <AlertMessage status='error' error='No hotspot assigned yet!' />
-          )}
+              ))
+            ) : (
+              <AlertMessage status='error' error='No hotspot assigned yet!' />
+            )}
+          </Box>
         </Box>
       </Box>
     </>

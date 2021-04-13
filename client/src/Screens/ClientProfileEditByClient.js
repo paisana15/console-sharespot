@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 import MyTextField from '../components/MyTextField';
+import MyTextFieldReadOnly from '../components/MyTextFieldReadOnly';
 import { Heading, Box, Button, useToast, useColorMode } from '@chakra-ui/react';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateClientByClient } from '../redux/action/ClientAction';
@@ -132,7 +133,7 @@ const ClientProfileEditByClient = ({ client_details }) => {
                 placeholder='Client phone number'
               />
               <div className='d-flex flex-column'>
-                <MyTextField
+                <MyTextFieldReadOnly
                   className='wallet-address-input mb-0'
                   type='text'
                   label='Wallet Address'
