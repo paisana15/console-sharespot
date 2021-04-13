@@ -15,6 +15,10 @@
     overflow-y: scroll;
 }
 
+.spacing-dashboard {
+    margin-top: 4rem;
+}
+
 .border-white-left-dashboard{
     padding-right: 1.5rem;
     margin-left: 1.5rem;
@@ -49,6 +53,15 @@
     color: white;
     border-radius: 13px;
     position: relative!important;
+    justify-content: center;
+}
+
+// .phone-mail-wrapper{
+//     width: 100%;
+// }
+
+.total-wrapper {
+    justify-content: space-evenly;
 }
 
 .word-break{
@@ -95,7 +108,7 @@
     background-color: #313131;
     border-radius: 0px 20px 20px 0px!important;
     color: white;
-    padding: 3rem 1.2rem;
+    padding: 1.2rem 1.2rem;
     font-size: 17px!important;
 }
 
@@ -138,6 +151,10 @@
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.container-total{
+    width: 100%!important;
 }
 
 .badge-date{
@@ -211,7 +228,7 @@ hr{
 
 .wrapper-badges{
     width:70%;
-    margin-left: auto;
+    display: flex;
 }
 
 .wallet-circle{
@@ -225,8 +242,9 @@ hr{
     align-items: center;
     justify-content: center;
     text-align: center;
-    top: -21px;
-    right: -30px;
+    top: -14px;
+    right: -16px;
+    transform: scale(0.9);
 }
 
 .bg-light-gray{
@@ -249,8 +267,26 @@ hr{
 }
 
 @media (min-width: 768px) {
+
     .available-container{
         margin-left: 3rem;
+        width: 50%;
+    }
+
+    .wallet-circle{
+        right: -26px;
+    }
+
+    .total-earned-singular{
+        background-color: #313131;
+        border-radius: 0px 20px 20px 0px!important;
+        color: white;
+        padding: 3rem 1.2rem;
+        font-size: 17px!important;
+    }
+
+    .wrapper-badges{
+        width:90%;
     }
 }
 
@@ -259,13 +295,20 @@ hr{
         margin-top: -4rem;
         margin-bottom: 3rem;
         justify-content: space-around;
+        width: 50%!important;
+    }
+
+    .wrapper-badges{
+        width: 70%;
+    }
+
+    .available-container{
+        width: 100%;
     }
 
     .available-container{
         width: 40%;
-        margin-top: 1rem;
-        margin-bottom: 1rem;
-        position: relative;
+        margin-bottom: .5rem;
     }
 
     .button-wrapper{
@@ -276,4 +319,9 @@ hr{
 }
 
 @media (min-width: 1200px) {
+
+    .wallet-circle{
+        transform: scale(1);
+    }
+
 }

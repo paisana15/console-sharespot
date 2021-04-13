@@ -8,7 +8,7 @@ import {
   Badge,
   useColorMode,
   IconButton,
-  Button
+  Button,
 } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import { useHistory } from 'react-router';
@@ -112,7 +112,7 @@ const ClientProfileScreen = ({ client_details }) => {
   return (
     <>
       <Box className='mt-4'>
-        <Flex alignItems='center'>
+        <Flex alignItems='center' className='mb-lg-4'>
           <Heading
             className='title-underline'
             textColor={`${colorMode === 'light' ? '#0E0C1C' : 'white'}`}
@@ -120,35 +120,68 @@ const ClientProfileScreen = ({ client_details }) => {
             mb='1'
           >
             {client?.firstname + ' ' + client?.lastname}
+            &nbsp;Wallet
             <hr />
           </Heading>
         </Flex>
         <div className='d-flex flex-column d-lg-flex flex-lg-row justify-content-space-between'>
-          <div className='d-flex flex-column mt-0 mt-md-4 w-50 mb-5'>
-            <div className='d-flex align-items-baseline mb-4'>
-              <span className='info-user-dashboard mr-4'>
-                <img className='mr-2' src={UserIcon} alt='User icon' height='20' width='20'/>
-                {client?.username}
-              </span>
-              <span className='info-user-dashboard mr-4'>
-                <img className='mr-2' src={PhoneIcon} alt='Phone icon' height='14' width='14'/>
-                {client?.phone_number}
-              </span>
-              <span className='info-user-dashboard'>
-                <img className='mr-2' src={MailIcon} alt='Mail icon' height='23' width='23'/>
-                {client?.email}
-              </span>
+        <div className='mb-4'>
+          <div className='d-flex flex-column flex-lg-row mb-0 mb-lg-4'>
+          <div className='col-12 col-lg-3 p-0 mb-3 mt-4 mt-lg-0 mb-lg-0 mr-4'> 
+            <span className='info-user-dashboard'>
+              <img
+                className='mr-2'
+                src={UserIcon}
+                alt='User icon'
+                height='20'
+                width='20'
+              />
+              {client?.username}
+            </span>
             </div>
+            <div className='col-12 col-lg-3 p-0 mb-3 mb-lg-0 mr-md-4'>
+            <span className='info-user-dashboard '>
+              <img
+                className='mr-2'
+                src={PhoneIcon}
+                alt='Phone icon'
+                height='14'
+                width='14'
+              />
+              {client?.phone_number}
+            </span>
+            </div>
+            <div className='col-12 col-lg-3 p-0 mb-3 mb-lg-0'>
+            <span className='info-user-dashboard'>
+              <img
+                className='mr-2'
+                src={MailIcon}
+                alt='Mail icon'
+                height='23'
+                width='23'
+              />
+              {client?.email}
+            </span>
+            </div>
+            </div>
+            <div className='col-12 col-lg-12 p-0 mb-3 mb-lg-0'>
             <span className='d-flex info-user-dashboard word-break align-items-center'>
-              <img className='mr-2' src={WalletUserIcon} alt='Wallet User icon' height='23' width='23'/>
+              <img
+                className='mr-2'
+                src={WalletUserIcon}
+                alt='Wallet User icon'
+                height='23'
+                width='23'
+              />
               {client?.wallet_address}
             </span>
+            </div>
           </div>
-          <div className='d-flex flex-column w-50 container-total flex-md-row'>
-            <div className='d-flex flex-column justify-content-around'>
-              <div className='d-flex align-items-center justify-content-space-between mb-4'>
+          <div className='d-flex flex-column container-total flex-md-row'>
+            <div className='total-wrapper d-flex flex-column'>
+              <div className='d-flex align-items-center justify-content-space-between mb-4 mb-md-0'>
                 <h5 className='total-text text-nowrap'>Total Rewards</h5>
-                <div className='total-rewards text-nowrap'>
+                <div className='total-rewards text-nowrap mb-md-3 mb-lg-0'>
                   <Text style={{ fontWeight: 'bold' }} fontSize='lg'>
                     <NumberFormat
                       suffix=' HNT'
@@ -181,43 +214,49 @@ const ClientProfileScreen = ({ client_details }) => {
                 </div>
               </div>
             </div>
-            <div className='d-flex flex-column available-container mt-5 mt-md-3'>
-            <div className='mx-auto'>
-              <h5 className='total-text'>Available</h5>
-              <Box
-                className="wallet-circle"
-                bg={colorMode === 'light' ? '#fff' : '#0E0C1C'}
-              >
-               <img src={WalletCircleIcon} height='28' width='28' alt='Wallet Circle'/>
-              </Box>
-              <Text style={{ fontWeight: 'bold' }} fontSize='2xl'>
-                <NumberFormat
-                  suffix=' HNT'
-                  thousandSeparator={true}
-                  displayType='text'
-                  value={
-                    client_wallet
-                      ? client_wallet?.wallet_balance?.toFixed(2)
-                      : '0'
-                  }
-                />
-              </Text>
+            <div className='d-flex flex-column available-container mt-5 mt-md-0 mt-lg-2'>
+              <div className='mx-auto'>
+                <h5 className='total-text'>Available</h5>
+                <Box
+                  className='wallet-circle'
+                  bg={colorMode === 'light' ? '#fff' : '#0E0C1C'}
+                >
+                  <img
+                    src={WalletCircleIcon}
+                    height='28'
+                    width='28'
+                    alt='Wallet Circle'
+                  />
+                </Box>
+                <Text style={{ fontWeight: 'bold' }} fontSize='2xl'>
+                  <NumberFormat
+                    suffix=' HNT'
+                    thousandSeparator={true}
+                    displayType='text'
+                    value={
+                      client_wallet
+                        ? client_wallet?.wallet_balance?.toFixed(2)
+                        : '0'
+                    }
+                  />
+                </Text>
               </div>
             </div>
           </div>
         </div>
       </Box>
       <Box
-        className='mt-5 pl-4'
+        className='spacing-dashboard pl-md-4'
         backgroundColor='#fafafa'
         borderRadius='15px'
-        bg={colorMode === 'light' ? '#fafafa' : '#1D1A30'}>
+        bg={colorMode === 'light' ? '#fafafa' : '#1D1A30'}
+      >
         <Box>
           <div className='button-wrapper'>
             <Link className='position-request' to={`/c/profile/withdraw`}>
               <Button
                 className='button-dashboard bg-blue'
-                w={{ base: '100%'}}
+                w={{ base: '100%' }}
                 mr={{ md: 2 }}
                 mt={{ base: 2, md: 0 }}
                 // onClick={getRewardHandler}
@@ -226,12 +265,8 @@ const ClientProfileScreen = ({ client_details }) => {
                 <div className='d-flex'>
                   <i style={{ marginRight: 5 }} className='fas fa-download'></i>
                   <div className='d-flex flex-column'>
-                    <span>
-                      Request
-                    </span>
-                    <span>
-                      Withdraw
-                    </span>
+                    <span>Request</span>
+                    <span>Withdraw</span>
                   </div>
                 </div>
               </Button>
@@ -260,7 +295,9 @@ const ClientProfileScreen = ({ client_details }) => {
           <Box borderRadius='md'>
             {chartData?.length > 0 ? (
               <Box p='3'>
-              <Heading className='ml-4' size='md'>Daily Rewards</Heading>
+                <Heading className='ml-4' size='md'>
+                  Daily Rewards
+                </Heading>
                 <Barchart
                   data={{
                     labels: chartData?.map((data) => data?.date),
@@ -319,38 +356,38 @@ const ClientProfileScreen = ({ client_details }) => {
             ) : null}
           </Box>
         </Box>
-        <Box mt='4'>
-          <Heading className='ml-4 d-flex' size='md'>
-            <div className='d-flex align-items-center'>
+        <Box className='mt-5 mt-lg-4'>
+          <Heading className='ml-4 mb-4 d-flex align-items-center' size='md'>
+            <div className='d-flex'>
               <Text
-                className='rectangle-hotspot mr-2' 
+                className='rectangle-hotspot mr-2'
                 border='2px'
                 borderColor={colorMode === 'light' ? 'black' : 'white'}
               >
-                 <Text className='circle-hotspot'
+                <Text
+                  className='circle-hotspot'
                   border='2px'
                   borderColor={colorMode === 'light' ? 'black' : 'white'}
                 />
               </Text>
             </div>
-            Assigned Hotspot ({client?.total_hotspot})&#x0003A;</Heading>
-          <div className='d-flex justify-content-end mr-5'>total earned</div>
-          <Box
-            borderRadius='md'
-            p='5'
-            className='assigned_hotspot_wrapper'
-          >
+            Assigned Hotspot ({client?.total_hotspot})&#x0003A;
+          </Heading>
+          <div className='justify-content-end mr-5 d-none d-md-flex'>
+            total earned
+          </div>
+          <Box borderRadius='md' p='5' className='assigned_hotspot_wrapper'>
             {client_hotspot?.length > 0 ? (
               client_hotspot.map((hotspot) => (
                 <Box
+                  className='mb-4'
                   display={{ md: 'flex' }}
                   key={hotspot?._id}
                   borderRadius='15px'
-                  mb='3'
                   bg={colorMode === 'light' ? '#f3f3f3' : '#0E0C1C'}
                 >
                   <Box d={{ md: 'flex' }}>
-                    <Box className='d-flex align-items-center ml-3'>
+                    <Box className='d-flex align-items-center ml-3 pt-3 pt-md-0'>
                       <IconButton
                         mr={{ md: 2 }}
                         color='blue.400'
@@ -364,11 +401,8 @@ const ClientProfileScreen = ({ client_details }) => {
                         }
                       />
                     </Box>
-                    <Box className='d-flex align-items-center w-100 p-3'>    
-                    {/* // width: 100%;
-      // display: flex;
-      // justify-content: space-around;> */}
-                      <Heading size='md'>
+                    <Box className='d-flex flex-column ml-2 justify-content-center w-100 pb-3 pl-3 pr-3 pt-0 p-md-3'>
+                      <Heading size='md' className='mb-3 mt-4 mt-md-0'>
                         <a
                           target='_blank'
                           rel='noreferrer'
@@ -377,47 +411,46 @@ const ClientProfileScreen = ({ client_details }) => {
                           {hotspot?.hotspot_name}
                         </a>
                       </Heading>
-                      <Box d={{ sm: 'flex' }} mt='2'>
+                      <Box d={{ sm: 'flex' }}>
                         <Flex className='wrapper-badges' d={{ sm: 'flex' }}>
-                    <Badge
-                        className='badge-relation-type mr-3 ml-0'
-                        ml='10px'
-                        colorScheme={
-                          hotspot?.relation_type === 'host'
-                            ? '#F99918'
-                            : hotspot?.relation_type === 'referrer'
-                            ? '#4AAAE3'
-                            : 'pink'
-                        }
-                      >
-                        <span className='text-white'>
-                          {hotspot?.relation_type}
-                        </span>
-                      </Badge>
-                      <Badge
-                        className='badge-percentage mr-3'
-                        color={'#fff'}
-                        backgroundColor={'#44BBA4'}
-                      >
-                        <Text fontSize='xs'>{hotspot?.percentage + '%'}</Text>
-                      </Badge>
-                      <Badge
-                        className='badge-date'
-                        backgroundColor={'transparent'}>
-                        <Text fontSize='xs'>
-                          {moment(hotspot?.startDate).format('YYYY-MM-DD')}
-                        </Text>
-                      </Badge>
-                    </Flex>
+                          <Badge
+                            className='badge-relation-type mr-1 mr-md-3 ml-0'
+                            ml='10px'
+                            colorScheme={
+                              hotspot?.relation_type === 'host'
+                                ? '#F99918'
+                                : hotspot?.relation_type === 'referrer'
+                                ? '#4AAAE3'
+                                : 'pink'
+                            }
+                          >
+                            <span className='text-white'>
+                              {hotspot?.relation_type}
+                            </span>
+                          </Badge>
+                          <Badge
+                            className='badge-percentage mr-1 mr-md-3'
+                            color={'#fff'}
+                            backgroundColor={'#44BBA4'}
+                          >
+                            <Text fontSize='xs'>
+                              {hotspot?.percentage + '%'}
+                            </Text>
+                          </Badge>
+                          <Badge
+                            className='badge-date'
+                            backgroundColor={'transparent'}
+                          >
+                            <Text fontSize='xs'>
+                              {moment(hotspot?.startDate).format('YYYY-MM-DD')}
+                            </Text>
+                          </Badge>
+                        </Flex>
                       </Box>
                     </Box>
                   </Box>
                   <Spacer display={{ base: 'none', md: 'block' }} />
-                  <Flex
-                    mt={{ base: '3', md: '0' }}
-                    textAlign='right'
-                    alignItems='center'
-                  >
+                  <div className='text-center mt-3 mt-md-0'>
                     <Box>
                       <Text
                         className='total-earned-singular'
@@ -434,7 +467,7 @@ const ClientProfileScreen = ({ client_details }) => {
                         />
                       </Text>
                     </Box>
-                  </Flex>
+                  </div>
                 </Box>
               ))
             ) : (

@@ -1,3 +1,17 @@
+.navbar-container{
+    align-items: center!important;
+    justify-content: center!important;
+}
+
+.navbar-dashboard{
+    overflow: visible!important;
+    background-color: #252332 !important;
+}
+
+.hamburger-menu {
+    cursor: pointer!important;
+}
+
 .selected-item-navbar{
     margin-top: 3px;
     width: 40px!important;
@@ -6,12 +20,95 @@
     margin-left: 19%;
 }
 
-.item-navbar{
-    margin-top: 6px;
+.border-transparent{
+    border-bottom: 2px solid transparent;
 }
+
+// .item-navbar{
+//     margin-top: 6px;
+// }
 
 a{
     &:hover{
         text-decoration: none!important;
     }
+}
+
+.items-navbar-wrapper{
+    position: absolute;
+    height: 190px;
+    width: 200px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 12px!important;
+    top: 70px;
+    right: 20px;
+    z-index: 200!important;
+    background-color: #252332 !important;
+}
+
+.switch-theme-btn{
+    background: transparent!important;
+    border: 1px solid white!important;
+    border-radius: 50%!important;
+    &:focus{
+        box-shadow: none!important;
+    }
+}
+
+.moon-icon{
+    position: absolute;
+    top: 6px;
+    right: 6px;
+}
+
+.sunny-icon{
+    position: absolute;
+    top: 16px;
+    right: 14px;
+}
+
+.sign-out-icon {
+    display: flex!important;
+    align-items: center!important;
+}
+
+.wrapper-navbar{
+    display:flex;
+}
+
+
+@media (min-width: 576px) { 
+  
+}
+
+@media (min-width: 768px) {
+
+}
+
+@media (min-width: 992px) {
+
+    .items-navbar-wrapper{
+        display: flex!important;
+            position: unset!important;
+            height: 100%!important;
+            width: 100%!important;
+            display: flex;
+            flex-direction: row;
+            border-radius: 12px!important;
+            z-index: 200!important;
+            background-color: transparent !important;
+            // padding: 1.2rem 2rem;
+    }
+
+    .wrapper-navbar{
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .navbar-container{
+        justify-content: normal!important;
+    }
+}
+
+@media (min-width: 1200px) {
 }
