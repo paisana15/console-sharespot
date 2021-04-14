@@ -114,7 +114,7 @@ const ClientLogin = () => {
           {error && <AlertMessage status='error' error={error} />}
         </Box>
       </div>
-      <a href='https://sharespot.pt' target='_blank' rel='noopener noreferrer'>
+      <a className='mt-4' href='https://sharespot.pt' target='_blank' rel='noopener noreferrer'>
           <span className='sharespot-bottom font-weight-bold'>sharespot.pt</span>
       </a>
     </div>
