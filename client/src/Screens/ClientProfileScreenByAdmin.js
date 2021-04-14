@@ -563,7 +563,7 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
             <ModalHeader>Confirm Delete</ModalHeader>
             <ModalCloseButton />
             <ModalBody>
-              <Text>{'Are you sure you want to remove this client?'}</Text>
+              <Text>{'Are you sure you want to remove this client?'}</Text> 
             </ModalBody>
 
             <ModalFooter>
