@@ -416,7 +416,7 @@ const ClientProfileScreen = ({ client_details }) => {
                           <Badge
                             className='badge-relation-type mr-1 mr-md-3 ml-0'
                             ml='10px'
-                            colorScheme={
+                            bg={
                               hotspot?.relation_type === 'host'
                                 ? '#F99918'
                                 : hotspot?.relation_type === 'referrer'

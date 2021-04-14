@@ -5,8 +5,8 @@ import * as yup from 'yup';
 import {
   Button,
   FormControl,
-  FormLabel,
   Input,
+  Heading,
   useColorMode,
   useToast,
 } from '@chakra-ui/react';
@@ -72,31 +72,35 @@ const WithDrawScreen = ({ wallet }) => {
   });
 
   return (
-    <Box p='4'>
+    <Box className='p-0'>
       <Helmet>
         <title>Withdraw Rewards</title>
       </Helmet>
-      <Box d={{ md: 'flex' }} mb='3' alignItems='center'>
-        <Text fontSize={{ base: '1xl', sm: '2xl' }} className='adminPageHeader'>
-          Withdraw Reward
-        </Text>
-        <Spacer />
-        <Box>
-          <Text
-            textTransform='uppercase'
-            d='flex'
-            alignItems='center'
-            fontSize='sm'
+      <Box className='withdraw-container' d={{ md: 'flex' }} mb='3' alignItems='center'>
+        <Heading
+            className='title-underline'
+            textColor={`${colorMode === 'light' ? '#0E0C1C' : 'white'}`}
+            size='lg'
+            mb='1'
           >
-            Available for Withdraw :{' '}
-            <Badge ml='2' variant='outline' colorScheme='green'>
-              HNT {(wallet?.totalRewards - wallet?.totalWithdraw).toFixed(2)}
-            </Badge>
-          </Text>
-        </Box>
+            Withdraw Reward
+            <hr />
+          </Heading>
+        <div className='d-flex flex-column available-container my-4 py-4'>
+              <div className='mx-auto'>
+                <h5 className='total-text'>Withdraw Available</h5>
+                <Box
+                  bg={colorMode === 'light' ? '#fff' : '#0E0C1C'}
+                >
+                </Box>
+                <Text style={{ fontWeight: 'bold' }} fontSize='2xl'>
+                {(wallet?.totalRewards - wallet?.totalWithdraw).toFixed(2)}&nbsp;HNT
+                </Text>
+              </div>
+            </div>
       </Box>
       <Box d={{ md: 'flex' }} mt='3'>
-        <Box w={{ base: '100%', md: '30%' }}>
+        <Box className='mb-5 mt-5' w={{ base: '100%', md: '30%' }}>
           <Formik
             initialValues={{
               amount: '',
@@ -116,15 +120,32 @@ const WithDrawScreen = ({ wallet }) => {
             }) => (
               <form onSubmit={handleSubmit}>
                 <FormControl>
-                  <FormLabel>Amount</FormLabel>
-                  <Input
-                    name='amount'
-                    placeholder='Enter withdrawal amount'
-                    value={values.amount}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    isDisabled={wallet?.pendingPayment > 0}
-                  />
+                  {/* <FormLabel>Amount</FormLabel> */}
+                  <Text
+                    className='mb-4'
+                    fontWeight='semibold'
+                    color={colorMode === 'light' ? '#0E0C1C' : 'white'}
+                    fontSize='lg'
+                    >
+                    Amount
+                  </Text>
+                  <div className='position-relative'>
+                    <Input
+                      className='border-bottom-gray input-insert-withdraw'
+                      name='amount'
+                      placeholder='Insert amount'
+                      value={values.amount}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      isDisabled={wallet?.pendingPayment > 0}
+                    />
+                    <Text
+                      className='value-unit'
+                      color={colorMode === 'light' ? '#0E0C1C' : '#CECECE'}
+                    >
+                      HNT
+                    </Text>
+                  </div>
                   {errors.amount && touched.amount && (
                     <div style={{ color: 'red', fontSize: 13 }}>
                       {errors.amount}
@@ -139,10 +160,10 @@ const WithDrawScreen = ({ wallet }) => {
                   w={{ base: '100%', md: 'auto' }}
                   isLoading={loading}
                   loadingText='Processing...'
-                  mt='3'
+                  mt='2'
+                  className='primary-btn mr-4 ml-0 mt-3'
                   type='submit'
-                  colorScheme='teal'
-                  size='sm'
+                  size='md'
                   variant='outline'
                   isDisabled={wallet?.pendingPayment > 0}
                 >
@@ -153,14 +174,10 @@ const WithDrawScreen = ({ wallet }) => {
           </Formik>
         </Box>
         <Spacer />
-        <Box mt={{ base: '3', md: 0 }} w={{ base: '100%', md: '60%' }}>
+        <Box className='mb-5' w={{ base: '100%', md: '60%' }}>
           <Text
-            borderBottom='1px'
-            borderColor='gray.400'
-            mb='2'
-            fontStyle='oblique'
-            paddingBottom='1.5'
-            textColor='#aaa'
+            className='mt-5 pt-3 mb-4 font-weight-bold withdraw-history'
+            color={colorMode === 'light' ? '#0E0C1C' : 'white'}
           >
             Withdraw History
           </Text>
@@ -173,27 +190,27 @@ const WithDrawScreen = ({ wallet }) => {
               wHistories.map((data, idx) => (
                 <Flex
                   key={idx}
-                  p='2'
-                  px='4'
-                  borderRadius='lg'
-                  mb='3'
+                  borderRadius='20px'
+                  className='mb-4 px-4 py-3'
                   boxShadow='base'
-                  bg={colorMode === 'light' ? '#f4f5f7' : '#303744'}
+                  bg={colorMode === 'light' ? '#F6F6F6' : '#1D1A30'}
                 >
                   <Box>
-                    <Text fontSize='sm'>
+                    <Text className='mb-2' fontWeight='normal' fontSize='sm'>
                       {moment(data?.createdAt).format('LLL')}
                     </Text>
                     <Box>
                       <Badge
-                        variant={colorMode === 'light' ? 'solid' : 'outline'}
-                        colorScheme={
+                        fontWeight='normal'
+                        className='px-3 py-1'
+                        borderRadius='24px'
+                        bg={
                           data?.status === 'Pending'
-                            ? 'orange'
+                            ? '#F9A518'
                             : data?.status === 'Rejected'
-                            ? 'red'
+                            ? '#F9183E'
                             : data?.status === 'Confirmed'
-                            ? 'green'
+                            ? '#44BBA4'
                             : 'purple'
                         }
                       >
@@ -210,12 +227,12 @@ const WithDrawScreen = ({ wallet }) => {
                   <Spacer />
                   <Flex textAlign='right' alignItems='center'>
                     <Box mr='2'>
-                      <Text fontSize='sm' color='grey'>
+                      <Text fontWeight='lighter' fontSize='sm' color={colorMode === 'light' ? '#0E0C1C' : '#FFFFFF'}>
                         Amount
                       </Text>
                       <Text
                         fontWeight='bold'
-                        color={colorMode === 'light' ? 'grey' : 'orange.200'}
+                        color={colorMode === 'light' ? '#0E0C1C' : '#FFF'}
                         fontSize='sm'
                       >
                         HNT {data?.amount?.toFixed(2)}

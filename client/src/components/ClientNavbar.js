@@ -1,4 +1,4 @@
-import { Box, Container, Flex, Text } from "@chakra-ui/layout";
+import { Box, Container, Flex, Heading} from "@chakra-ui/layout";
 import React, { useState } from "react";
 import { Link, useRouteMatch, useLocation } from "react-router-dom";
 import { clientLogout } from "../redux/action/ClientAction";
@@ -18,19 +18,18 @@ import SunnyIconSelected from "../assets/icons/sunny-icon-selected.svg";
 import SunnyIconNotSelected from "../assets/icons/sunny-icon-not-selected.svg";
 
 const MenuItems = ({ children }) => (
-  <Text
+  <Heading
     className="d-flex align-items-center"
     color="white"
     fontWeight="normal"
     letterSpacing=""
     fontSize="sm"
     cursor="pointer"
-    // mt={{ base: 4, md: 0 }}
     mr={4}
     display="block"
   >
     {children}
-  </Text>
+  </Heading>
 );
 
 const ClientNavbar = () => {

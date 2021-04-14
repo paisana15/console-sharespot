@@ -65,7 +65,7 @@ const ClientProfileEditByClient = ({ client_details }) => {
   });
   return (
     <Box
-      p='4'
+      className='p-0'
       backgroundColor={`${colorMode === 'light' ? '#fff' : '#0E0C1C'}`}
     >
       <Helmet>

@@ -1,0 +1,39 @@
+.value-unit{
+    font-weight: bold;
+    position: absolute;
+    right: 0;
+    top: 10px;
+}
+
+.input-insert-withdraw::-webkit-input-placeholder { /* Edge */
+    color: #CECECE;
+  }
+  
+.input-insert-withdraw:-ms-input-placeholder { /* Internet Explorer 10-11 */
+    color: #CECECE;
+  }
+  
+.input-insert-withdraw::placeholder {
+    color: #CECECE;
+}
+
+.withdraw-history{
+    font-size: 18px!important;
+}
+
+@media (min-width: 576px) { 
+  
+}
+
+@media (min-width: 768px) {
+    .withdraw-container{
+        justify-content: space-between;
+    }
+}
+
+@media (min-width: 992px) {
+
+}
+
+@media (min-width: 1200px) {
+}
