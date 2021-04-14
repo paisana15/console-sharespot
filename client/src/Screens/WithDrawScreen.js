@@ -74,30 +74,33 @@ const WithDrawScreen = ({ wallet }) => {
   return (
     <Box className='p-0'>
       <Helmet>
-        <title>Withdraw Rewards</title>
+        <title>Request Withdraw</title>
       </Helmet>
-      <Box className='withdraw-container' d={{ md: 'flex' }} mb='3' alignItems='center'>
+      <Box
+        className='withdraw-container'
+        d={{ md: 'flex' }}
+        mb='3'
+        alignItems='center'
+      >
         <Heading
-            className='title-underline'
-            textColor={`${colorMode === 'light' ? '#0E0C1C' : 'white'}`}
-            size='lg'
-            mb='1'
-          >
-            Withdraw Reward
-            <hr />
-          </Heading>
+          className='title-underline'
+          textColor={`${colorMode === 'light' ? '#0E0C1C' : 'white'}`}
+          size='lg'
+          mb='1'
+        >
+          Request Withdraw
+          <hr />
+        </Heading>
         <div className='d-flex flex-column available-container my-4 py-4'>
-              <div className='mx-auto'>
-                <h5 className='total-text'>Withdraw Available</h5>
-                <Box
-                  bg={colorMode === 'light' ? '#fff' : '#0E0C1C'}
-                >
-                </Box>
-                <Text style={{ fontWeight: 'bold' }} fontSize='2xl'>
-                {(wallet?.totalRewards - wallet?.totalWithdraw).toFixed(2)}&nbsp;HNT
-                </Text>
-              </div>
-            </div>
+          <div className='mx-auto'>
+            <h5 className='total-text'>Withdraw Available</h5>
+            <Box bg={colorMode === 'light' ? '#fff' : '#0E0C1C'}></Box>
+            <Text style={{ fontWeight: 'bold' }} fontSize='2xl'>
+              {(wallet?.totalRewards - wallet?.totalWithdraw).toFixed(2)}
+              &nbsp;HNT
+            </Text>
+          </div>
+        </div>
       </Box>
       <Box d={{ md: 'flex' }} mt='3'>
         <Box className='mb-5 mt-5' w={{ base: '100%', md: '30%' }}>
@@ -126,7 +129,7 @@ const WithDrawScreen = ({ wallet }) => {
                     fontWeight='semibold'
                     color={colorMode === 'light' ? '#0E0C1C' : 'white'}
                     fontSize='lg'
-                    >
+                  >
                     Amount
                   </Text>
                   <div className='position-relative'>
@@ -227,7 +230,11 @@ const WithDrawScreen = ({ wallet }) => {
                   <Spacer />
                   <Flex textAlign='right' alignItems='center'>
                     <Box mr='2'>
-                      <Text fontWeight='lighter' fontSize='sm' color={colorMode === 'light' ? '#0E0C1C' : '#FFFFFF'}>
+                      <Text
+                        fontWeight='lighter'
+                        fontSize='sm'
+                        color={colorMode === 'light' ? '#0E0C1C' : '#FFFFFF'}
+                      >
                         Amount
                       </Text>
                       <Text

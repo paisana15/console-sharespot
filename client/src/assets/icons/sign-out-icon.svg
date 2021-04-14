@@ -1,0 +1,8 @@
+<svg id="ic-actions-log-out" xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 25 25">
+  <rect id="Rectangle_465" data-name="Rectangle 465" width="25" height="25" fill="none"/>
+  <g id="ic-actions-log-out-2" data-name="ic-actions-log-out" transform="translate(3.602 3)">
+    <path id="Path_430" data-name="Path 430" d="M15.709,15.667v4.222a2.058,2.058,0,0,1-2,2.111h-6a2.058,2.058,0,0,1-2-2.111V5.111A2.058,2.058,0,0,1,7.709,3h6a2.058,2.058,0,0,1,2,2.111V9.333" transform="translate(-5.709 -3)" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/>
+    <line id="Line_554" data-name="Line 554" x2="10" transform="translate(7.796 9.446)" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="bevel" stroke-width="1.5"/>
+    <path id="Path_431" data-name="Path 431" d="M18.823,8l3.436,3.436a.837.837,0,0,1,0,1.184L18.879,16" transform="translate(-4.709 -2.5)" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="bevel" stroke-width="1.5"/>
+  </g>
+</svg>
