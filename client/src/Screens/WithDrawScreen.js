@@ -207,6 +207,7 @@ const WithDrawScreen = ({ wallet }) => {
                         fontWeight='normal'
                         className='px-3 py-1'
                         borderRadius='24px'
+                        color='white'
                         bg={
                           data?.status === 'Pending'
                             ? '#F9A518'
