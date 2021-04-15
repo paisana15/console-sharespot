@@ -23,6 +23,7 @@ import PhoneIcon from '../assets/icons/phone-icon.svg';
 import MailIcon from '../assets/icons/mail-icon.svg';
 import WalletUserIcon from '../assets/icons/wallet-user-icon.svg';
 import WalletCircleIcon from '../assets/icons/wallet-circle-icon.svg';
+import WalletRequest from '../assets/icons/wallet-request-icon.svg';
 
 const ClientProfileScreen = ({ client_details }) => {
   const { colorMode } = useColorMode();
@@ -262,9 +263,9 @@ const ClientProfileScreen = ({ client_details }) => {
                 // onClick={getRewardHandler}
                 variant={colorMode === 'dark' ? 'outline' : 'solid'}
               >
-                <div className='d-flex'>
-                  <i style={{ marginRight: 5 }} className='fas fa-download'></i>
-                  <div className='d-flex flex-column'>
+                <div className='d-flex align-items-center'>
+                  <img className='mr-2' src={WalletRequest} height='37' width='37' alt='Request Withdraw' />
+                  <div className='d-flex flex-column align-items-baseline'>
                     <span>Request</span>
                     <span>Withdraw</span>
                   </div>
@@ -305,9 +306,10 @@ const ClientProfileScreen = ({ client_details }) => {
                       {
                         label: 'Total Rewards',
                         data: chartData?.map((data) => data?.total.toFixed(2)),
-                        backgroundColor: 'rgba(153, 102, 255, 0.2)',
-                        borderColor: 'rgb(153, 102, 255)',
+                        backgroundColor: 'rgba(67,188,164,0.3)',
+                        borderColor: 'rgb(67,188,164)',
                         borderWidth: 1,
+                        borderRadius: 50
                       },
                     ],
                   }}
@@ -323,8 +325,12 @@ const ClientProfileScreen = ({ client_details }) => {
                     },
                   }}
                 />
-                <Box pb='2' d={{ md: 'flex' }} mt='3'>
-                  <Badge variant='outline' colorScheme='green'>
+                <Box className='mt-4 mb-4' pb='2' d={{ md: 'flex' }} >
+                  <Badge 
+                    textColor={colorMode === 'light' ? '#0E0C1C' : 'white'}
+                    className='badge-chart-monthly' 
+                    variant='outline'
+                  >
                     Last 30 Days Reward : HNT{' '}
                     {chartDaysLoading ? (
                       <Loader xs />
@@ -333,7 +339,11 @@ const ClientProfileScreen = ({ client_details }) => {
                     )}
                   </Badge>
                   <Spacer />
-                  <Badge variant='outline' colorScheme='blue'>
+                  <Badge
+                    textColor={colorMode === 'light' ? '#0E0C1C' : 'white'}
+                    className='badge-chart-weekly'
+                    variant='outline'
+                  >
                     Last 7 Days Reward : HNT{' '}
                     {chartDaysLoading ? (
                       <Loader xs />
@@ -343,7 +353,10 @@ const ClientProfileScreen = ({ client_details }) => {
                   </Badge>
                   <Spacer />
 
-                  <Badge variant='outline' colorScheme='orange'>
+                  <Badge 
+                    textColor={colorMode === 'light' ? '#0E0C1C' : 'white'}
+                    className='badge-chart-daily'
+                    variant='outline'>
                     Last 24 Hours Reward : HNT{' '}
                     {chartDaysLoading ? (
                       <Loader xs />
