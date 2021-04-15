@@ -19,6 +19,7 @@ import { Helmet } from 'react-helmet';
 import Loader from '../components/Loader';
 import AlertMessage from '../components/Alert';
 import moment from 'moment';
+import WalletCircleIcon from '../assets/icons/wallet-circle-icon.svg';
 
 const WithDrawScreen = ({ wallet }) => {
   const dispatch = useDispatch();
@@ -91,10 +92,20 @@ const WithDrawScreen = ({ wallet }) => {
           Request Withdraw
           <hr />
         </Heading>
-        <div className='d-flex flex-column available-container my-4 py-4'>
+        <div className='d-flex flex-column available-withdraw my-4 py-4'>
           <div className='mx-auto'>
-            <h5 className='total-text'>Withdraw Available</h5>
-            <Box bg={colorMode === 'light' ? '#fff' : '#0E0C1C'}></Box>
+            <h5 className='total-text text-right mr-0'>Available</h5>
+            <Box
+              className='wallet-circle'
+              bg={colorMode === 'light' ? '#fff' : '#0E0C1C'}
+            >
+              <img
+                src={WalletCircleIcon}
+                height='28'
+                width='28'
+                alt='Wallet Circle'
+              />
+            </Box>
             <Text style={{ fontWeight: 'bold' }} fontSize='2xl'>
               {(wallet?.totalRewards - wallet?.totalWithdraw).toFixed(2)}
               &nbsp;HNT
@@ -123,7 +134,6 @@ const WithDrawScreen = ({ wallet }) => {
             }) => (
               <form onSubmit={handleSubmit}>
                 <FormControl>
-                  {/* <FormLabel>Amount</FormLabel> */}
                   <Text
                     className='mb-4'
                     fontWeight='semibold'
