@@ -331,7 +331,7 @@ const ClientProfileScreen = ({ client_details }) => {
                     className='badge-chart-monthly' 
                     variant='outline'
                   >
-                    Last 30 Days Reward : HNT{' '}
+                    Monthly Rewards: HNT{' '}
                     {chartDaysLoading ? (
                       <Loader xs />
                     ) : (
@@ -344,7 +344,7 @@ const ClientProfileScreen = ({ client_details }) => {
                     className='badge-chart-weekly'
                     variant='outline'
                   >
-                    Last 7 Days Reward : HNT{' '}
+                    Weekly Rewards: HNT{' '}
                     {chartDaysLoading ? (
                       <Loader xs />
                     ) : (
@@ -357,7 +357,7 @@ const ClientProfileScreen = ({ client_details }) => {
                     textColor={colorMode === 'light' ? '#0E0C1C' : 'white'}
                     className='badge-chart-daily'
                     variant='outline'>
-                    Last 24 Hours Reward : HNT{' '}
+                    Daily Rewards: HNT{' '}
                     {chartDaysLoading ? (
                       <Loader xs />
                     ) : (
