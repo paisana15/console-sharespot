@@ -1,5 +1,5 @@
 import React from 'react';
-import { CloseButton } from "@chakra-ui/react"
+import { CloseButton } from '@chakra-ui/react'
 import { Alert, AlertIcon, AlertTitle } from '@chakra-ui/alert';
 
 const AlertMessage = ({ status, error }) => {

@@ -127,7 +127,7 @@ const ClientProfileScreen = ({ client_details }) => {
         <div className='d-flex flex-column d-lg-flex flex-lg-row justify-content-space-between'>
         <div className='mb-4'>
           <div className='d-flex flex-column flex-lg-row mb-0 mb-lg-4'>
-          <div className='col-12 col-lg-3 p-0 mb-3 mt-4 mt-lg-0 mb-lg-0 mr-4'> 
+          <div className='col-12 col-lg-3 p-0 mb-3 mt-4 mt-lg-0 mb-lg-0 mr-2'> 
             <span className='info-user-dashboard'>
               <img
                 className='mr-2'
@@ -359,7 +359,7 @@ const ClientProfileScreen = ({ client_details }) => {
         <Box className='mt-5 mt-lg-4'>
           <Heading className='ml-4 mb-4 d-flex align-items-center' size='md'>
             <div className='d-flex'>
-              <Text
+              <Heading
                 className='rectangle-hotspot mr-2'
                 border='2px'
                 borderColor={colorMode === 'light' ? 'black' : 'white'}
@@ -369,7 +369,7 @@ const ClientProfileScreen = ({ client_details }) => {
                   border='2px'
                   borderColor={colorMode === 'light' ? 'black' : 'white'}
                 />
-              </Text>
+              </Heading>
             </div>
             Assigned Hotspot ({client?.total_hotspot})&#x0003A;
           </Heading>
@@ -416,7 +416,7 @@ const ClientProfileScreen = ({ client_details }) => {
                           <Badge
                             className='badge-relation-type mr-1 mr-md-3 ml-0'
                             ml='10px'
-                            colorScheme={
+                            bg={
                               hotspot?.relation_type === 'host'
                                 ? '#F99918'
                                 : hotspot?.relation_type === 'referrer'
