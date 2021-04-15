@@ -325,10 +325,10 @@ const ClientProfileScreen = ({ client_details }) => {
                     },
                   }}
                 />
-                <Box className='mt-4 mb-4' pb='2' d={{ md: 'flex' }} >
+                <Box className='d-flex flex-column flex-lg-row text-center mt-4 mb-4' pb='2' >
                   <Badge 
                     textColor={colorMode === 'light' ? '#0E0C1C' : 'white'}
-                    className='badge-chart-monthly' 
+                    className='badge-chart-monthly mb-3 mb-lg-0' 
                     variant='outline'
                   >
                     Monthly Rewards: HNT{' '}
@@ -341,7 +341,7 @@ const ClientProfileScreen = ({ client_details }) => {
                   <Spacer />
                   <Badge
                     textColor={colorMode === 'light' ? '#0E0C1C' : 'white'}
-                    className='badge-chart-weekly'
+                    className='badge-chart-weekly mb-3 mb-lg-0'
                     variant='outline'
                   >
                     Weekly Rewards: HNT{' '}
