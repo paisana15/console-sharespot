@@ -297,7 +297,7 @@ const ClientProfileScreen = ({ client_details }) => {
             {chartData?.length > 0 ? (
               <Box p='3'>
                 <Heading className='ml-4' size='md'>
-                  Daily Rewards
+                  Weekly Rewards
                 </Heading>
                 <Barchart
                   data={{
