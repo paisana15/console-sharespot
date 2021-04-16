@@ -261,6 +261,29 @@ hr{
     color: $black!important;
 }
 
+.badge-chart-monthly{
+    border: 1px solid #4AAAE3!important;
+    border-radius: 13px!important;
+    padding: 1rem 2rem!important;
+    
+    box-shadow: none!important;
+}
+
+.badge-chart-daily{
+    border: 1px solid #F9183E!important;
+    border-radius: 13px!important;
+    padding: 1rem 2rem!important;
+
+    box-shadow: none!important;
+}
+
+.badge-chart-weekly{
+    border: 1px solid $primary-color!important;
+    border-radius: 13px!important;
+    padding: 1rem 2rem!important;
+    box-shadow: none!important;
+}
+
 
 @media (min-width: 576px) { 
   
