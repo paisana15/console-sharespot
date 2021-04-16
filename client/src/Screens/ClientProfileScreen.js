@@ -396,7 +396,7 @@ const ClientProfileScreen = ({ client_details }) => {
                   className='mb-4'
                   display={{ md: 'flex' }}
                   key={hotspot?._id}
-                  borderRadius='15px'
+                  borderRadius='20px'
                   bg={colorMode === 'light' ? '#f3f3f3' : '#0E0C1C'}
                 >
                   <Box d={{ md: 'flex' }}>

@@ -177,7 +177,6 @@ const WithDrawScreen = ({ wallet }) => {
                   className='primary-btn mr-4 ml-0 mt-3'
                   type='submit'
                   size='md'
-                  variant='outline'
                   isDisabled={wallet?.pendingPayment > 0}
                 >
                   Request Withdraw
@@ -205,7 +204,6 @@ const WithDrawScreen = ({ wallet }) => {
                   key={idx}
                   borderRadius='20px'
                   className='mb-4 px-4 py-3'
-                  boxShadow='base'
                   bg={colorMode === 'light' ? '#F6F6F6' : '#1D1A30'}
                 >
                   <Box>
