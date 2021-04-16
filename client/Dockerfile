@@ -8,4 +8,4 @@ RUN npm i -g serve
 ENV GENERATE_SOURCEMAP=false
 RUN npm run build
 
-CMD ["serve", "-s", "build", "-l", "80"]
+CMD ["serve", "-s", "build", "-l", "3000"]
