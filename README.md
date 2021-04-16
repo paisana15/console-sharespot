@@ -17,7 +17,7 @@ npm install       // install frontend packages
 ## Usage
 ```
 cd /project-folder
-npm run server    // run server side
+npm run start:dev    // run server side
 npm run client    // run client side
 ```
 #### Create a .env file in root folder & fill it as below
