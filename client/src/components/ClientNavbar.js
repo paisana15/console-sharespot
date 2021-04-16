@@ -20,7 +20,7 @@ import SignOutIcon from '../assets/icons/sign-out-icon.svg';
 
 const MenuItems = ({ children }) => (
   <Heading
-    className='d-flex align-items-center'
+    className='d-flex align-items-center menu-item'
     color='white'
     fontWeight='normal'
     letterSpacing=''
@@ -96,11 +96,11 @@ const ClientNavbar = () => {
                   ) : (
                     <>
                       <img
-                        className='mr-2'
+                        className='mr-2 menu-item'
                         src={DashboardNotSelected}
                         alt='Dashboard icon'
-                        height='20'
-                        width='20'
+                        height='18'
+                        width='18'
                       />
                       <span className='border-transparent'>Dashboard</span>
                     </>
@@ -112,7 +112,7 @@ const ClientNavbar = () => {
                   {location.pathname === '/c/profile/withdraw' ? (
                     <>
                       <img
-                        className='mr-2'
+                        className='mr-2 menu-item'
                         src={WithdrawSelected}
                         alt='Withdraw icon'
                         height='20'
@@ -126,7 +126,7 @@ const ClientNavbar = () => {
                   ) : (
                     <>
                       <img
-                        className='mr-2'
+                        className='mr-2 menu-item'
                         src={WithdrawNotSelected}
                         alt='Withdraw icon'
                         height='20'
@@ -142,7 +142,7 @@ const ClientNavbar = () => {
                   {location.pathname === '/c/profile/edit' ? (
                     <div className='d-flex'>
                       <img
-                        className='mr-2'
+                        className='mr-2 menu-item'
                         src={AccountSelected}
                         alt='Account icon'
                         height='20'
@@ -156,7 +156,7 @@ const ClientNavbar = () => {
                   ) : (
                     <div className='d-flex'>
                       <img
-                        className='mr-2'
+                        className='mr-2 menu-item'
                         src={AccountNotSelected}
                         alt='Account icon'
                         height='20'
@@ -173,7 +173,7 @@ const ClientNavbar = () => {
                   onClick={logoutHandler}
                 >
                   <img
-                    className='mr-1'
+                    className='mr-1 menu-item'
                     src={SignOutIcon}
                     alt='Account icon'
                     height='20'
@@ -187,7 +187,7 @@ const ClientNavbar = () => {
               <MenuItems>
                 <span className='d-none d-lg-flex align-items-center' onClick={logoutHandler}>
                   <img
-                    className='mr-2'
+                    className='mr-2 menu-item'
                     src={SignOutIcon}
                     alt='Account icon'
                     height='20'
@@ -247,7 +247,7 @@ const ClientNavbar = () => {
               <span className='d-none d-lg-flex mr-3' onClick={logoutHandler}>
                 Sign out
                 <img
-                  className='ml-2'
+                  className='ml-2 menu-item'
                   src={SignOutIcon}
                   alt='Account icon'
                   height='20'
