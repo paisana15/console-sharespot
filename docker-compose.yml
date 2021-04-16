@@ -37,9 +37,6 @@ services:
       dockerfile: client/Dockerfile
     networks:
       - default
-    environment:
-      JWT_SECRET: ${JWT_SECRET}
-      PROD_SERVER_URL: ${PROD_SERVER}
 
 networks:
   default:

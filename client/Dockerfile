@@ -4,6 +4,8 @@ WORKDIR /app
 COPY . .
 WORKDIR /app/client
 RUN npm install
+RUN npm i -g serve
+ENV GENERATE_SOURCEMAP=false
+RUN npm run build
 
-WORKDIR /app
-CMD ["npm", "run", "client"]
+CMD ["serve", "-s", "build", "-l", "80"]

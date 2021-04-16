@@ -6,7 +6,6 @@ import { errorHandler, notFound } from './middleware/errorMiddleware.js';
 import adminRoutes from './routes/AdminRoutes.js';
 import clientRoutes from './routes/ClientRoutes.js';
 import cors from 'cors';
-import ClientHotspot from './models/ClientHotspotModel.js';
 import axios from 'axios';
 
 dotenv.config();
