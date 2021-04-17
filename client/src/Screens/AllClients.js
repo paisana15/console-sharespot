@@ -62,6 +62,7 @@ const AllClients = () => {
   } = getRewardByA;
 
   useEffect(() => {
+    const abortController = new AbortController();
     if (clients && clients?.length < 1) {
       dispatch(getAllClients());
     }
@@ -120,6 +121,9 @@ const AllClients = () => {
     ) {
       fetchChartData();
     }
+    return () => {
+      abortController.abort();
+    };
   }, [
     dispatch,
     toast,
