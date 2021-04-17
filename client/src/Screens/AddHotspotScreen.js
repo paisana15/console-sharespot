@@ -28,6 +28,7 @@ const AddHotspotScreen = () => {
   const { clients: getClients } = allClientsGet;
 
   useEffect(() => {
+    const abortController = new AbortController();
     async function fetchData() {
       try {
         const res = await axios.get(
@@ -64,7 +65,9 @@ const AddHotspotScreen = () => {
         isClosable: true,
       });
     }
-    return () => {};
+    return () => {
+      abortController.abort();
+    };
   }, [success, error, toast, getClients, apiData]);
   const fieldValidationSchema = yup.object({
     client_id: yup.string().required('Client id required!'),

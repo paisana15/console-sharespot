@@ -9,6 +9,7 @@ import { useColorMode } from '@chakra-ui/color-mode';
 import ClientDetailsByAdmin from './ClientDetailsByAdmin';
 import WithdrawRequestScreen from './WithdrawRequestScreen';
 import { Helmet } from 'react-helmet';
+import AllHotspotsScreen from './AllHotspotsScreen';
 
 const AdminDashboard = () => {
   const { path } = useRouteMatch();
@@ -37,6 +38,10 @@ const AdminDashboard = () => {
               component={ClientDetailsByAdmin}
             />
             <Route path={`${path}/add-hotspot`} component={AddHotspotScreen} />
+            <Route
+              path={`${path}/all-hotspots`}
+              component={AllHotspotsScreen}
+            />
             <Route
               path={`${path}/add-new-client`}
               component={AddClientScreen}

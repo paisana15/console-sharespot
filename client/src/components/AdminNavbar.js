@@ -81,6 +81,11 @@ const AdminNavbar = () => {
                 <i className='fas fa-users'></i> All Clients
               </MenuItems>
             </Link>
+            <Link to={`${path}/all-hotspots`}>
+              <MenuItems>
+                <i className='fas fa-wifi'></i> Hotspots
+              </MenuItems>
+            </Link>
             <Link to={`${path}/add-hotspot`}>
               <MenuItems>
                 <i className='fas fa-wifi'></i> Add Hotspot
