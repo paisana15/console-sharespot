@@ -24,7 +24,7 @@ const AllHotspotsScreen = () => {
     async function fetchData() {
       try {
         const response = await axios.get(
-          `https://api.helium.io/v1/accounts/13ESLoXiie3eXoyitxryNQNamGAnJjKt2WkiB4gNq95knxAiGEp/hotspots`
+          `https://api.helium.wtf/v1/accounts/13ESLoXiie3eXoyitxryNQNamGAnJjKt2WkiB4gNq95knxAiGEp/hotspots`
         );
         if (response) {
           setHotspots(response?.data?.data);
@@ -33,7 +33,7 @@ const AllHotspotsScreen = () => {
           const lastDataRes = await Promise.all(
             response?.data?.data?.map(async (data) => {
               const response = await axios.get(
-                `https://api.helium.io/v1/hotspots/${data?.address}/rewards/sum?min_time=-1%20day&bucket=day`
+                `https://api.helium.wtf/v1/hotspots/${data?.address}/rewards/sum?min_time=-1%20day&bucket=day`
               );
               const result = response?.data?.data?.[0]?.total.toFixed(2);
               return result;
@@ -46,7 +46,7 @@ const AllHotspotsScreen = () => {
           const weekReward = await Promise.all(
             response?.data?.data?.map(async (data) => {
               const response = await axios.get(
-                `https://api.helium.io/v1/hotspots/${data?.address}/rewards/sum?min_time=-7%20day&bucket=day`
+                `https://api.helium.wtf/v1/hotspots/${data?.address}/rewards/sum?min_time=-7%20day&bucket=day`
               );
               const result = response?.data?.data
                 ?.map((d) => d.total)
@@ -61,7 +61,7 @@ const AllHotspotsScreen = () => {
           const monthReward = await Promise.all(
             response?.data?.data?.map(async (data) => {
               const response = await axios.get(
-                `https://api.helium.io/v1/hotspots/${data?.address}/rewards/sum?min_time=-30%20day&bucket=day`
+                `https://api.helium.wtf/v1/hotspots/${data?.address}/rewards/sum?min_time=-30%20day&bucket=day`
               );
               const result = response?.data?.data
                 ?.map((d) => d.total)
