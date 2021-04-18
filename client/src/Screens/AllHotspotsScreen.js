@@ -188,7 +188,15 @@ const AllHotspotsScreen = () => {
                         ></Box>
 
                         <Box>
-                          <Box>{data?.name.toUpperCase()}</Box>
+                          <Box>
+                            <a
+                              href={`https://explorer.helium.com/hotspots/${data?.address}`}
+                              target='_blank'
+                              rel='noreferrer'
+                            >
+                              {data?.name.toUpperCase()}
+                            </a>
+                          </Box>
                           <Box textColor='gray.500' fontSize='xs'>
                             {data?.location}
                           </Box>
