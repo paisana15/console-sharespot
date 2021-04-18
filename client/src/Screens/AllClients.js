@@ -137,6 +137,8 @@ const AllClients = () => {
   ]);
 
   useEffect(() => {
+    const abortController = new AbortController();
+
     async function thsevenlastDayFetch() {
       const request30 = await axios.get(
         'https://api.helium.wtf/v1/accounts/13ESLoXiie3eXoyitxryNQNamGAnJjKt2WkiB4gNq95knxAiGEp/rewards/sum?min_time=-30%20day'
@@ -166,7 +168,9 @@ const AllClients = () => {
     if (thirtyDR === '' || sevenDR === '' || lastDR === '') {
       thsevenlastDayFetch();
     }
-    return () => {};
+    return () => {
+      abortController.abort();
+    };
   }, [thirtyDR, sevenDR, lastDR]);
 
   const clientsList = clients?.filter((client) => {
