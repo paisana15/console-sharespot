@@ -61,11 +61,16 @@ const AllClients = () => {
     error: rewardFError,
   } = getRewardByA;
 
+  // useEffect(() => {
+  //   console.log('I am calling!');
+  //   dispatch(getAllClients());
+  // }, [dispatch]);
+
   useEffect(() => {
     const abortController = new AbortController();
-    if (clients && clients?.length < 1) {
-      dispatch(getAllClients());
-    }
+
+    dispatch(getAllClients());
+
     if ((balances && Object.keys(balances)?.length < 1) || rewardFSuccess) {
       dispatch(getMWSWCWbalances());
     }
@@ -94,7 +99,6 @@ const AllClients = () => {
           `https://api.helium.wtf/v1/accounts/13ESLoXiie3eXoyitxryNQNamGAnJjKt2WkiB4gNq95knxAiGEp/rewards/sum?min_time=-${chartInitial?.time}%20day&bucket=${chartInitial?.bucket}
         `
         );
-
         if (response) {
           const result = response?.data?.data?.map((item) => {
             const total = item?.total;
@@ -114,13 +118,8 @@ const AllClients = () => {
         console.log(error);
       }
     }
-    if (
-      (chartData && chartData?.length < 1) ||
-      chartInitial?.time ||
-      chartInitial?.bucket
-    ) {
-      fetchChartData();
-    }
+    fetchChartData();
+
     return () => {
       abortController.abort();
     };
@@ -129,8 +128,6 @@ const AllClients = () => {
     toast,
     rewardFSuccess,
     rewardFError,
-    clients,
-    chartData,
     balances,
     chartInitial?.time,
     chartInitial?.bucket,

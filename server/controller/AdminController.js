@@ -1521,15 +1521,10 @@ const getMainSecondWallet = asyncHandler(async (req, res) => {
   if (client_wallets) {
     const cw_balance = await calc_cw_balances(client_wallets);
     const mwsw = await MwSwBalance.find({});
-    if (cw_balance) {
-      res.status(200).json({
-        mw_balance: mwsw[0]?.mw_balance,
-        cw_balance,
-      });
-    } else {
-      res.status(500);
-      throw new Error('Failed to calculate cw_balances! Client balances is 0!');
-    }
+    res.status(200).json({
+      mw_balance: mwsw[0]?.mw_balance,
+      cw_balance,
+    });
   } else {
     res.status(500);
     throw new Error('Failed to fetch client wallet balances!');
