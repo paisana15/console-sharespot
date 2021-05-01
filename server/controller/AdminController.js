@@ -389,7 +389,7 @@ const calHotspotTotal = async (assigned_hotspots) => {
     const responses = await Promise.all(
       assigned_hotspots?.map(async (data) => {
         const minTime = moment(data?.startDate).format('YYYY-MM-DD');
-        const maxTime = moment(data?.endtDate).format('YYYY-MM-DD');
+        const maxTime = moment(data?.endDate).format('YYYY-MM-DD');
         const url = `https://api.helium.wtf/v1/hotspots/${data?.hotspot_address}/rewards/sum?max_time=${maxTime}&min_time=${minTime}`;
         const response = await axios.get(url);
         if (response?.data) {
