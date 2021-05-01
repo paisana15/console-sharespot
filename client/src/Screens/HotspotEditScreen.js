@@ -79,6 +79,7 @@ const HotspotEditScreen = ({ hotspots }) => {
     relation_type: yup.string().required('Role required!'),
     percentage: yup.number().required('Percentage required!'),
     startDate: yup.string().required('Start date required!'),
+    endDate: yup.string().required('End date required!'),
   });
 
   return Object.keys(hotspot).length > 0 ? (
@@ -97,6 +98,7 @@ const HotspotEditScreen = ({ hotspots }) => {
             relation_type: hotspot?.relation_type,
             percentage: hotspot?.percentage,
             startDate: moment(hotspot?.startDate).format('YYYY-MM-DD'),
+            endDate: moment(hotspot?.endDate).format('YYYY-MM-DD'),
           }}
           validationSchema={fieldValidationSchema}
           onSubmit={(data) => {
@@ -173,6 +175,7 @@ const HotspotEditScreen = ({ hotspots }) => {
                   <option value='host'>Host</option>
                   <option value='referrer'>Referrer</option>
                   <option value='partner'>Partner</option>
+                  <option value='hold'>Hold</option>
                 </Field>
                 {errors.relation_type && touched.relation_type && (
                   <div style={{ color: 'red', fontSize: 13 }}>
@@ -207,6 +210,21 @@ const HotspotEditScreen = ({ hotspots }) => {
                 {errors.startDate && touched.startDate && (
                   <div style={{ color: 'red', fontSize: 13 }}>
                     {errors.startDate}
+                  </div>
+                )}
+              </FormControl>
+              <FormControl>
+                <FormLabel>End Date</FormLabel>
+                <Input
+                  name='endDate'
+                  value={values.endDate}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  type='date'
+                />
+                {errors.endDate && touched.endDate && (
+                  <div style={{ color: 'red', fontSize: 13 }}>
+                    {errors.endDate}
                   </div>
                 )}
               </FormControl>

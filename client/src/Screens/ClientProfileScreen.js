@@ -126,56 +126,56 @@ const ClientProfileScreen = ({ client_details }) => {
           </Heading>
         </Flex>
         <div className='d-flex flex-column d-lg-flex flex-lg-row justify-content-space-between'>
-        <div className='mb-4'>
-          <div className='d-flex flex-column flex-lg-row mb-0 mb-lg-4'>
-          <div className='col-12 col-lg-3 p-0 mb-3 mt-4 mt-lg-0 mb-lg-0 mr-2'> 
-            <span className='info-user-dashboard'>
-              <img
-                className='mr-2'
-                src={UserIcon}
-                alt='User icon'
-                height='20'
-                width='20'
-              />
-              {client?.username}
-            </span>
-            </div>
-            <div className='col-12 col-lg-3 p-0 mb-3 mb-lg-0 mr-md-4'>
-            <span className='info-user-dashboard '>
-              <img
-                className='mr-2'
-                src={PhoneIcon}
-                alt='Phone icon'
-                height='14'
-                width='14'
-              />
-              {client?.phone_number}
-            </span>
-            </div>
-            <div className='col-12 col-lg-3 p-0 mb-3 mb-lg-0'>
-            <span className='info-user-dashboard'>
-              <img
-                className='mr-2'
-                src={MailIcon}
-                alt='Mail icon'
-                height='23'
-                width='23'
-              />
-              {client?.email}
-            </span>
-            </div>
+          <div className='mb-4'>
+            <div className='d-flex flex-column flex-lg-row mb-0 mb-lg-4'>
+              <div className='col-12 col-lg-3 p-0 mb-3 mt-4 mt-lg-0 mb-lg-0 mr-2'>
+                <span className='info-user-dashboard'>
+                  <img
+                    className='mr-2'
+                    src={UserIcon}
+                    alt='User icon'
+                    height='20'
+                    width='20'
+                  />
+                  {client?.username}
+                </span>
+              </div>
+              <div className='col-12 col-lg-3 p-0 mb-3 mb-lg-0 mr-md-4'>
+                <span className='info-user-dashboard '>
+                  <img
+                    className='mr-2'
+                    src={PhoneIcon}
+                    alt='Phone icon'
+                    height='14'
+                    width='14'
+                  />
+                  {client?.phone_number}
+                </span>
+              </div>
+              <div className='col-12 col-lg-3 p-0 mb-3 mb-lg-0'>
+                <span className='info-user-dashboard'>
+                  <img
+                    className='mr-2'
+                    src={MailIcon}
+                    alt='Mail icon'
+                    height='23'
+                    width='23'
+                  />
+                  {client?.email}
+                </span>
+              </div>
             </div>
             <div className='col-12 col-lg-12 p-0 mb-3 mb-lg-0'>
-            <span className='d-flex info-user-dashboard word-break align-items-center'>
-              <img
-                className='mr-2'
-                src={WalletUserIcon}
-                alt='Wallet User icon'
-                height='23'
-                width='23'
-              />
-              {client?.wallet_address}
-            </span>
+              <span className='d-flex info-user-dashboard word-break align-items-center'>
+                <img
+                  className='mr-2'
+                  src={WalletUserIcon}
+                  alt='Wallet User icon'
+                  height='23'
+                  width='23'
+                />
+                {client?.wallet_address}
+              </span>
             </div>
           </div>
           <div className='d-flex flex-column container-total flex-md-row'>
@@ -264,7 +264,13 @@ const ClientProfileScreen = ({ client_details }) => {
                 variant={colorMode === 'dark' ? 'outline' : 'solid'}
               >
                 <div className='d-flex align-items-center'>
-                  <img className='mr-2' src={WalletRequest} height='37' width='37' alt='Request Withdraw' />
+                  <img
+                    className='mr-2'
+                    src={WalletRequest}
+                    height='37'
+                    width='37'
+                    alt='Request Withdraw'
+                  />
                   <div className='d-flex flex-column align-items-baseline'>
                     <span>Request</span>
                     <span>Withdraw</span>
@@ -309,7 +315,7 @@ const ClientProfileScreen = ({ client_details }) => {
                         backgroundColor: 'rgba(67,188,164,0.3)',
                         borderColor: 'rgb(67,188,164)',
                         borderWidth: 1,
-                        borderRadius: 50
+                        borderRadius: 50,
                       },
                     ],
                   }}
@@ -325,10 +331,13 @@ const ClientProfileScreen = ({ client_details }) => {
                     },
                   }}
                 />
-                <Box className='d-flex flex-column flex-lg-row text-center mt-4 mb-4' pb='2' >
-                  <Badge 
+                <Box
+                  className='d-flex flex-column flex-lg-row text-center mt-4 mb-4'
+                  pb='2'
+                >
+                  <Badge
                     textColor={colorMode === 'light' ? '#0E0C1C' : 'white'}
-                    className='badge-chart-monthly mb-3 mb-lg-0' 
+                    className='badge-chart-monthly mb-3 mb-lg-0'
                     variant='outline'
                   >
                     Monthly Rewards: HNT{' '}
@@ -353,10 +362,11 @@ const ClientProfileScreen = ({ client_details }) => {
                   </Badge>
                   <Spacer />
 
-                  <Badge 
+                  <Badge
                     textColor={colorMode === 'light' ? '#0E0C1C' : 'white'}
                     className='badge-chart-daily'
-                    variant='outline'>
+                    variant='outline'
+                  >
                     Daily Rewards: HNT{' '}
                     {chartDaysLoading ? (
                       <Loader xs />
@@ -456,6 +466,14 @@ const ClientProfileScreen = ({ client_details }) => {
                           >
                             <Text fontSize='xs'>
                               {moment(hotspot?.startDate).format('YYYY-MM-DD')}
+                            </Text>
+                          </Badge>
+                          <Badge
+                            className='badge-date ml-2'
+                            backgroundColor={'transparent'}
+                          >
+                            <Text fontSize='xs'>
+                              {moment(hotspot?.endDate).format('YYYY-MM-DD')}
                             </Text>
                           </Badge>
                         </Flex>

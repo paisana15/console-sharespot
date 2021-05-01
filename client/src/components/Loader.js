@@ -10,7 +10,7 @@ const Loader = ({ xs, small }) => {
       justifyContent='center'
     >
       <Spinner
-        thickness='3px'
+        thickness={xs ? '1px' : '3px'}
         speed='0.65s'
         emptyColor='gray.200'
         color='blue.500'

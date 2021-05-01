@@ -166,6 +166,7 @@ const addHotspotToClient = asyncHandler(async (req, res) => {
             relation_type: req.body.relation_type,
             percentage: req.body.percentage,
             startDate: req.body.startDate,
+            endDate: req.body.endDate,
           });
           if (newConnection) {
             client.total_hotspot = parseInt(client.total_hotspot) + 1;
@@ -188,6 +189,7 @@ const addHotspotToClient = asyncHandler(async (req, res) => {
           relation_type: req.body.relation_type,
           percentage: req.body.percentage,
           startDate: req.body.startDate,
+          endDate: req.body.endDate,
         });
         if (newConnection) {
           client.total_hotspot = parseInt(client.total_hotspot) + 1;
@@ -227,6 +229,7 @@ const editHotspotToClient = asyncHandler(async (req, res) => {
       hotspot.hotspot_address = h_address || hotspot.hotspot_address;
       hotspot.percentage = req.body.percentage || hotspot.percentage;
       hotspot.startDate = req.body.startDate || hotspot.startDate;
+      hotspot.endDate = req.body.endDate || hotspot.endDate;
       hotspot.relation_type = req.body.relation_type || hotspot.relation_type;
       const update = await hotspot.save();
       if (update) {
@@ -385,10 +388,10 @@ const calHotspotTotal = async (assigned_hotspots) => {
   try {
     const responses = await Promise.all(
       assigned_hotspots?.map(async (data) => {
-        const minDate = moment(data?.startDate).format('YYYY-MM-DD');
-        const response = await axios.get(
-          `https://api.helium.wtf/v1/hotspots/${data?.hotspot_address}/rewards/sum?max_time=2030-08-27&min_time=${minDate}`
-        );
+        const minTime = moment(data?.startDate).format('YYYY-MM-DD');
+        const maxTime = moment(data?.endtDate).format('YYYY-MM-DD');
+        const url = `https://api.helium.wtf/v1/hotspots/${data?.hotspot_address}/rewards/sum?max_time=${maxTime}&min_time=${minTime}`;
+        const response = await axios.get(url);
         if (response?.data) {
           const val = (response?.data?.data?.total * data?.percentage) / 100;
           data.total_earned = val;
