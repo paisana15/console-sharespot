@@ -148,40 +148,40 @@ const addHotspotToClient = asyncHandler(async (req, res) => {
       const h_name = req.body.hotspot_address.split(' ')[0];
       const h_address = req.body.hotspot_address.split(' ')[1];
 
-      if (relation_type === 'host') {
-        const hotspot_has_host = await ClientHotspot.find({
-          hotspot_address: h_address,
-          relation_type: 'host',
-        });
-        if (hotspot_has_host.length > 0) {
-          res.status(400);
-          throw new Error(
-            "This hotspot already assigned as host, can't be assign!"
-          );
-        } else {
-          const newConnection = await ClientHotspot.create({
-            hotspot_name: h_name,
-            hotspot_address: h_address,
-            client_id: req.body.client_id,
-            relation_type: req.body.relation_type,
-            percentage: req.body.percentage,
-            startDate: req.body.startDate,
-            endDate: req.body.endDate,
-          });
-          if (newConnection) {
-            client.total_hotspot = parseInt(client.total_hotspot) + 1;
-            const update = await client.save();
-            if (update) {
-              res.status(201).json(newConnection);
-            } else {
-              res.status(500);
-              throw new Error('Failed to save client!');
-            }
-          } else {
-            throw new Error();
-          }
-        }
-      } else {
+      // if (relation_type === 'host') {
+      //   const hotspot_has_host = await ClientHotspot.find({
+      //     hotspot_address: h_address,
+      //     relation_type: 'host',
+      //   });
+      //   if (hotspot_has_host.length > 0) {
+      //     res.status(400);
+      //     throw new Error(
+      //       "This hotspot already assigned as host, can't be assign!"
+      //     );
+      //   } else {
+      //     const newConnection = await ClientHotspot.create({
+      //       hotspot_name: h_name,
+      //       hotspot_address: h_address,
+      //       client_id: req.body.client_id,
+      //       relation_type: req.body.relation_type,
+      //       percentage: req.body.percentage,
+      //       startDate: req.body.startDate,
+      //       endDate: req.body.endDate,
+      //     });
+      //     if (newConnection) {
+      //       client.total_hotspot = parseInt(client.total_hotspot) + 1;
+      //       const update = await client.save();
+      //       if (update) {
+      //         res.status(201).json(newConnection);
+      //       } else {
+      //         res.status(500);
+      //         throw new Error('Failed to save client!');
+      //       }
+      //     } else {
+      //       throw new Error();
+      //     }
+      //   }
+      // } else {
         const newConnection = await ClientHotspot.create({
           hotspot_name: h_name,
           hotspot_address: h_address,
@@ -204,7 +204,7 @@ const addHotspotToClient = asyncHandler(async (req, res) => {
           res.status(500);
           throw new Error('Hotspot adding failed!');
         }
-      }
+      // }
     }
   } else {
     res.status(404);
