@@ -51,6 +51,8 @@ const AgreementInfo = ({ agreement }) => {
               ? 'Referrer'
               : agreement?.relation_type === 'host'
               ? 'Host'
+              : agreement?.relation_type === 'partner'
+              ? 'Partner'
               : agreement?.relation_type === 'hold' && 'Hold'}
           </Text>
         </Box>
