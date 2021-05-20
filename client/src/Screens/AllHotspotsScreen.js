@@ -7,12 +7,40 @@ import Loader from '../components/Loader';
 import NumberFormat from 'react-number-format';
 import { FormControl } from '@chakra-ui/form-control';
 import { Select } from '@chakra-ui/select';
+import { Button } from '@chakra-ui/button';
+import {
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+} from '@chakra-ui/modal';
+import { useDisclosure } from '@chakra-ui/hooks';
+import AgreementInfo from '../components/AgreementInfo';
+import { useDispatch, useSelector } from 'react-redux';
+import { getAgreements } from '../redux/action/AdminAction';
+import Alert from '../components/Alert';
+import { Input, InputGroup, InputLeftElement } from '@chakra-ui/input';
+import { SearchIcon } from '@chakra-ui/icons';
 
 const AllHotspotsScreen = () => {
   const [error, setError] = useState('');
   const [hotspots, setHotspots] = useState([]);
   const [hotspotLoading, setHotspotLoading] = useState(true);
   const [filterValue, setFilterValue] = useState('');
+  const { onOpen, isOpen, onClose } = useDisclosure();
+  const [hotspotSearchText, setHotspotSearchText] = useState('');
+
+  const dispatch = useDispatch();
+
+  const agreementGet = useSelector((state) => state?.agreementGet);
+  const {
+    loading: agreemetnLoading,
+    agreements,
+    error: agreementError,
+  } = agreementGet;
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -127,6 +155,17 @@ const AllHotspotsScreen = () => {
     }
   });
 
+  const getAgreementsHandler = (hotspotAdress) => {
+    dispatch(getAgreements(hotspotAdress));
+    onOpen();
+  };
+
+  const hotspotList = hotspotsData?.filter((hotspot) => {
+    return hotspotSearchText !== ''
+      ? hotspot?.name.toLowerCase().includes(hotspotSearchText.toLowerCase())
+      : hotspot;
+  });
+
   return (
     <>
       <Box p='4'>
@@ -135,7 +174,20 @@ const AllHotspotsScreen = () => {
             All Hotspots ({hotspots ? hotspots?.length : '0'})
           </Text>
           <Spacer />
-          <Box d='inline-block'>
+          <Box d={{ base: 'block', md: 'flex' }}>
+            <InputGroup mr={{ md: 3 }} mb={{ base: 2, md: 0 }}>
+              <InputLeftElement
+                pointerEvents='none'
+                children={<SearchIcon color='gray.300' />}
+              />
+              <Input
+                variant='flushed'
+                size='sm'
+                type='text'
+                placeholder='Search hotspot ...'
+                onChange={(e) => setHotspotSearchText(e.target.value)}
+              />
+            </InputGroup>
             <FormControl>
               <Select
                 value={filterValue}
@@ -159,8 +211,8 @@ const AllHotspotsScreen = () => {
         {hotspotLoading ? (
           <Loader />
         ) : (
-          hotspotsData &&
-          hotspotsData?.length > 0 && (
+          hotspotList &&
+          hotspotList?.length > 0 && (
             <Table shadow='lg' size='sm' variant='striped'>
               <Thead>
                 <Tr>
@@ -172,7 +224,7 @@ const AllHotspotsScreen = () => {
                 </Tr>
               </Thead>
               <Tbody>
-                {hotspotsData?.map((data, idx) => (
+                {hotspotList?.map((data, idx) => (
                   <Tr key={idx}>
                     <Td>
                       <Flex alignItems='center'>
@@ -201,6 +253,16 @@ const AllHotspotsScreen = () => {
                             {data?.location}
                           </Box>
                         </Box>
+                        <Box>
+                          <Button
+                            onClick={() => getAgreementsHandler(data?.address)}
+                            variant='unstyled'
+                            ml='2'
+                            size='xs'
+                          >
+                            <i className='fas fa-users'></i>
+                          </Button>
+                        </Box>
                       </Flex>
                     </Td>
                     <Td isNumeric>{data?.last_day_rewards?.toFixed(2)}</Td>
@@ -222,7 +284,41 @@ const AllHotspotsScreen = () => {
           )
         )}
       </Box>
+      <Modal size='lg' isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Agreements</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Box>
+              {agreemetnLoading ? (
+                <Loader small />
+              ) : agreementError ? (
+                <Alert status='fail' error={agreementError} />
+              ) : agreements?.length > 0 ? (
+                agreements?.map((agreement) => (
+                  <AgreementInfo key={agreement?._id} agreement={agreement} />
+                ))
+              ) : (
+                <Text color='gray.500'>
+                  No agreemetns found for this hotspot!
+                </Text>
+              )}
+            </Box>
+          </ModalBody>
 
+          <ModalFooter>
+            <Button
+              mr='2'
+              variant='outline'
+              colorScheme='blue'
+              onClick={onClose}
+            >
+              Close
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
       {error && <AlertMessage status='error' error={error} />}
     </>
   );

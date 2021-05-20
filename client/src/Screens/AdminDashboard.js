@@ -39,7 +39,7 @@ const AdminDashboard = () => {
             />
             <Route path={`${path}/add-hotspot`} component={AddHotspotScreen} />
             <Route
-              path={`${path}/all-hotspots`}
+              path={`${path}/hotspots`}
               component={AllHotspotsScreen}
             />
             <Route

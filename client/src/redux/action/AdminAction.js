@@ -63,6 +63,9 @@ import {
   GET_REWARD_BY_ADMIN_FAILED,
   GET_REWARD_BY_ADMIN_REQUEST,
   GET_REWARD_BY_ADMIN_RESET,
+  GET_AGREEMENTS_REQUEST,
+  GET_AGREEMENTS_SUCCESS,
+  GET_AGREEMENTS_FAILED,
 } from '../actionTypes';
 
 export const adminLogin = (credentials) => async (dispatch) => {
@@ -211,48 +214,46 @@ export const addNewClient = (client) => async (dispatch, getState) => {
     });
   }
 };
-export const updateClient = (clientId, client) => async (
-  dispatch,
-  getState
-) => {
-  try {
-    dispatch({
-      type: CLIENT_UPDATE_REQUEST,
-    });
-
-    const {
-      loginAdmin: { aInfo },
-    } = getState();
-
-    const config = {
-      headers: {
-        Authorization: `Bearer ${aInfo._atoken}`,
-      },
-    };
-    const { data } = await axios.put(
-      `${baseURL}/api/admin/editClientProfile/${clientId}`,
-      client,
-      config
-    );
-    dispatch({
-      type: CLIENT_UPDATE_SUCCESS,
-      payload: data,
-    });
-    setTimeout(() => {
+export const updateClient =
+  (clientId, client) => async (dispatch, getState) => {
+    try {
       dispatch({
-        type: CLIENT_UPDATE_RESET,
+        type: CLIENT_UPDATE_REQUEST,
       });
-    }, 2000);
-  } catch (error) {
-    dispatch({
-      type: CLIENT_UPDATE_FAILED,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
-    });
-  }
-};
+
+      const {
+        loginAdmin: { aInfo },
+      } = getState();
+
+      const config = {
+        headers: {
+          Authorization: `Bearer ${aInfo._atoken}`,
+        },
+      };
+      const { data } = await axios.put(
+        `${baseURL}/api/admin/editClientProfile/${clientId}`,
+        client,
+        config
+      );
+      dispatch({
+        type: CLIENT_UPDATE_SUCCESS,
+        payload: data,
+      });
+      setTimeout(() => {
+        dispatch({
+          type: CLIENT_UPDATE_RESET,
+        });
+      }, 2000);
+    } catch (error) {
+      dispatch({
+        type: CLIENT_UPDATE_FAILED,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
 
 export const deleteClient = (clientId) => async (dispatch, getState) => {
   try {
@@ -332,79 +333,75 @@ export const addHotspotToClient = (datas) => async (dispatch, getState) => {
   }
 };
 
-export const deleteHotspot = (hotspotId, clientId) => async (
-  dispatch,
-  getState
-) => {
-  try {
-    const {
-      loginAdmin: { aInfo },
-    } = getState();
+export const deleteHotspot =
+  (hotspotId, clientId) => async (dispatch, getState) => {
+    try {
+      const {
+        loginAdmin: { aInfo },
+      } = getState();
 
-    const config = {
-      headers: {
-        Authorization: `Bearer ${aInfo._atoken}`,
-      },
-    };
-    const { data } = await axios.delete(
-      `${baseURL}/api/admin/deleteHotspot/${hotspotId}/${clientId}`,
-      config
-    );
-    dispatch({
-      type: HOTSPOT_DELETE,
-      payload: data,
-    });
-  } catch (error) {
-    dispatch({
-      type: ADD_HOTSPOT_TO_CLIENT_FAILED,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
-    });
-  }
-};
-
-export const updateHotspot = (hotspotId, hotspot) => async (
-  dispatch,
-  getState
-) => {
-  try {
-    dispatch({
-      type: HOTSPOT_UPDATE_REQUEST,
-    });
-    const {
-      loginAdmin: { aInfo },
-    } = getState();
-
-    const config = {
-      headers: {
-        Authorization: `Bearer ${aInfo._atoken}`,
-      },
-    };
-    await axios.put(
-      `${baseURL}/api/admin/editHotspot/${hotspotId}`,
-      hotspot,
-      config
-    );
-    dispatch({
-      type: HOTSPOT_UPDATE_SUCCESS,
-    });
-    setTimeout(() => {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${aInfo._atoken}`,
+        },
+      };
+      const { data } = await axios.delete(
+        `${baseURL}/api/admin/deleteHotspot/${hotspotId}/${clientId}`,
+        config
+      );
       dispatch({
-        type: HOTSPOT_UPDATE_RESET,
+        type: HOTSPOT_DELETE,
+        payload: data,
       });
-    }, 2000);
-  } catch (error) {
-    dispatch({
-      type: HOTSPOT_UPDATE_FAILED,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
-    });
-  }
-};
+    } catch (error) {
+      dispatch({
+        type: ADD_HOTSPOT_TO_CLIENT_FAILED,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
+
+export const updateHotspot =
+  (hotspotId, hotspot) => async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: HOTSPOT_UPDATE_REQUEST,
+      });
+      const {
+        loginAdmin: { aInfo },
+      } = getState();
+
+      const config = {
+        headers: {
+          Authorization: `Bearer ${aInfo._atoken}`,
+        },
+      };
+      await axios.put(
+        `${baseURL}/api/admin/editHotspot/${hotspotId}`,
+        hotspot,
+        config
+      );
+      dispatch({
+        type: HOTSPOT_UPDATE_SUCCESS,
+      });
+      setTimeout(() => {
+        dispatch({
+          type: HOTSPOT_UPDATE_RESET,
+        });
+      }, 2000);
+    } catch (error) {
+      dispatch({
+        type: HOTSPOT_UPDATE_FAILED,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
 
 export const getWithdrawalRequets = () => async (dispatch, getState) => {
   try {
@@ -556,150 +553,142 @@ export const getMWSWCWbalances = () => async (dispatch, getState) => {
   }
 };
 
-export const getManulaWithdrawHistory = (clientId) => async (
-  dispatch,
-  getState
-) => {
-  try {
-    dispatch({
-      type: GET_MANUAL_WITHDRAW_HISTORY_REQUEST,
-    });
-    const {
-      loginAdmin: { aInfo },
-    } = getState();
+export const getManulaWithdrawHistory =
+  (clientId) => async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: GET_MANUAL_WITHDRAW_HISTORY_REQUEST,
+      });
+      const {
+        loginAdmin: { aInfo },
+      } = getState();
 
-    const config = {
-      headers: {
-        Authorization: `Bearer ${aInfo._atoken}`,
-      },
-    };
-    const { data } = await axios.get(
-      `${baseURL}/api/admin/getManulaWithdrawHistory/${clientId}`,
-      config
-    );
-    dispatch({
-      type: GET_MANUAL_WITHDRAW_HISTORY_SUCCESS,
-      payload: data,
-    });
-  } catch (error) {
-    dispatch({
-      type: GET_MANUAL_WITHDRAW_HISTORY_FAILED,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
-    });
-  }
-};
+      const config = {
+        headers: {
+          Authorization: `Bearer ${aInfo._atoken}`,
+        },
+      };
+      const { data } = await axios.get(
+        `${baseURL}/api/admin/getManulaWithdrawHistory/${clientId}`,
+        config
+      );
+      dispatch({
+        type: GET_MANUAL_WITHDRAW_HISTORY_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: GET_MANUAL_WITHDRAW_HISTORY_FAILED,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
 
-export const addManulaWithdrawHistory = (clientId, mw_amount) => async (
-  dispatch,
-  getState
-) => {
-  try {
-    dispatch({
-      type: ADD_MANUAL_WITHDRAW_HISTORY_REQUEST,
-    });
-    const {
-      loginAdmin: { aInfo },
-    } = getState();
+export const addManulaWithdrawHistory =
+  (clientId, mw_amount) => async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: ADD_MANUAL_WITHDRAW_HISTORY_REQUEST,
+      });
+      const {
+        loginAdmin: { aInfo },
+      } = getState();
 
-    const config = {
-      headers: {
-        Authorization: `Bearer ${aInfo._atoken}`,
-      },
-    };
-    const { data } = await axios.put(
-      `${baseURL}/api/admin/addManualWithdraw/${clientId}`,
-      { mw_amount },
-      config
-    );
-    dispatch({
-      type: ADD_MANUAL_WITHDRAW_HISTORY_SUCCESS,
-      payload: data,
-    });
-  } catch (error) {
-    dispatch({
-      type: ADD_MANUAL_WITHDRAW_HISTORY_FAILED,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
-    });
-  }
-};
+      const config = {
+        headers: {
+          Authorization: `Bearer ${aInfo._atoken}`,
+        },
+      };
+      const { data } = await axios.put(
+        `${baseURL}/api/admin/addManualWithdraw/${clientId}`,
+        { mw_amount },
+        config
+      );
+      dispatch({
+        type: ADD_MANUAL_WITHDRAW_HISTORY_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: ADD_MANUAL_WITHDRAW_HISTORY_FAILED,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
 
-export const deleteManulaWithdrawHistory = (historyId) => async (
-  dispatch,
-  getState
-) => {
-  try {
-    dispatch({
-      type: DELETE_MANUAL_WITHDRAW_HISTORY_REQUEST,
-    });
-    const {
-      loginAdmin: { aInfo },
-    } = getState();
+export const deleteManulaWithdrawHistory =
+  (historyId) => async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: DELETE_MANUAL_WITHDRAW_HISTORY_REQUEST,
+      });
+      const {
+        loginAdmin: { aInfo },
+      } = getState();
 
-    const config = {
-      headers: {
-        Authorization: `Bearer ${aInfo._atoken}`,
-      },
-    };
-    const { data } = await axios.delete(
-      `${baseURL}/api/admin/deleteManualWithdraw/${historyId}`,
-      config
-    );
-    dispatch({
-      type: DELETE_MANUAL_WITHDRAW_HISTORY_SUCCESS,
-      payload: data,
-    });
-  } catch (error) {
-    dispatch({
-      type: DELETE_MANUAL_WITHDRAW_HISTORY_FAILED,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
-    });
-  }
-};
+      const config = {
+        headers: {
+          Authorization: `Bearer ${aInfo._atoken}`,
+        },
+      };
+      const { data } = await axios.delete(
+        `${baseURL}/api/admin/deleteManualWithdraw/${historyId}`,
+        config
+      );
+      dispatch({
+        type: DELETE_MANUAL_WITHDRAW_HISTORY_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: DELETE_MANUAL_WITHDRAW_HISTORY_FAILED,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
 
-export const getWithdrawHistoryByA = (clientId) => async (
-  dispatch,
-  getState
-) => {
-  try {
-    dispatch({
-      type: GET_WITHDRAW_HISTORY_BYA_REQUEST,
-    });
-    const {
-      loginAdmin: { aInfo },
-    } = getState();
+export const getWithdrawHistoryByA =
+  (clientId) => async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: GET_WITHDRAW_HISTORY_BYA_REQUEST,
+      });
+      const {
+        loginAdmin: { aInfo },
+      } = getState();
 
-    const config = {
-      headers: {
-        Authorization: `Bearer ${aInfo._atoken}`,
-      },
-    };
-    const { data } = await axios.get(
-      `${baseURL}/api/admin/getWithdrawHistoryByAdmin/${clientId}`,
-      config
-    );
-    dispatch({
-      type: GET_WITHDRAW_HISTORY_BYA_SUCCESS,
-      payload: data,
-    });
-  } catch (error) {
-    dispatch({
-      type: GET_WITHDRAW_HISTORY_BYA_FAILED,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
-    });
-  }
-};
+      const config = {
+        headers: {
+          Authorization: `Bearer ${aInfo._atoken}`,
+        },
+      };
+      const { data } = await axios.get(
+        `${baseURL}/api/admin/getWithdrawHistoryByAdmin/${clientId}`,
+        config
+      );
+      dispatch({
+        type: GET_WITHDRAW_HISTORY_BYA_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: GET_WITHDRAW_HISTORY_BYA_FAILED,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
 
 export const getRewardByAdmin = () => async (dispatch, getState) => {
   try {
@@ -733,6 +722,39 @@ export const getRewardByAdmin = () => async (dispatch, getState) => {
     });
     dispatch({
       type: GET_REWARD_BY_ADMIN_RESET,
+    });
+  }
+};
+
+export const getAgreements = (hotspotAdress) => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: GET_AGREEMENTS_REQUEST,
+    });
+    const {
+      loginAdmin: { aInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${aInfo._atoken}`,
+      },
+    };
+    const { data } = await axios.get(
+      `${baseURL}/api/admin/getHotspotAgreements/${hotspotAdress}`,
+      config
+    );
+    dispatch({
+      type: GET_AGREEMENTS_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: GET_AGREEMENTS_FAILED,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
     });
   }
 };

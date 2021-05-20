@@ -182,28 +182,28 @@ const addHotspotToClient = asyncHandler(async (req, res) => {
       //     }
       //   }
       // } else {
-        const newConnection = await ClientHotspot.create({
-          hotspot_name: h_name,
-          hotspot_address: h_address,
-          client_id: req.body.client_id,
-          relation_type: req.body.relation_type,
-          percentage: req.body.percentage,
-          startDate: req.body.startDate,
-          endDate: req.body.endDate,
-        });
-        if (newConnection) {
-          client.total_hotspot = parseInt(client.total_hotspot) + 1;
-          const update = await client.save();
-          if (update) {
-            res.status(201).json(newConnection);
-          } else {
-            res.status(500);
-            throw new Error('Failed to save client!');
-          }
+      const newConnection = await ClientHotspot.create({
+        hotspot_name: h_name,
+        hotspot_address: h_address,
+        client_id: req.body.client_id,
+        relation_type: req.body.relation_type,
+        percentage: req.body.percentage,
+        startDate: req.body.startDate,
+        endDate: req.body.endDate,
+      });
+      if (newConnection) {
+        client.total_hotspot = parseInt(client.total_hotspot) + 1;
+        const update = await client.save();
+        if (update) {
+          res.status(201).json(newConnection);
         } else {
           res.status(500);
-          throw new Error('Hotspot adding failed!');
+          throw new Error('Failed to save client!');
         }
+      } else {
+        res.status(500);
+        throw new Error('Hotspot adding failed!');
+      }
       // }
     }
   } else {
@@ -1681,6 +1681,22 @@ const getWithdrawHistoryByAdmin = asyncHandler(async (req, res) => {
     throw new Error('Client not found!');
   }
 });
+// desc: get agreements of specific hotspot
+// endpoint: host_url/api/admin/getHotspotAgreements/:hotspotId
+// access: private
+// method: get
+const getHotspotAgreements = asyncHandler(async (req, res) => {
+  const hotspotId = req.params.hotspotId;
+  const agreements = await ClientHotspot.find({
+    hotspot_address: hotspotId,
+  }).populate('client_id');
+  if (agreements) {
+    res.status(200).json(agreements);
+  } else {
+    res.status(404);
+    throw new Error('No agreements found for this hotspot!');
+  }
+});
 
 export {
   adminLogin,
@@ -1705,4 +1721,5 @@ export {
   getWithdrawHistoryByAdmin,
   getHotspotRewardByS,
   getHotspotRewardByAdmin,
+  getHotspotAgreements,
 };

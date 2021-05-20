@@ -12,6 +12,7 @@ import {
   ClientUpdateReducer,
   DeleteMWHistoriesReducer,
   DelSingleClientReducer,
+  GetAgreementsReducer,
   GetAllClientsReducer,
   GetMWHistoriesReducer,
   GetMWSWCWReducer,
@@ -55,6 +56,7 @@ const reducer = combineReducers({
   addMWHistory: AddMWHistoriesReducer,
   deleteMWHistory: DeleteMWHistoriesReducer,
   getRewardByA: GetRewardByAdminReducer,
+  agreementGet: GetAgreementsReducer,
 });
 
 const verifyToken = (token, lsItem) => {

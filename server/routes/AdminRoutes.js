@@ -20,7 +20,7 @@ import {
   deleteManualWithdraw,
   getWithdrawHistoryByAdmin,
   getHotspotRewardByS,
-  getHotspotRewardByAdmin,
+  getHotspotRewardByAdmin, getHotspotAgreements
 } from '../controller/AdminController.js';
 import { verifyAdmin } from '../middleware/authMiddleware.js';
 
@@ -62,5 +62,6 @@ router
 router
   .route('/getWithdrawHistoryByAdmin/:clientId')
   .get(verifyAdmin, getWithdrawHistoryByAdmin);
+router.route('/getHotspotAgreements/:hotspotId').get(verifyAdmin, getHotspotAgreements)
 
 export default router;

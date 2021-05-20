@@ -60,6 +60,9 @@ import {
   GET_REWARD_BY_ADMIN_SUCCESS,
   GET_REWARD_BY_ADMIN_FAILED,
   GET_REWARD_BY_ADMIN_RESET,
+  GET_AGREEMENTS_REQUEST,
+  GET_AGREEMENTS_SUCCESS,
+  GET_AGREEMENTS_FAILED,
 } from '../actionTypes';
 
 export const AdminLoginReducer = (state = {}, action) => {
@@ -302,6 +305,19 @@ export const GetRewardByAdminReducer = (state = {}, action) => {
       return { loading: false, error: action.payload };
     case GET_REWARD_BY_ADMIN_RESET:
       return {};
+    default:
+      return state;
+  }
+};
+
+export const GetAgreementsReducer = (state = { agreements: [] }, action) => {
+  switch (action.type) {
+    case GET_AGREEMENTS_REQUEST:
+      return { loading: true };
+    case GET_AGREEMENTS_SUCCESS:
+      return { loading: false, agreements: action.payload };
+    case GET_AGREEMENTS_FAILED:
+      return { loading: false, error: action.payload };
     default:
       return state;
   }
