@@ -90,7 +90,7 @@ const deleteClient = asyncHandler(async (req, res) => {
       // deleting all hostpot assigned to this client
       await ClientHotspot.deleteMany(
         { client_id: clientId },
-        (error, result) => {t
+        (error, result) => {
           if (error) {
           }
         }
