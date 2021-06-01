@@ -90,7 +90,7 @@ const deleteClient = asyncHandler(async (req, res) => {
       // deleting all hostpot assigned to this client
       await ClientHotspot.deleteMany(
         { client_id: clientId },
-        (error, result) => {
+        (error, result) => {t
           if (error) {
           }
         }
@@ -141,10 +141,8 @@ const addHotspotToClient = asyncHandler(async (req, res) => {
     hotspot_address: hotspot_address.split(' ')[1],
   });
   if (client) {
-
       const h_name = req.body.hotspot_address.split(' ')[0];
-      const h_address = req.body.hotspot_address.split(' ')[1];
-
+      const h_address = req.body.hotspot_address.split(' ')[1]
       // if (relation_type === 'host') {
       //   const hotspot_has_host = await ClientHotspot.find({
       //     hotspot_address: h_address,
@@ -202,7 +200,7 @@ const addHotspotToClient = asyncHandler(async (req, res) => {
         throw new Error('Hotspot adding failed!');
       }
       // }
-    }
+    //}
   } else {
     res.status(404);
     throw new Error('Client not found!');
