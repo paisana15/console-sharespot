@@ -59,7 +59,7 @@ const AgreementInfo = ({ agreement }) => {
 
         <Box w='50%' textAlign='center'>
           <Text fontSize='xs' color='gray.400'>
-            Commision
+            Commission
           </Text>
           <Text
             fontSize='sm'

@@ -5,8 +5,9 @@ import morgan from 'morgan';
 import { errorHandler, notFound } from './middleware/errorMiddleware.js';
 import adminRoutes from './routes/AdminRoutes.js';
 import clientRoutes from './routes/ClientRoutes.js';
-import cors from 'cors';
 import axios from 'axios';
+import cors from 'cors';
+import { corsWithOptions } from './routes/cors.js';
 
 dotenv.config();
 
@@ -14,12 +15,15 @@ dotenv.config();
 connectDB();
 
 const app = express();
-app.use(cors());
+
 app.use(express.json());
 
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
+// set cors preflight options
+app.options('*', cors());
+app.use(corsWithOptions);
 
 // routes
 app.get('/', (req, res) => {
