@@ -141,13 +141,8 @@ const addHotspotToClient = asyncHandler(async (req, res) => {
     hotspot_address: hotspot_address.split(' ')[1],
   });
   if (client) {
-    if (client_has_current_hostpot.length > 0) {
-      res.status(400);
-      throw new Error(`This hotspot is already assigned to this client!`);
-    } else {
       const h_name = req.body.hotspot_address.split(' ')[0];
-      const h_address = req.body.hotspot_address.split(' ')[1];
-
+      const h_address = req.body.hotspot_address.split(' ')[1]
       // if (relation_type === 'host') {
       //   const hotspot_has_host = await ClientHotspot.find({
       //     hotspot_address: h_address,
@@ -205,7 +200,7 @@ const addHotspotToClient = asyncHandler(async (req, res) => {
         throw new Error('Hotspot adding failed!');
       }
       // }
-    }
+    //}
   } else {
     res.status(404);
     throw new Error('Client not found!');
