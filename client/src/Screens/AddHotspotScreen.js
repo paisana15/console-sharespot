@@ -32,7 +32,7 @@ const AddHotspotScreen = () => {
     async function fetchData() {
       try {
         const res = await axios.get(
-          'https://api.helium.wtf/v1/accounts/13ESLoXiie3eXoyitxryNQNamGAnJjKt2WkiB4gNq95knxAiGEp/hotspots'
+          'https://api.helium.io/v1/accounts/13ESLoXiie3eXoyitxryNQNamGAnJjKt2WkiB4gNq95knxAiGEp/hotspots'
         );
         if (res.data) {
           setApiData(res?.data?.data);
@@ -79,14 +79,14 @@ const AddHotspotScreen = () => {
   });
 
   return (
-    <Box p='4'>
+    <Box p="4">
       <Helmet>
         <title>Add Hotspot | Admin Dashboard</title>
       </Helmet>
-      <Text display='inline-block' fontSize='2xl' className='adminPageHeader'>
+      <Text display="inline-block" fontSize="2xl" className="adminPageHeader">
         Add Hotspot
       </Text>
-      <Box mt='3'>
+      <Box mt="3">
         <Formik
           initialValues={{
             client_id: '',
@@ -114,7 +114,7 @@ const AddHotspotScreen = () => {
                 <FormLabel>Select Client</FormLabel>
                 <Field
                   as={Select}
-                  name='client_id'
+                  name="client_id"
                   value={values.client_id}
                   onChange={handleChange}
                   onBlur={handleBlur}
@@ -137,7 +137,7 @@ const AddHotspotScreen = () => {
                 <FormLabel>Select Hotspot</FormLabel>
                 <Field
                   as={Select}
-                  name='hotspot_address'
+                  name="hotspot_address"
                   value={values.hotspot_address}
                   onChange={handleChange}
                   onBlur={handleBlur}
@@ -154,23 +154,23 @@ const AddHotspotScreen = () => {
                     {errors.hotspot_address}
                   </div>
                 )}
-                {apiError && <AlertMessage status='error' error={apiError} />}
+                {apiError && <AlertMessage status="error" error={apiError} />}
               </FormControl>
 
               <FormControl>
                 <FormLabel>Role</FormLabel>
                 <Field
                   as={Select}
-                  name='relation_type'
+                  name="relation_type"
                   value={values.relation_type}
                   onChange={handleChange}
                   onBlur={handleBlur}
                 >
-                  <option value=''> --- </option>
-                  <option value='host'>Host</option>
-                  <option value='referrer'>Referrer</option>
-                  <option value='partner'>Partner</option>
-                  <option value='hold'>Hold</option>
+                  <option value=""> --- </option>
+                  <option value="host">Host</option>
+                  <option value="referrer">Referrer</option>
+                  <option value="partner">Partner</option>
+                  <option value="hold">Hold</option>
                 </Field>
                 {errors.relation_type && touched.relation_type && (
                   <div style={{ color: 'red', fontSize: 13 }}>
@@ -182,7 +182,7 @@ const AddHotspotScreen = () => {
               <FormControl>
                 <FormLabel>Percentage</FormLabel>
                 <Input
-                  name='percentage'
+                  name="percentage"
                   value={values.percentage}
                   onChange={handleChange}
                   onBlur={handleBlur}
@@ -196,11 +196,11 @@ const AddHotspotScreen = () => {
               <FormControl>
                 <FormLabel>Start Date</FormLabel>
                 <Input
-                  name='startDate'
+                  name="startDate"
                   value={values.startDate}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  type='date'
+                  type="date"
                 />
                 {errors.startDate && touched.startDate && (
                   <div style={{ color: 'red', fontSize: 13 }}>
@@ -211,11 +211,11 @@ const AddHotspotScreen = () => {
               <FormControl>
                 <FormLabel>End Date</FormLabel>
                 <Input
-                  name='endDate'
+                  name="endDate"
                   value={values.endDate}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  type='date'
+                  type="date"
                 />
                 {errors.endDate && touched.endDate && (
                   <div style={{ color: 'red', fontSize: 13 }}>
@@ -224,11 +224,11 @@ const AddHotspotScreen = () => {
                 )}
               </FormControl>
               <Button
-                type='submit'
-                mt='3'
+                type="submit"
+                mt="3"
                 isLoading={loading}
-                loadingText='Creating...'
-                colorScheme='purple'
+                loadingText="Creating..."
+                colorScheme="purple"
               >
                 Create Agreement
               </Button>

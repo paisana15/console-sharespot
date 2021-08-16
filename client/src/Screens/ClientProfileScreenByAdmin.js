@@ -133,7 +133,7 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
     async function fetchChartData() {
       try {
         const response = await axios.get(
-          `https://api.helium.wtf/v1/hotspots/${hotspotAddress}/rewards/sum?min_time=-30%20day&bucket=day
+          `https://api.helium.io/v1/hotspots/${hotspotAddress}/rewards/sum?min_time=-30%20day&bucket=day
         `
         );
         if (response) {
@@ -155,8 +155,11 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
         console.log(error);
       }
     }
-    fetchChartData();
+    if (hotspotAddress !== '') {
+      fetchChartData();
+    }
   }, [hotspotAddress, hotspotPercent]);
+
   const fieldValidationSchema = yup.object({
     m_withdraw: yup
       .number()
@@ -180,15 +183,15 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
       setChartLoading(true);
       // 30 days reward
       const request1 = await axios.get(
-        `https://api.helium.wtf/v1/hotspots/${address}/rewards/sum?min_time=-30%20day`
+        `https://api.helium.io/v1/hotspots/${address}/rewards/sum?min_time=-30%20day`
       );
       // 7 days reward
       const request2 = await axios.get(
-        `https://api.helium.wtf/v1/hotspots/${address}/rewards/sum?min_time=-7%20day`
+        `https://api.helium.io/v1/hotspots/${address}/rewards/sum?min_time=-7%20day`
       );
       // 24 hours reward
       const request3 = await axios.get(
-        `https://api.helium.wtf/v1/hotspots/${address}/rewards/sum?min_time=-1%20day`
+        `https://api.helium.io/v1/hotspots/${address}/rewards/sum?min_time=-1%20day`
       );
       const responses = await axios.all([request1, request2, request3]);
 
@@ -212,59 +215,59 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
   return (
     <>
       <Box>
-        <Flex alignItems='center'>
+        <Flex alignItems="center">
           <Heading
             textColor={`${colorMode === 'light' ? 'gray.600' : '#b3bfd4'}`}
-            size='lg'
-            mb='1'
+            size="lg"
+            mb="1"
           >
             {client?.firstname + ' ' + client?.lastname}
           </Heading>
-          <Tooltip hasArrow label='Edit Profile' bg='gray.300' color='black'>
+          <Tooltip hasArrow label="Edit Profile" bg="gray.300" color="black">
             <span
               style={{ color: '#8594af', marginLeft: 5, cursor: 'pointer' }}
             >
               <Link to={`${url}/edit`}>
-                <i className='fas fa-edit'></i>
+                <i className="fas fa-edit"></i>
               </Link>
             </span>
           </Tooltip>
         </Flex>
         <Box display={{ md: 'flex' }}>
-          <Text color='gray.500' fontSize='sm'>
-            <i className='fas fa-user'></i> Username : {client?.username}
+          <Text color="gray.500" fontSize="sm">
+            <i className="fas fa-user"></i> Username : {client?.username}
           </Text>
           <Spacer />
-          <Text color='gray.500' fontSize='sm'>
-            <i className='fas fa-at'></i> Email : {client?.email}
+          <Text color="gray.500" fontSize="sm">
+            <i className="fas fa-at"></i> Email : {client?.email}
           </Text>
         </Box>
         <Box display={{ md: 'flex' }}>
-          <Text color='gray.500' fontSize='sm'>
-            <i className='fas fa-phone-alt'></i> Phone : {client?.phone_number}
+          <Text color="gray.500" fontSize="sm">
+            <i className="fas fa-phone-alt"></i> Phone : {client?.phone_number}
           </Text>
           <Spacer />
-          <Text color='gray.500' fontSize='sm'>
-            <i className='fas fa-wallet'></i> Wallet Address :{' '}
+          <Text color="gray.500" fontSize="sm">
+            <i className="fas fa-wallet"></i> Wallet Address :{' '}
             {client?.wallet_address}
           </Text>
         </Box>
       </Box>
-      <Box d={{ md: 'flex' }} color='white' mt='3'>
+      <Box d={{ md: 'flex' }} color="white" mt="3">
         <Box
-          boxShadow='base'
-          textAlign='center'
-          p='4'
-          borderRadius='lg'
-          bg='red.400'
+          boxShadow="base"
+          textAlign="center"
+          p="4"
+          borderRadius="lg"
+          bg="red.400"
           w={{ base: '100%', md: '30%' }}
           mb={{ base: '3', sm: '3', md: '3' }}
         >
-          <Heading size='md'>Total Withdrawn</Heading>
-          <Text style={{ fontWeight: 'bold' }} fontSize='3xl'>
+          <Heading size="md">Total Withdrawn</Heading>
+          <Text style={{ fontWeight: 'bold' }} fontSize="3xl">
             <NumberFormat
-              prefix='HNT '
-              displayType='text'
+              prefix="HNT "
+              displayType="text"
               value={
                 client_wallet ? client_wallet?.totalWithdraw?.toFixed(2) : '0'
               }
@@ -274,19 +277,19 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
         </Box>
         <Spacer />
         <Box
-          boxShadow='base'
-          textAlign='center'
-          p='4'
-          borderRadius='lg'
-          bg='green.400'
+          boxShadow="base"
+          textAlign="center"
+          p="4"
+          borderRadius="lg"
+          bg="green.400"
           w={{ base: '100%', md: '30%' }}
           mb={{ base: '3', sm: '3', md: '3' }}
         >
-          <Heading size='md'>Total Rewards</Heading>
-          <Text style={{ fontWeight: 'bold' }} fontSize='3xl'>
+          <Heading size="md">Total Rewards</Heading>
+          <Text style={{ fontWeight: 'bold' }} fontSize="3xl">
             <NumberFormat
-              prefix='HNT '
-              displayType='text'
+              prefix="HNT "
+              displayType="text"
               value={
                 client_wallet ? client_wallet?.totalRewards?.toFixed(2) : '0'
               }
@@ -296,19 +299,19 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
         </Box>
         <Spacer />
         <Box
-          boxShadow='base'
-          textAlign='center'
-          p='4'
-          borderRadius='lg'
-          bg='blue.400'
+          boxShadow="base"
+          textAlign="center"
+          p="4"
+          borderRadius="lg"
+          bg="blue.400"
           w={{ base: '100%', md: '30%' }}
           mb={{ base: '3', sm: '3', md: '3' }}
         >
-          <Heading size='md'>Balance</Heading>
-          <Text style={{ fontWeight: 'bold' }} fontSize='3xl'>
+          <Heading size="md">Balance</Heading>
+          <Text style={{ fontWeight: 'bold' }} fontSize="3xl">
             <NumberFormat
-              prefix='HNT '
-              displayType='text'
+              prefix="HNT "
+              displayType="text"
               value={
                 client_wallet ? client_wallet?.wallet_balance?.toFixed(2) : '0'
               }
@@ -318,10 +321,10 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
         </Box>
       </Box>
       <Box>
-        <Box boxShadow='md' borderRadius='md' p='3'>
+        <Box boxShadow="md" borderRadius="md" p="3">
           {chartData?.length > 0 ? (
-            <Box p='3'>
-              <Text fontSize='lg' fontWeight='semibold'>
+            <Box p="3">
+              <Text fontSize="lg" fontWeight="semibold">
                 Daily Reward
               </Text>
               <Barchart
@@ -349,8 +352,8 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
                   },
                 }}
               />
-              <Box pb='2' d={{ md: 'flex' }} mt='3'>
-                <Badge variant='outline' colorScheme='green'>
+              <Box pb="2" d={{ md: 'flex' }} mt="3">
+                <Badge variant="outline" colorScheme="green">
                   Last 30 Days Reward : HNT{' '}
                   {chartDaysLoading ? (
                     <Loader xs />
@@ -359,7 +362,7 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
                   )}
                 </Badge>
                 <Spacer />
-                <Badge variant='outline' colorScheme='blue'>
+                <Badge variant="outline" colorScheme="blue">
                   Last 7 Days Reward : HNT{' '}
                   {chartDaysLoading ? (
                     <Loader xs />
@@ -369,7 +372,7 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
                 </Badge>
                 <Spacer />
 
-                <Badge variant='outline' colorScheme='orange'>
+                <Badge variant="outline" colorScheme="orange">
                   Last 24 Hours Reward : HNT{' '}
                   {chartDaysLoading ? (
                     <Loader xs />
@@ -382,34 +385,34 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
           ) : null}
         </Box>
       </Box>
-      <Box mt='4'>
-        <Heading mb='3' pl='3' size='xs'>
+      <Box mt="4">
+        <Heading mb="3" pl="3" size="xs">
           Assigned Hotspot ({client?.total_hotspot})
         </Heading>
         <Box
-          boxShadow='md'
-          borderRadius='md'
-          p='4'
-          className='assigned_hotspot_wrapper'
+          boxShadow="md"
+          borderRadius="md"
+          p="4"
+          className="assigned_hotspot_wrapper"
         >
           {client_hotspot?.length > 0 ? (
             client_hotspot.map((hotspot) => (
               <Box
                 display={{ md: 'flex' }}
                 key={hotspot?._id}
-                p='4'
-                borderRadius='lg'
-                mb='3'
-                boxShadow='base'
+                p="4"
+                borderRadius="lg"
+                mb="3"
+                boxShadow="base"
                 bg={colorMode === 'light' ? '#f4f5f7' : '#303744'}
               >
                 <Box d={{ md: 'flex' }}>
                   <Box>
                     <IconButton
                       mr={{ md: 2 }}
-                      color='blue.400'
-                      aria-label='Search database'
-                      icon={<i className='far fa-chart-bar'></i>}
+                      color="blue.400"
+                      aria-label="Search database"
+                      icon={<i className="far fa-chart-bar"></i>}
                       onClick={() =>
                         selectHandler(
                           hotspot?.hotspot_address,
@@ -419,24 +422,24 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
                     />
                   </Box>
                   <Box>
-                    <Heading size='sm'>
+                    <Heading size="sm">
                       <a
-                        target='_blank'
-                        rel='noreferrer'
+                        target="_blank"
+                        rel="noreferrer"
                         href={`https://explorer.helium.com/hotspots/${hotspot?.hotspot_address}`}
                       >
                         {hotspot?.hotspot_name}
                       </a>
                     </Heading>
-                    <Box d={{ sm: 'flex' }} mt='2'>
-                      <Text fontSize='xs' mr='1'>
+                    <Box d={{ sm: 'flex' }} mt="2">
+                      <Text fontSize="xs" mr="1">
                         Percentage
                       </Text>
                       <Badge colorScheme={'green'}>
-                        <Text fontSize='xs'>{hotspot?.percentage + '%'}</Text>
+                        <Text fontSize="xs">{hotspot?.percentage + '%'}</Text>
                       </Badge>
                       <Badge
-                        ml='10px'
+                        ml="10px"
                         colorScheme={
                           hotspot?.relation_type === 'host'
                             ? 'purple'
@@ -445,21 +448,21 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
                             : 'pink'
                         }
                       >
-                        <Text fontSize='xs'>{hotspot?.relation_type}</Text>
+                        <Text fontSize="xs">{hotspot?.relation_type}</Text>
                       </Badge>
-                      <Text fontSize='xs' ml='2' mr='1'>
+                      <Text fontSize="xs" ml="2" mr="1">
                         From
                       </Text>
-                      <Badge colorScheme='blue'>
-                        <Text fontSize='xs'>
+                      <Badge colorScheme="blue">
+                        <Text fontSize="xs">
                           {moment(hotspot?.startDate).format('YYYY-MM-DD')}
                         </Text>
                       </Badge>
-                      <Text fontSize='xs' ml='2' mr='1'>
+                      <Text fontSize="xs" ml="2" mr="1">
                         To
                       </Text>
-                      <Badge colorScheme='blue'>
-                        <Text fontSize='xs'>
+                      <Badge colorScheme="blue">
+                        <Text fontSize="xs">
                           {moment(hotspot?.endDate).format('YYYY-MM-DD')}
                         </Text>
                       </Badge>
@@ -469,21 +472,21 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
                 <Spacer display={{ base: 'none', md: 'block' }} />
                 <Flex
                   mt={{ base: '3', md: '0' }}
-                  textAlign='right'
-                  alignItems='center'
+                  textAlign="right"
+                  alignItems="center"
                 >
-                  <Box mr='2'>
-                    <Text fontSize='sm' color='grey'>
+                  <Box mr="2">
+                    <Text fontSize="sm" color="grey">
                       Total Earned
                     </Text>
                     <Text
-                      fontWeight='semibold'
+                      fontWeight="semibold"
                       color={colorMode === 'light' ? 'grey' : 'orange.200'}
-                      fontSize='sm'
+                      fontSize="sm"
                     >
                       <NumberFormat
-                        prefix='HNT '
-                        displayType='text'
+                        prefix="HNT "
+                        displayType="text"
                         value={hotspot?.total_earned.toFixed(2)}
                         thousandSeparator={true}
                       />
@@ -492,70 +495,70 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
 
                   <Flex>
                     <Button
-                      size='sm'
-                      colorScheme='teal'
-                      variant='outline'
-                      borderColor='teal'
-                      mr='2'
-                      color='gray.500'
+                      size="sm"
+                      colorScheme="teal"
+                      variant="outline"
+                      borderColor="teal"
+                      mr="2"
+                      color="gray.500"
                       onClick={() =>
                         history.push(`${url}/hotspot/${hotspot?._id}/edit`)
                       }
                     >
-                      <EditIcon color='teal.300' />
+                      <EditIcon color="teal.300" />
                     </Button>
                     <Button
-                      size='sm'
-                      variant='outline'
-                      colorScheme='red'
-                      borderColor='red.400'
-                      color='gray.500'
+                      size="sm"
+                      variant="outline"
+                      colorScheme="red"
+                      borderColor="red.400"
+                      color="gray.500"
                       onClick={() => {
                         dispatch(deleteHotspot(hotspot?._id, client?._id));
                       }}
                     >
-                      <DeleteIcon color='red.300' />
+                      <DeleteIcon color="red.300" />
                     </Button>
                   </Flex>
                 </Flex>
               </Box>
             ))
           ) : (
-            <AlertMessage status='error' error='No hotspot assigned yet!' />
+            <AlertMessage status="error" error="No hotspot assigned yet!" />
           )}
         </Box>
-        <Box d={{ md: 'flex' }} mt='6' alignItems='center'>
+        <Box d={{ md: 'flex' }} mt="6" alignItems="center">
           <Button
             mr={{ md: 2 }}
             w={{ base: '100%', md: 'auto' }}
             mt={{ base: 2, md: 0 }}
-            variant='solid'
-            colorScheme='red'
+            variant="solid"
+            colorScheme="red"
             onClick={onOpen}
           >
-            <i style={{ marginRight: 5 }} className='far fa-trash-alt'></i>
+            <i style={{ marginRight: 5 }} className="far fa-trash-alt"></i>
             Delete Client
           </Button>
           <Button
             w={{ base: '100%', md: 'auto' }}
             mr={{ md: 2 }}
             mt={{ base: 2, md: 0 }}
-            colorScheme='yellow'
-            variant='outline'
+            colorScheme="yellow"
+            variant="outline"
             onClick={onWOpen}
           >
-            <i style={{ marginRight: 5 }} className='fas fa-money-check'></i>Add
+            <i style={{ marginRight: 5 }} className="fas fa-money-check"></i>Add
             Withdraw
           </Button>
           <Button
             w={{ base: '100%', md: 'auto' }}
             mr={{ md: 2 }}
             mt={{ base: 2, md: 0 }}
-            colorScheme='purple'
-            variant='outline'
+            colorScheme="purple"
+            variant="outline"
             onClick={getClientWHHandler}
           >
-            <i style={{ marginRight: 5 }} className='fas fa-money-check'></i>
+            <i style={{ marginRight: 5 }} className="fas fa-money-check"></i>
             Withdraw History
           </Button>
         </Box>
@@ -563,7 +566,7 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
         {loading ? (
           <Loader />
         ) : (
-          error && <AlertMessage status='error' error={error} />
+          error && <AlertMessage status="error" error={error} />
         )}
         <Modal isOpen={isOpen} onClose={onClose}>
           <ModalOverlay />
@@ -576,17 +579,17 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
 
             <ModalFooter>
               <Button
-                mr='2'
-                variant='outline'
-                colorScheme='blue'
+                mr="2"
+                variant="outline"
+                colorScheme="blue"
                 onClick={onClose}
               >
                 Close
               </Button>
               <Button
                 onClick={clientDelteHandler}
-                colorScheme='red'
-                variant='outline'
+                colorScheme="red"
+                variant="outline"
               >
                 Yes, Confirm
               </Button>
@@ -599,24 +602,24 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
             <ModalHeader>Withdraw History</ModalHeader>
             <ModalCloseButton />
             <ModalBody>
-              <Box className='assigned_hotspot_wrapper'>
+              <Box className="assigned_hotspot_wrapper">
                 {historyLoading ? (
                   <Loader />
                 ) : historyError ? (
-                  <AlertMessage status='error' error={historyError} />
+                  <AlertMessage status="error" error={historyError} />
                 ) : wHistories && wHistories?.length > 0 ? (
                   wHistories.map((data, idx) => (
                     <Flex
                       key={idx}
-                      p='2'
-                      px='4'
-                      borderRadius='lg'
-                      mb='3'
-                      boxShadow='base'
+                      p="2"
+                      px="4"
+                      borderRadius="lg"
+                      mb="3"
+                      boxShadow="base"
                       bg={colorMode === 'light' ? '#f4f5f7' : '#303744'}
                     >
                       <Box>
-                        <Text fontSize='sm'>
+                        <Text fontSize="sm">
                           {moment(data?.createdAt).format('LLL')}
                         </Text>
                         <Box>
@@ -645,17 +648,17 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
                         </Box>
                       </Box>
                       <Spacer />
-                      <Flex textAlign='right' alignItems='center'>
-                        <Box mr='2'>
-                          <Text fontSize='sm' color='grey'>
+                      <Flex textAlign="right" alignItems="center">
+                        <Box mr="2">
+                          <Text fontSize="sm" color="grey">
                             Amount
                           </Text>
                           <Text
-                            fontWeight='bold'
+                            fontWeight="bold"
                             color={
                               colorMode === 'light' ? 'grey' : 'orange.200'
                             }
-                            fontSize='sm'
+                            fontSize="sm"
                           >
                             HNT {data?.amount?.toFixed(2)}
                           </Text>
@@ -664,15 +667,15 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
                     </Flex>
                   ))
                 ) : (
-                  <AlertMessage status='error' error='No withdraw history!' />
+                  <AlertMessage status="error" error="No withdraw history!" />
                 )}
               </Box>
             </ModalBody>
 
             <ModalFooter>
               <Button
-                variant='outline'
-                colorScheme='blue'
+                variant="outline"
+                colorScheme="blue"
                 mr={3}
                 onClick={onWHClose}
               >
@@ -707,28 +710,28 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
                   {({ handleSubmit }) => (
                     <form onSubmit={handleSubmit}>
                       <MyTextField
-                        type='text'
-                        placeholder='Manual withdraw amount'
-                        label='Amount'
-                        name='m_withdraw'
+                        type="text"
+                        placeholder="Manual withdraw amount"
+                        label="Amount"
+                        name="m_withdraw"
                       />
-                      <Box d='flex' alignItems='baseline' float='right'>
+                      <Box d="flex" alignItems="baseline" float="right">
                         <Button
-                          variant='outline'
-                          colorScheme='blue'
+                          variant="outline"
+                          colorScheme="blue"
                           onClick={onWClose}
-                          mr='2'
-                          size='sm'
+                          mr="2"
+                          size="sm"
                         >
                           Close
                         </Button>
                         <Button
-                          mt='2'
+                          mt="2"
                           isLoading={addMWLoading}
                           loadingText={'Adding...'}
-                          type='submit'
-                          colorScheme='facebook'
-                          size='sm'
+                          type="submit"
+                          colorScheme="facebook"
+                          size="sm"
                         >
                           Add
                         </Button>
@@ -738,7 +741,7 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
                 </Formik>
               </Box>
               <Box>
-                <Table mt='24' shadow='lg' size='sm' variant='striped'>
+                <Table mt="24" shadow="lg" size="sm" variant="striped">
                   <TableCaption>Recent withdraw added by admin</TableCaption>
                   <Thead>
                     <Tr>
@@ -751,14 +754,14 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
                       mw_histories?.map((data) => (
                         <Tr key={data?._id}>
                           <Td>{moment(data?.createdAt).format('LLL')}</Td>
-                          <Td textColor='green.400' isNumeric>
+                          <Td textColor="green.400" isNumeric>
                             HNT {data?.mw_amount}
                           </Td>
                           <Td isNumeric>
                             <Button
-                              variant='outline'
-                              colorScheme='red'
-                              size='xs'
+                              variant="outline"
+                              colorScheme="red"
+                              size="xs"
                               onClick={() => {
                                 dispatch(
                                   deleteManulaWithdrawHistory(data?._id)
@@ -774,8 +777,8 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
                 </Table>
                 {mw_histories?.length < 1 && (
                   <AlertMessage
-                    status='error'
-                    error='No history for this user!'
+                    status="error"
+                    error="No history for this user!"
                   />
                 )}
               </Box>

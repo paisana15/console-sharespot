@@ -49,7 +49,7 @@ const ClientProfileScreen = ({ client_details }) => {
     async function fetchChartData() {
       try {
         const response = await axios.get(
-          `https://api.helium.wtf/v1/hotspots/${hotspotAddress}/rewards/sum?min_time=-60%20day&bucket=week
+          `https://api.helium.io/v1/hotspots/${hotspotAddress}/rewards/sum?min_time=-60%20day&bucket=week
         `
         );
         if (response) {
@@ -81,15 +81,15 @@ const ClientProfileScreen = ({ client_details }) => {
       setChartLoading(true);
       // 30 days reward
       const request1 = await axios.get(
-        `https://api.helium.wtf/v1/hotspots/${address}/rewards/sum?min_time=-30%20day`
+        `https://api.helium.io/v1/hotspots/${address}/rewards/sum?min_time=-30%20day`
       );
       // 7 days reward
       const request2 = await axios.get(
-        `https://api.helium.wtf/v1/hotspots/${address}/rewards/sum?min_time=-7%20day`
+        `https://api.helium.io/v1/hotspots/${address}/rewards/sum?min_time=-7%20day`
       );
       // 24 hours reward
       const request3 = await axios.get(
-        `https://api.helium.wtf/v1/hotspots/${address}/rewards/sum?min_time=-1%20day`
+        `https://api.helium.io/v1/hotspots/${address}/rewards/sum?min_time=-1%20day`
       );
       const responses = await axios.all([request1, request2, request3]);
 
@@ -112,82 +112,82 @@ const ClientProfileScreen = ({ client_details }) => {
 
   return (
     <>
-      <Box className='mt-4'>
-        <Flex alignItems='center' className='mb-lg-4'>
+      <Box className="mt-4">
+        <Flex alignItems="center" className="mb-lg-4">
           <Heading
-            className='title-underline'
+            className="title-underline"
             textColor={`${colorMode === 'light' ? '#0E0C1C' : 'white'}`}
-            size='lg'
-            mb='1'
+            size="lg"
+            mb="1"
           >
             {client?.firstname + ' ' + client?.lastname}
             &nbsp;Wallet
             <hr />
           </Heading>
         </Flex>
-        <div className='d-flex flex-column d-lg-flex flex-lg-row justify-content-space-between'>
-          <div className='mb-4'>
-            <div className='d-flex flex-column flex-lg-row mb-0 mb-lg-4'>
-              <div className='col-12 col-lg-3 p-0 mb-3 mt-4 mt-lg-0 mb-lg-0 mr-2'>
-                <span className='info-user-dashboard'>
+        <div className="d-flex flex-column d-lg-flex flex-lg-row justify-content-space-between">
+          <div className="mb-4">
+            <div className="d-flex flex-column flex-lg-row mb-0 mb-lg-4">
+              <div className="col-12 col-lg-3 p-0 mb-3 mt-4 mt-lg-0 mb-lg-0 mr-2">
+                <span className="info-user-dashboard">
                   <img
-                    className='mr-2'
+                    className="mr-2"
                     src={UserIcon}
-                    alt='User icon'
-                    height='20'
-                    width='20'
+                    alt="User icon"
+                    height="20"
+                    width="20"
                   />
                   {client?.username}
                 </span>
               </div>
-              <div className='col-12 col-lg-3 p-0 mb-3 mb-lg-0 mr-md-4'>
-                <span className='info-user-dashboard '>
+              <div className="col-12 col-lg-3 p-0 mb-3 mb-lg-0 mr-md-4">
+                <span className="info-user-dashboard ">
                   <img
-                    className='mr-2'
+                    className="mr-2"
                     src={PhoneIcon}
-                    alt='Phone icon'
-                    height='14'
-                    width='14'
+                    alt="Phone icon"
+                    height="14"
+                    width="14"
                   />
                   {client?.phone_number}
                 </span>
               </div>
-              <div className='col-12 col-lg-3 p-0 mb-3 mb-lg-0'>
-                <span className='info-user-dashboard'>
+              <div className="col-12 col-lg-3 p-0 mb-3 mb-lg-0">
+                <span className="info-user-dashboard">
                   <img
-                    className='mr-2'
+                    className="mr-2"
                     src={MailIcon}
-                    alt='Mail icon'
-                    height='23'
-                    width='23'
+                    alt="Mail icon"
+                    height="23"
+                    width="23"
                   />
                   {client?.email}
                 </span>
               </div>
             </div>
-            <div className='col-12 col-lg-12 p-0 mb-3 mb-lg-0'>
-              <span className='d-flex info-user-dashboard word-break align-items-center'>
+            <div className="col-12 col-lg-12 p-0 mb-3 mb-lg-0">
+              <span className="d-flex info-user-dashboard word-break align-items-center">
                 <img
-                  className='mr-2'
+                  className="mr-2"
                   src={WalletUserIcon}
-                  alt='Wallet User icon'
-                  height='23'
-                  width='23'
+                  alt="Wallet User icon"
+                  height="23"
+                  width="23"
                 />
                 {client?.wallet_address}
               </span>
             </div>
           </div>
-          <div className='d-flex flex-column container-total flex-md-row'>
-            <div className='total-wrapper d-flex flex-column'>
-              <div className='d-flex align-items-center justify-content-space-between mb-4 mb-md-0'>
-                <h5 className='total-text text-nowrap'>Total Rewards</h5>
-                <div className='total-rewards text-nowrap mb-md-3 mb-lg-0'>
-                  <Text style={{ fontWeight: 'bold' }} fontSize='lg'>
+          <div className="d-flex flex-column container-total flex-md-row">
+            <div className="total-wrapper d-flex flex-column">
+              <div className="d-flex align-items-center justify-content-space-between mb-4 mb-md-0">
+                <h5 className="total-text text-nowrap">Total Rewards</h5>
+                <div className="total-rewards text-nowrap mb-md-3 mb-lg-0">
+                  <Text style={{ fontWeight: 'bold' }} fontSize="lg">
                     <NumberFormat
-                      suffix=' HNT'
+                      suffix=" HNT"
                       thousandSeparator={true}
-                      displayType='text'
+                      displayType="text"
                       value={
                         client_wallet
                           ? client_wallet?.totalRewards?.toFixed(0)
@@ -197,14 +197,14 @@ const ClientProfileScreen = ({ client_details }) => {
                   </Text>
                 </div>
               </div>
-              <div className='d-flex align-items-center justify-content-space-between'>
-                <h5 className='total-text text-nowrap'>Total Withdrawn</h5>
-                <div className='total-withdrawn text-nowrap'>
-                  <Text style={{ fontWeight: 'bold' }} fontSize='lg'>
+              <div className="d-flex align-items-center justify-content-space-between">
+                <h5 className="total-text text-nowrap">Total Withdrawn</h5>
+                <div className="total-withdrawn text-nowrap">
+                  <Text style={{ fontWeight: 'bold' }} fontSize="lg">
                     <NumberFormat
-                      suffix=' HNT'
+                      suffix=" HNT"
                       thousandSeparator={true}
-                      displayType='text'
+                      displayType="text"
                       value={
                         client_wallet
                           ? client_wallet?.totalWithdraw?.toFixed(0)
@@ -215,25 +215,25 @@ const ClientProfileScreen = ({ client_details }) => {
                 </div>
               </div>
             </div>
-            <div className='d-flex flex-column available-container mt-5 mt-md-0 mt-lg-2'>
-              <div className='mx-auto'>
-                <h5 className='total-text'>Available</h5>
+            <div className="d-flex flex-column available-container mt-5 mt-md-0 mt-lg-2">
+              <div className="mx-auto">
+                <h5 className="total-text">Available</h5>
                 <Box
-                  className='wallet-circle'
+                  className="wallet-circle"
                   bg={colorMode === 'light' ? '#fff' : '#0E0C1C'}
                 >
                   <img
                     src={WalletCircleIcon}
-                    height='28'
-                    width='28'
-                    alt='Wallet Circle'
+                    height="28"
+                    width="28"
+                    alt="Wallet Circle"
                   />
                 </Box>
-                <Text style={{ fontWeight: 'bold' }} fontSize='2xl'>
+                <Text style={{ fontWeight: 'bold' }} fontSize="2xl">
                   <NumberFormat
-                    suffix=' HNT'
+                    suffix=" HNT"
                     thousandSeparator={true}
-                    displayType='text'
+                    displayType="text"
                     value={
                       client_wallet
                         ? client_wallet?.wallet_balance?.toFixed(2)
@@ -247,31 +247,31 @@ const ClientProfileScreen = ({ client_details }) => {
         </div>
       </Box>
       <Box
-        className='spacing-dashboard pl-md-4'
-        backgroundColor='#fafafa'
-        borderRadius='15px'
+        className="spacing-dashboard pl-md-4"
+        backgroundColor="#fafafa"
+        borderRadius="15px"
         bg={colorMode === 'light' ? '#fafafa' : '#1D1A30'}
       >
         <Box>
-          <div className='button-wrapper'>
-            <Link className='position-request' to={`/c/profile/withdraw`}>
+          <div className="button-wrapper">
+            <Link className="position-request" to={`/c/profile/withdraw`}>
               <Button
-                className='button-dashboard bg-blue'
+                className="button-dashboard bg-blue"
                 w={{ base: '100%' }}
                 mr={{ md: 2 }}
                 mt={{ base: 2, md: 0 }}
                 // onClick={getRewardHandler}
                 variant={colorMode === 'dark' ? 'outline' : 'solid'}
               >
-                <div className='d-flex align-items-center'>
+                <div className="d-flex align-items-center">
                   <img
-                    className='mr-2'
+                    className="mr-2"
                     src={WalletRequest}
-                    height='37'
-                    width='37'
-                    alt='Request Withdraw'
+                    height="37"
+                    width="37"
+                    alt="Request Withdraw"
                   />
-                  <div className='d-flex flex-column align-items-baseline'>
+                  <div className="d-flex flex-column align-items-baseline">
                     <span>Request</span>
                     <span>Withdraw</span>
                   </div>
@@ -299,10 +299,10 @@ const ClientProfileScreen = ({ client_details }) => {
               </div> 
             </Button> */}
           </div>
-          <Box borderRadius='md'>
+          <Box borderRadius="md">
             {chartData?.length > 0 ? (
-              <Box p='3'>
-                <Heading className='ml-4' size='md'>
+              <Box p="3">
+                <Heading className="ml-4" size="md">
                   Weekly Rewards
                 </Heading>
                 <Barchart
@@ -332,13 +332,13 @@ const ClientProfileScreen = ({ client_details }) => {
                   }}
                 />
                 <Box
-                  className='d-flex flex-column flex-lg-row text-center mt-4 mb-4'
-                  pb='2'
+                  className="d-flex flex-column flex-lg-row text-center mt-4 mb-4"
+                  pb="2"
                 >
                   <Badge
                     textColor={colorMode === 'light' ? '#0E0C1C' : 'white'}
-                    className='badge-chart-monthly mb-3 mb-lg-0'
-                    variant='outline'
+                    className="badge-chart-monthly mb-3 mb-lg-0"
+                    variant="outline"
                   >
                     Monthly Rewards: HNT{' '}
                     {chartDaysLoading ? (
@@ -350,8 +350,8 @@ const ClientProfileScreen = ({ client_details }) => {
                   <Spacer />
                   <Badge
                     textColor={colorMode === 'light' ? '#0E0C1C' : 'white'}
-                    className='badge-chart-weekly mb-3 mb-lg-0'
-                    variant='outline'
+                    className="badge-chart-weekly mb-3 mb-lg-0"
+                    variant="outline"
                   >
                     Weekly Rewards: HNT{' '}
                     {chartDaysLoading ? (
@@ -364,8 +364,8 @@ const ClientProfileScreen = ({ client_details }) => {
 
                   <Badge
                     textColor={colorMode === 'light' ? '#0E0C1C' : 'white'}
-                    className='badge-chart-daily'
-                    variant='outline'
+                    className="badge-chart-daily"
+                    variant="outline"
                   >
                     Daily Rewards: HNT{' '}
                     {chartDaysLoading ? (
@@ -379,43 +379,43 @@ const ClientProfileScreen = ({ client_details }) => {
             ) : null}
           </Box>
         </Box>
-        <Box className='mt-5 mt-lg-4'>
-          <Heading className='ml-4 mb-4 d-flex align-items-center' size='md'>
-            <div className='d-flex'>
+        <Box className="mt-5 mt-lg-4">
+          <Heading className="ml-4 mb-4 d-flex align-items-center" size="md">
+            <div className="d-flex">
               <Heading
-                className='rectangle-hotspot mr-2'
-                border='2px'
+                className="rectangle-hotspot mr-2"
+                border="2px"
                 borderColor={colorMode === 'light' ? 'black' : 'white'}
               >
                 <Text
-                  className='circle-hotspot'
-                  border='2px'
+                  className="circle-hotspot"
+                  border="2px"
                   borderColor={colorMode === 'light' ? 'black' : 'white'}
                 />
               </Heading>
             </div>
             Assigned Hotspot ({client?.total_hotspot})&#x0003A;
           </Heading>
-          <div className='justify-content-end mr-5 d-none d-md-flex'>
+          <div className="justify-content-end mr-5 d-none d-md-flex">
             total earned
           </div>
-          <Box borderRadius='md' p='5' className='assigned_hotspot_wrapper'>
+          <Box borderRadius="md" p="5" className="assigned_hotspot_wrapper">
             {client_hotspot?.length > 0 ? (
               client_hotspot.map((hotspot) => (
                 <Box
-                  className='mb-4'
+                  className="mb-4"
                   display={{ md: 'flex' }}
                   key={hotspot?._id}
-                  borderRadius='20px'
+                  borderRadius="20px"
                   bg={colorMode === 'light' ? '#f3f3f3' : '#0E0C1C'}
                 >
                   <Box d={{ md: 'flex' }}>
-                    <Box className='d-flex align-items-center ml-3 pt-3 pt-md-0'>
+                    <Box className="d-flex align-items-center ml-3 pt-3 pt-md-0">
                       <IconButton
                         mr={{ md: 2 }}
-                        color='blue.400'
-                        aria-label='Search database'
-                        icon={<i className='far fa-chart-bar'></i>}
+                        color="blue.400"
+                        aria-label="Search database"
+                        icon={<i className="far fa-chart-bar"></i>}
                         onClick={() =>
                           selectHandler(
                             hotspot?.hotspot_address,
@@ -424,21 +424,21 @@ const ClientProfileScreen = ({ client_details }) => {
                         }
                       />
                     </Box>
-                    <Box className='d-flex flex-column ml-2 justify-content-center w-100 pb-3 pl-3 pr-3 pt-0 p-md-3'>
-                      <Heading size='md' className='mb-3 mt-4 mt-md-0'>
+                    <Box className="d-flex flex-column ml-2 justify-content-center w-100 pb-3 pl-3 pr-3 pt-0 p-md-3">
+                      <Heading size="md" className="mb-3 mt-4 mt-md-0">
                         <a
-                          target='_blank'
-                          rel='noreferrer'
+                          target="_blank"
+                          rel="noreferrer"
                           href={`https://explorer.helium.com/hotspots/${hotspot?.hotspot_address}`}
                         >
                           {hotspot?.hotspot_name}
                         </a>
                       </Heading>
                       <Box d={{ sm: 'flex' }}>
-                        <Flex className='wrapper-badges' d={{ sm: 'flex' }}>
+                        <Flex className="wrapper-badges" d={{ sm: 'flex' }}>
                           <Badge
-                            className='badge-relation-type mr-1 mr-md-3 ml-0'
-                            ml='10px'
+                            className="badge-relation-type mr-1 mr-md-3 ml-0"
+                            ml="10px"
                             bg={
                               hotspot?.relation_type === 'host'
                                 ? '#F99918'
@@ -447,32 +447,32 @@ const ClientProfileScreen = ({ client_details }) => {
                                 : 'pink'
                             }
                           >
-                            <span className='text-white'>
+                            <span className="text-white">
                               {hotspot?.relation_type}
                             </span>
                           </Badge>
                           <Badge
-                            className='badge-percentage mr-1 mr-md-3'
+                            className="badge-percentage mr-1 mr-md-3"
                             color={'#fff'}
                             backgroundColor={'#44BBA4'}
                           >
-                            <Text fontSize='xs'>
+                            <Text fontSize="xs">
                               {hotspot?.percentage + '%'}
                             </Text>
                           </Badge>
                           <Badge
-                            className='badge-date'
+                            className="badge-date"
                             backgroundColor={'transparent'}
                           >
-                            <Text fontSize='xs'>
+                            <Text fontSize="xs">
                               {moment(hotspot?.startDate).format('YYYY-MM-DD')}
                             </Text>
                           </Badge>
                           <Badge
-                            className='badge-date ml-2'
+                            className="badge-date ml-2"
                             backgroundColor={'transparent'}
                           >
-                            <Text fontSize='xs'>
+                            <Text fontSize="xs">
                               {moment(hotspot?.endDate).format('YYYY-MM-DD')}
                             </Text>
                           </Badge>
@@ -481,19 +481,19 @@ const ClientProfileScreen = ({ client_details }) => {
                     </Box>
                   </Box>
                   <Spacer display={{ base: 'none', md: 'block' }} />
-                  <div className='text-center mt-3 mt-md-0'>
+                  <div className="text-center mt-3 mt-md-0">
                     <Box>
                       <Text
-                        className='total-earned-singular'
-                        fontWeight='semibold'
+                        className="total-earned-singular"
+                        fontWeight="semibold"
                         bg={colorMode === 'light' ? '#313131' : '#292446'}
                         color={colorMode === 'light' ? 'white' : ''}
-                        fontSize='sm'
+                        fontSize="sm"
                       >
                         <NumberFormat
-                          prefix='HNT '
+                          prefix="HNT "
                           thousandSeparator={true}
-                          displayType='text'
+                          displayType="text"
                           value={hotspot?.total_earned.toFixed(2)}
                         />
                       </Text>
@@ -502,7 +502,7 @@ const ClientProfileScreen = ({ client_details }) => {
                 </Box>
               ))
             ) : (
-              <AlertMessage status='error' error='No hotspot assigned yet!' />
+              <AlertMessage status="error" error="No hotspot assigned yet!" />
             )}
           </Box>
         </Box>

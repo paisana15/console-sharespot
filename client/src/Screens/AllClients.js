@@ -96,7 +96,7 @@ const AllClients = () => {
     async function fetchChartData() {
       try {
         const response = await axios.get(
-          `https://api.helium.wtf/v1/accounts/13ESLoXiie3eXoyitxryNQNamGAnJjKt2WkiB4gNq95knxAiGEp/rewards/sum?min_time=-${chartInitial?.time}%20day&bucket=${chartInitial?.bucket}
+          `https://api.helium.io/v1/accounts/13ESLoXiie3eXoyitxryNQNamGAnJjKt2WkiB4gNq95knxAiGEp/rewards/sum?min_time=-${chartInitial?.time}%20day&bucket=${chartInitial?.bucket}
         `
         );
         if (response) {
@@ -138,13 +138,13 @@ const AllClients = () => {
 
     async function thsevenlastDayFetch() {
       const request30 = await axios.get(
-        'https://api.helium.wtf/v1/accounts/13ESLoXiie3eXoyitxryNQNamGAnJjKt2WkiB4gNq95knxAiGEp/rewards/sum?min_time=-30%20day'
+        'https://api.helium.io/v1/accounts/13ESLoXiie3eXoyitxryNQNamGAnJjKt2WkiB4gNq95knxAiGEp/rewards/sum?min_time=-30%20day'
       );
       const request7 = await axios.get(
-        'https://api.helium.wtf/v1/accounts/13ESLoXiie3eXoyitxryNQNamGAnJjKt2WkiB4gNq95knxAiGEp/rewards/sum?min_time=-7%20day'
+        'https://api.helium.io/v1/accounts/13ESLoXiie3eXoyitxryNQNamGAnJjKt2WkiB4gNq95knxAiGEp/rewards/sum?min_time=-7%20day'
       );
       const request1 = await axios.get(
-        'https://api.helium.wtf/v1/accounts/13ESLoXiie3eXoyitxryNQNamGAnJjKt2WkiB4gNq95knxAiGEp/rewards/sum?min_time=-1%20day'
+        'https://api.helium.io/v1/accounts/13ESLoXiie3eXoyitxryNQNamGAnJjKt2WkiB4gNq95knxAiGEp/rewards/sum?min_time=-1%20day'
       );
       try {
         const responses = await axios.all([request30, request7, request1]);
@@ -179,28 +179,28 @@ const AllClients = () => {
   });
 
   return (
-    <Box p='4'>
+    <Box p="4">
       <Helmet>
         <title>All Clients | Admin Dashboard</title>
       </Helmet>
-      <Box d={{ md: 'flex' }} color='white' mt='3'>
+      <Box d={{ md: 'flex' }} color="white" mt="3">
         <Box
-          boxShadow='base'
-          textAlign='center'
-          p='4'
-          borderRadius='lg'
-          bg='red.400'
+          boxShadow="base"
+          textAlign="center"
+          p="4"
+          borderRadius="lg"
+          bg="red.400"
           w={{ base: '100%', md: '30%' }}
           mb={{ base: '3', sm: '3', md: '3' }}
         >
-          <Heading size='md'>Main Wallet Balance</Heading>
-          <Box style={{ fontWeight: 'bold' }} fontSize='3xl'>
+          <Heading size="md">Main Wallet Balance</Heading>
+          <Box style={{ fontWeight: 'bold' }} fontSize="3xl">
             {mwLoading ? (
               <Loader small />
             ) : (
               <NumberFormat
-                prefix='HNT '
-                displayType='text'
+                prefix="HNT "
+                displayType="text"
                 value={balances ? balances?.mw_balance?.toFixed(2) : '0'}
                 thousandSeparator={true}
               />
@@ -209,22 +209,22 @@ const AllClients = () => {
         </Box>
         <Spacer />
         <Box
-          boxShadow='base'
-          textAlign='center'
-          p='4'
-          borderRadius='lg'
-          bg='green.400'
+          boxShadow="base"
+          textAlign="center"
+          p="4"
+          borderRadius="lg"
+          bg="green.400"
           w={{ base: '100%', md: '30%' }}
           mb={{ base: '3', sm: '3', md: '3' }}
         >
-          <Heading size='md'>Clients Balance</Heading>
-          <Box style={{ fontWeight: 'bold' }} fontSize='3xl'>
+          <Heading size="md">Clients Balance</Heading>
+          <Box style={{ fontWeight: 'bold' }} fontSize="3xl">
             {mwLoading ? (
               <Loader small />
             ) : (
               <NumberFormat
-                prefix='HNT '
-                displayType='text'
+                prefix="HNT "
+                displayType="text"
                 value={balances ? balances?.cw_balance?.toFixed(2) : '0'}
                 thousandSeparator={true}
               />
@@ -233,22 +233,22 @@ const AllClients = () => {
         </Box>
         <Spacer />
         <Box
-          boxShadow='base'
-          textAlign='center'
-          p='4'
-          borderRadius='lg'
-          bg='blue.400'
+          boxShadow="base"
+          textAlign="center"
+          p="4"
+          borderRadius="lg"
+          bg="blue.400"
           w={{ base: '100%', md: '30%' }}
           mb={{ base: '3', sm: '3', md: '3' }}
         >
-          <Heading size='md'>Available Balance</Heading>
-          <Box style={{ fontWeight: 'bold' }} fontSize='3xl'>
+          <Heading size="md">Available Balance</Heading>
+          <Box style={{ fontWeight: 'bold' }} fontSize="3xl">
             {mwLoading ? (
               <Loader small />
             ) : (
               <NumberFormat
-                prefix='HNT '
-                displayType='text'
+                prefix="HNT "
+                displayType="text"
                 value={
                   balances
                     ? (
@@ -263,23 +263,23 @@ const AllClients = () => {
           </Box>
         </Box>
       </Box>
-      <Box d={{ md: 'flex' }} color='white' mt='3'>
+      <Box d={{ md: 'flex' }} color="white" mt="3">
         <Box
-          boxShadow='base'
-          textAlign='center'
-          p='2'
-          borderRadius='lg'
-          border='1px'
-          borderColor='red.400'
+          boxShadow="base"
+          textAlign="center"
+          p="2"
+          borderRadius="lg"
+          border="1px"
+          borderColor="red.400"
           w={{ base: '100%', md: '30%' }}
           mb={{ base: '3', sm: '3', md: '3' }}
           color={colorMode === 'light' ? 'gray.600' : '#ddd'}
         >
-          <Heading size='sm'>Last 30 Days Rewards</Heading>
-          <Box style={{ fontWeight: 'bold' }} fontSize='lg'>
+          <Heading size="sm">Last 30 Days Rewards</Heading>
+          <Box style={{ fontWeight: 'bold' }} fontSize="lg">
             <NumberFormat
-              prefix='HNT '
-              displayType='text'
+              prefix="HNT "
+              displayType="text"
               value={thirtyDR ? thirtyDR.toFixed(2) : '0'}
               thousandSeparator={true}
             />
@@ -287,21 +287,21 @@ const AllClients = () => {
         </Box>
         <Spacer />
         <Box
-          boxShadow='base'
-          textAlign='center'
-          p='2'
-          borderRadius='lg'
-          border='1px'
-          borderColor='green.400'
+          boxShadow="base"
+          textAlign="center"
+          p="2"
+          borderRadius="lg"
+          border="1px"
+          borderColor="green.400"
           w={{ base: '100%', md: '30%' }}
           mb={{ base: '3', sm: '3', md: '3' }}
           color={colorMode === 'light' ? 'gray.600' : '#ddd'}
         >
-          <Heading size='sm'>Last 7 Days Rewards</Heading>
-          <Box style={{ fontWeight: 'bold' }} fontSize='lg'>
+          <Heading size="sm">Last 7 Days Rewards</Heading>
+          <Box style={{ fontWeight: 'bold' }} fontSize="lg">
             <NumberFormat
-              prefix='HNT '
-              displayType='text'
+              prefix="HNT "
+              displayType="text"
               value={sevenDR ? sevenDR?.toFixed(2) : '0'}
               thousandSeparator={true}
             />
@@ -309,42 +309,42 @@ const AllClients = () => {
         </Box>
         <Spacer />
         <Box
-          boxShadow='base'
-          textAlign='center'
-          p='2'
-          borderRadius='lg'
-          border='1px'
-          borderColor='blue.400'
+          boxShadow="base"
+          textAlign="center"
+          p="2"
+          borderRadius="lg"
+          border="1px"
+          borderColor="blue.400"
           w={{ base: '100%', md: '30%' }}
           mb={{ base: '3', sm: '3', md: '3' }}
           color={colorMode === 'light' ? 'gray.600' : '#ddd'}
         >
-          <Heading size='sm'>Last 24 Hours Rewards</Heading>
-          <Box style={{ fontWeight: 'bold' }} fontSize='lg'>
+          <Heading size="sm">Last 24 Hours Rewards</Heading>
+          <Box style={{ fontWeight: 'bold' }} fontSize="lg">
             <NumberFormat
-              prefix='HNT '
-              displayType='text'
+              prefix="HNT "
+              displayType="text"
               value={lastDR ? lastDR?.toFixed(2) : '0'}
               thousandSeparator={true}
             />
           </Box>
         </Box>
       </Box>
-      {mwError && <AlertMessage status='error' error={mwError} />}
-      <Box boxShadow='md' p='3' borderRadius='md'>
+      {mwError && <AlertMessage status="error" error={mwError} />}
+      <Box boxShadow="md" p="3" borderRadius="md">
         <Box d={{ md: 'flex' }}>
-          <Text fontWeight='semibold' fontSize='lg'>
+          <Text fontWeight="semibold" fontSize="lg">
             {chartInitial?.time === '60'
               ? 'Rewards per Week'
               : 'Last 30 Days Reward'}
           </Text>
           <Spacer />
           <Button
-            size='sm'
+            size="sm"
             w={{ base: '100%', md: 'auto' }}
-            variant='outline'
-            colorScheme='green'
-            leftIcon={<i className='fas fa-sync-alt'></i>}
+            variant="outline"
+            colorScheme="green"
+            leftIcon={<i className="fas fa-sync-alt"></i>}
             onClick={() => {
               setChartInitital((state) => ({
                 time: state?.time === '60' ? '30' : '60',
@@ -385,46 +385,46 @@ const AllClients = () => {
           />
         </Box>
       </Box>
-      <Box display={{ sm: 'flex' }} mt='3' mb='3' alignItems='center'>
-        <Text fontSize='2xl' className='adminPageHeader'>
+      <Box display={{ sm: 'flex' }} mt="3" mb="3" alignItems="center">
+        <Text fontSize="2xl" className="adminPageHeader">
           All Clients ({clients ? clients?.length : '0'})
         </Text>
         <Spacer />
         <Box d={{ base: 'block', md: 'flex' }}>
           <InputGroup mr={{ md: 3 }} mb={{ base: 2, md: 0 }}>
             <InputLeftElement
-              pointerEvents='none'
-              children={<SearchIcon color='gray.300' />}
+              pointerEvents="none"
+              children={<SearchIcon color="gray.300" />}
             />
             <Input
-              variant='flushed'
-              size='sm'
-              type='text'
-              placeholder='Search client ...'
+              variant="flushed"
+              size="sm"
+              type="text"
+              placeholder="Search client ..."
               onChange={(e) => setClientSearchText(e.target.value)}
             />
           </InputGroup>
 
           <Link to={`/h/add-new-client`}>
             <Button
-              variant='outline'
+              variant="outline"
               w={{ base: '100%', md: 'auto' }}
-              size='sm'
-              colorScheme='purple'
+              size="sm"
+              colorScheme="purple"
             >
-              <i className='fas fa-user-plus' style={{ marginRight: 5 }}></i>{' '}
+              <i className="fas fa-user-plus" style={{ marginRight: 5 }}></i>{' '}
               Add New Client
             </Button>
           </Link>
         </Box>
       </Box>
-      <Box className='assigned_hotspot_wrapper'>
+      <Box className="assigned_hotspot_wrapper">
         {loading ? (
           <Loader />
         ) : error ? (
-          <AlertMessage status='error' error={error} />
+          <AlertMessage status="error" error={error} />
         ) : clients && clients?.length > 0 ? (
-          <Table shadow='lg' size='sm' variant='striped'>
+          <Table shadow="lg" size="sm" variant="striped">
             <TableCaption>All Clients with their Wallet Balance.</TableCaption>
             <Thead>
               <Tr>
@@ -448,13 +448,13 @@ const AllClients = () => {
                     </Td>
                     <Td isNumeric>
                       <Text
-                        fontWeight='semibold'
+                        fontWeight="semibold"
                         color={colorMode === 'light' ? 'gray.600' : 'green.500'}
                       >
                         <NumberFormat
-                          prefix='HNT '
+                          prefix="HNT "
                           thousandSeparator={true}
-                          displayType='text'
+                          displayType="text"
                           value={client?.wallet_balance.toFixed(2)}
                         />
                       </Text>
@@ -464,23 +464,23 @@ const AllClients = () => {
             </Tbody>
           </Table>
         ) : (
-          <AlertMessage status='error' error='No clients found!' />
+          <AlertMessage status="error" error="No clients found!" />
         )}
       </Box>
-      <Box mt='2'>
+      <Box mt="2">
         <Button
           w={{ base: '100%', md: 'auto' }}
           mr={{ md: 2 }}
           mt={{ base: 2, md: 0 }}
-          colorScheme='orange'
-          variant='outline'
+          colorScheme="orange"
+          variant="outline"
           isLoading={rewardFLoading}
-          loadingText='Fetching...'
+          loadingText="Fetching..."
           onClick={() => {
             dispatch(getRewardByAdmin());
           }}
         >
-          <i style={{ marginRight: 5 }} className='fas fa-download'></i>Fetch
+          <i style={{ marginRight: 5 }} className="fas fa-download"></i>Fetch
           Reward
         </Button>
       </Box>

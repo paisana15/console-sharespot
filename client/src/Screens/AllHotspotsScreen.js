@@ -47,14 +47,14 @@ const AllHotspotsScreen = () => {
     async function fetchData() {
       try {
         const response = await axios.get(
-          `https://api.helium.wtf/v1/accounts/13ESLoXiie3eXoyitxryNQNamGAnJjKt2WkiB4gNq95knxAiGEp/hotspots`
+          `https://api.helium.io/v1/accounts/13ESLoXiie3eXoyitxryNQNamGAnJjKt2WkiB4gNq95knxAiGEp/hotspots`
         );
         if (response) {
           // 24 hour reward
           const lastDayReward = await Promise.all(
             response?.data?.data?.map(async (data) => {
               const response = await axios.get(
-                `https://api.helium.wtf/v1/hotspots/${data?.address}/rewards/sum?min_time=-1%20day&bucket=day`
+                `https://api.helium.io/v1/hotspots/${data?.address}/rewards/sum?min_time=-1%20day&bucket=day`
               );
               const result = response?.data?.data?.[0]?.total;
               return result;
@@ -65,7 +65,7 @@ const AllHotspotsScreen = () => {
           const weekReward = await Promise.all(
             response?.data?.data?.map(async (data) => {
               const response = await axios.get(
-                `https://api.helium.wtf/v1/hotspots/${data?.address}/rewards/sum?min_time=-7%20day&bucket=day`
+                `https://api.helium.io/v1/hotspots/${data?.address}/rewards/sum?min_time=-7%20day&bucket=day`
               );
               const result = response?.data?.data
                 ?.map((d) => d.total)
@@ -78,7 +78,7 @@ const AllHotspotsScreen = () => {
           const monthReward = await Promise.all(
             response?.data?.data?.map(async (data) => {
               const response = await axios.get(
-                `https://api.helium.wtf/v1/hotspots/${data?.address}/rewards/sum?min_time=-30%20day&bucket=day`
+                `https://api.helium.io/v1/hotspots/${data?.address}/rewards/sum?min_time=-30%20day&bucket=day`
               );
               const result = response?.data?.data
                 ?.map((d) => d.total)
@@ -168,23 +168,23 @@ const AllHotspotsScreen = () => {
 
   return (
     <>
-      <Box p='4'>
-        <Box mb='2' d={{ md: 'flex' }}>
-          <Text d='inline-block' fontSize='2xl' className='adminPageHeader'>
+      <Box p="4">
+        <Box mb="2" d={{ md: 'flex' }}>
+          <Text d="inline-block" fontSize="2xl" className="adminPageHeader">
             All Hotspots ({hotspots ? hotspots?.length : '0'})
           </Text>
           <Spacer />
           <Box d={{ base: 'block', md: 'flex' }}>
             <InputGroup mr={{ md: 3 }} mb={{ base: 2, md: 0 }}>
               <InputLeftElement
-                pointerEvents='none'
-                children={<SearchIcon color='gray.300' />}
+                pointerEvents="none"
+                children={<SearchIcon color="gray.300" />}
               />
               <Input
-                variant='flushed'
-                size='sm'
-                type='text'
-                placeholder='Search hotspot ...'
+                variant="flushed"
+                size="sm"
+                type="text"
+                placeholder="Search hotspot ..."
                 onChange={(e) => setHotspotSearchText(e.target.value)}
               />
             </InputGroup>
@@ -192,18 +192,18 @@ const AllHotspotsScreen = () => {
               <Select
                 value={filterValue}
                 onChange={(e) => setFilterValue(e.target.value)}
-                size='sm'
-                placeholder='Sort By'
-                variant='flushed'
+                size="sm"
+                placeholder="Sort By"
+                variant="flushed"
               >
-                <option value='de_a'>Daily Earning (Ascending)</option>
-                <option value='de_d'>Daily Earning (Descensing)</option>
-                <option value='we_a'>Weekly Earning (Ascending)</option>
-                <option value='we_d'>Weekly Earning (Descensing)</option>
-                <option value='me_a'>Monthly Earning (Ascending)</option>
-                <option value='me_d'>Monthly Earning (Descensing)</option>
-                <option value='ae_a'>All Time (Ascending)</option>
-                <option value='ae_d'>All Time (Descensing)</option>
+                <option value="de_a">Daily Earning (Ascending)</option>
+                <option value="de_d">Daily Earning (Descensing)</option>
+                <option value="we_a">Weekly Earning (Ascending)</option>
+                <option value="we_d">Weekly Earning (Descensing)</option>
+                <option value="me_a">Monthly Earning (Ascending)</option>
+                <option value="me_d">Monthly Earning (Descensing)</option>
+                <option value="ae_a">All Time (Ascending)</option>
+                <option value="ae_d">All Time (Descensing)</option>
               </Select>
             </FormControl>
           </Box>
@@ -213,7 +213,7 @@ const AllHotspotsScreen = () => {
         ) : (
           hotspotList &&
           hotspotList?.length > 0 && (
-            <Table shadow='lg' size='sm' variant='striped'>
+            <Table shadow="lg" size="sm" variant="striped">
               <Thead>
                 <Tr>
                   <Th>Name</Th>
@@ -227,40 +227,40 @@ const AllHotspotsScreen = () => {
                 {hotspotList?.map((data, idx) => (
                   <Tr key={idx}>
                     <Td>
-                      <Flex alignItems='center'>
+                      <Flex alignItems="center">
                         <Box
-                          w='1.5'
-                          h='1.5'
-                          mr='1.5'
+                          w="1.5"
+                          h="1.5"
+                          mr="1.5"
                           bg={
                             data?.status === 'online' ? 'green.400' : 'red.500'
                           }
                           rounded
-                          borderRadius='50%'
+                          borderRadius="50%"
                         ></Box>
 
                         <Box>
                           <Box>
                             <a
                               href={`https://explorer.helium.com/hotspots/${data?.address}`}
-                              target='_blank'
-                              rel='noreferrer'
+                              target="_blank"
+                              rel="noreferrer"
                             >
                               {data?.name.toUpperCase()}
                             </a>
                           </Box>
-                          <Box textColor='gray.500' fontSize='xs'>
+                          <Box textColor="gray.500" fontSize="xs">
                             {data?.location}
                           </Box>
                         </Box>
                         <Box>
                           <Button
                             onClick={() => getAgreementsHandler(data?.address)}
-                            variant='unstyled'
-                            ml='2'
-                            size='xs'
+                            variant="unstyled"
+                            ml="2"
+                            size="xs"
                           >
-                            <i className='fas fa-users'></i>
+                            <i className="fas fa-users"></i>
                           </Button>
                         </Box>
                       </Flex>
@@ -271,7 +271,7 @@ const AllHotspotsScreen = () => {
                     <Td isNumeric>
                       {
                         <NumberFormat
-                          displayType='text'
+                          displayType="text"
                           value={data?.all_time_rewards?.toFixed(2)}
                           thousandSeparator={true}
                         />
@@ -284,7 +284,7 @@ const AllHotspotsScreen = () => {
           )
         )}
       </Box>
-      <Modal size='lg' isOpen={isOpen} onClose={onClose}>
+      <Modal size="lg" isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Agreements</ModalHeader>
@@ -294,13 +294,13 @@ const AllHotspotsScreen = () => {
               {agreemetnLoading ? (
                 <Loader small />
               ) : agreementError ? (
-                <Alert status='fail' error={agreementError} />
+                <Alert status="fail" error={agreementError} />
               ) : agreements?.length > 0 ? (
                 agreements?.map((agreement) => (
                   <AgreementInfo key={agreement?._id} agreement={agreement} />
                 ))
               ) : (
-                <Text color='gray.500'>
+                <Text color="gray.500">
                   No agreemetns found for this hotspot!
                 </Text>
               )}
@@ -309,9 +309,9 @@ const AllHotspotsScreen = () => {
 
           <ModalFooter>
             <Button
-              mr='2'
-              variant='outline'
-              colorScheme='blue'
+              mr="2"
+              variant="outline"
+              colorScheme="blue"
               onClick={onClose}
             >
               Close
@@ -319,7 +319,7 @@ const AllHotspotsScreen = () => {
           </ModalFooter>
         </ModalContent>
       </Modal>
-      {error && <AlertMessage status='error' error={error} />}
+      {error && <AlertMessage status="error" error={error} />}
     </>
   );
 };
