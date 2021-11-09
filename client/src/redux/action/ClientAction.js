@@ -144,7 +144,7 @@ export const updateClientByClient =
     }
   };
 export const passwordReset =
-  (clientId, credentials) => async (dispatch, getState) => {
+  (clientId, credentials, fromAdmin) => async (dispatch, getState) => {
     try {
       dispatch({
         type: CLIENT_PASSWORD_UPDATE_REQUEST,
@@ -154,13 +154,19 @@ export const passwordReset =
         loginClient: { cInfo },
       } = getState();
 
+      const {
+        loginAdmin: { aInfo },
+      } = getState();
+
       const config = {
         headers: {
-          Authorization: `Bearer ${cInfo._ctoken}`,
+          Authorization: `Bearer ${fromAdmin ? aInfo._atoken : cInfo._ctoken}`,
         },
       };
       const { data } = await axios.put(
-        `${baseURL}/api/client/resetPassword/${clientId}`,
+        fromAdmin
+          ? `${baseURL}/api/client/resetPassword/byAdmin/${clientId}`
+          : `${baseURL}/api/client/resetPassword/${clientId}`,
         credentials,
         config
       );

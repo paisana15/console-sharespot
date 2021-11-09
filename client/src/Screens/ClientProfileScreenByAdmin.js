@@ -85,11 +85,7 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
   const { mw_histories } = getMWHistories;
 
   const addMWHistory = useSelector((state) => state.addMWHistory);
-  const {
-    loading: addMWLoading,
-    success: addMWSuccess,
-    error: addMWError,
-  } = addMWHistory;
+  const { loading: addMWLoading, error: addMWError } = addMWHistory;
 
   const histtoryWBya = useSelector((state) => state.histtoryWBya);
   const {
