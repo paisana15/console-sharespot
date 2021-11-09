@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { baseURL } from '../../baseURL';
+import { baseURL } from '../../constants';
 
 import {
   ACCEPT_WITHDRAW_FAILED,

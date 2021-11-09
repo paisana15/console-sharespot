@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { baseURL } from '../../baseURL';
+import { baseURL } from '../../constants';
 
 import {
   CLIENT_LOGIN_REQUEST,
@@ -67,210 +67,200 @@ export const clientLogout = () => async (dispatch) => {
   }
 };
 
-export const getClientProfileByClient = (clientId) => async (
-  dispatch,
-  getState
-) => {
-  try {
-    dispatch({
-      type: GET_CLIENT_PROFILE_BYC_REQUEST,
-    });
-    const {
-      loginClient: { cInfo },
-    } = getState();
+export const getClientProfileByClient =
+  (clientId) => async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: GET_CLIENT_PROFILE_BYC_REQUEST,
+      });
+      const {
+        loginClient: { cInfo },
+      } = getState();
 
-    const config = {
-      headers: {
-        Authorization: `Bearer ${cInfo._ctoken}`,
-      },
-    };
-    const { data } = await axios.get(
-      `${baseURL}/api/client/getClientProfileByClient/${clientId}`,
-      config
-    );
-    dispatch({
-      type: GET_CLIENT_PROFILE_BYC_SUCCESS,
-      payload: data,
-    });
-  } catch (error) {
-    dispatch({
-      type: GET_CLIENT_PROFILE_BYC_FAILED,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
-    });
-  }
-};
-export const updateClientByClient = (clientId, client) => async (
-  dispatch,
-  getState
-) => {
-  try {
-    dispatch({
-      type: CLIENT_UPDATE_BYC_REQUEST,
-    });
+      const config = {
+        headers: {
+          Authorization: `Bearer ${cInfo._ctoken}`,
+        },
+      };
+      const { data } = await axios.get(
+        `${baseURL}/api/client/getClientProfileByClient/${clientId}`,
+        config
+      );
+      dispatch({
+        type: GET_CLIENT_PROFILE_BYC_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: GET_CLIENT_PROFILE_BYC_FAILED,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
+export const updateClientByClient =
+  (clientId, client) => async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: CLIENT_UPDATE_BYC_REQUEST,
+      });
 
-    const {
-      loginClient: { cInfo },
-    } = getState();
+      const {
+        loginClient: { cInfo },
+      } = getState();
 
-    const config = {
-      headers: {
-        Authorization: `Bearer ${cInfo._ctoken}`,
-      },
-    };
-    const { data } = await axios.put(
-      `${baseURL}/api/client/editSingleClientByClient/${clientId}`,
-      client,
-      config
-    );
-    dispatch({
-      type: CLIENT_UPDATE_BYC_SUCCESS,
-      payload: data,
-    });
-    setTimeout(() => {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${cInfo._ctoken}`,
+        },
+      };
+      const { data } = await axios.put(
+        `${baseURL}/api/client/editSingleClientByClient/${clientId}`,
+        client,
+        config
+      );
+      dispatch({
+        type: CLIENT_UPDATE_BYC_SUCCESS,
+        payload: data,
+      });
+      setTimeout(() => {
+        dispatch({
+          type: CLIENT_UPDATE_BYC_RESET,
+        });
+      }, 2000);
+    } catch (error) {
+      dispatch({
+        type: CLIENT_UPDATE_BYC_FAILED,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
       dispatch({
         type: CLIENT_UPDATE_BYC_RESET,
       });
-    }, 2000);
-  } catch (error) {
-    dispatch({
-      type: CLIENT_UPDATE_BYC_FAILED,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
-    });
-    dispatch({
-      type: CLIENT_UPDATE_BYC_RESET,
-    });
-  }
-};
-export const passwordReset = (clientId, credentials) => async (
-  dispatch,
-  getState
-) => {
-  try {
-    dispatch({
-      type: CLIENT_PASSWORD_UPDATE_REQUEST,
-    });
+    }
+  };
+export const passwordReset =
+  (clientId, credentials) => async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: CLIENT_PASSWORD_UPDATE_REQUEST,
+      });
 
-    const {
-      loginClient: { cInfo },
-    } = getState();
+      const {
+        loginClient: { cInfo },
+      } = getState();
 
-    const config = {
-      headers: {
-        Authorization: `Bearer ${cInfo._ctoken}`,
-      },
-    };
-    const { data } = await axios.put(
-      `${baseURL}/api/client/resetPassword/${clientId}`,
-      credentials,
-      config
-    );
-    dispatch({
-      type: CLIENT_PASSWORD_UPDATE_SUCCESS,
-      payload: data,
-    });
-    setTimeout(() => {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${cInfo._ctoken}`,
+        },
+      };
+      const { data } = await axios.put(
+        `${baseURL}/api/client/resetPassword/${clientId}`,
+        credentials,
+        config
+      );
+      dispatch({
+        type: CLIENT_PASSWORD_UPDATE_SUCCESS,
+        payload: data,
+      });
+      setTimeout(() => {
+        dispatch({
+          type: CLIENT_PASSWORD_UPDATE_RESET,
+        });
+      }, 2000);
+    } catch (error) {
+      dispatch({
+        type: CLIENT_PASSWORD_UPDATE_FAILED,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
       dispatch({
         type: CLIENT_PASSWORD_UPDATE_RESET,
       });
-    }, 2000);
-  } catch (error) {
-    dispatch({
-      type: CLIENT_PASSWORD_UPDATE_FAILED,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
-    });
-    dispatch({
-      type: CLIENT_PASSWORD_UPDATE_RESET,
-    });
-  }
-};
+    }
+  };
 
-export const withdrawRequestByClient = (clientId, amount) => async (
-  dispatch,
-  getState
-) => {
-  try {
-    dispatch({
-      type: CLIENT_WITHDRAW_REQUEST,
-    });
-    const {
-      loginClient: { cInfo },
-    } = getState();
+export const withdrawRequestByClient =
+  (clientId, amount) => async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: CLIENT_WITHDRAW_REQUEST,
+      });
+      const {
+        loginClient: { cInfo },
+      } = getState();
 
-    const config = {
-      headers: {
-        Authorization: `Bearer ${cInfo._ctoken}`,
-      },
-    };
-    const { data } = await axios.post(
-      `${baseURL}/api/client/withdrawRequest/${clientId}`,
-      amount,
-      config
-    );
-    dispatch({
-      type: CLIENT_WITHDRAW_SUCCESS,
-      payload: data,
-    });
-    setTimeout(() => {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${cInfo._ctoken}`,
+        },
+      };
+      const { data } = await axios.post(
+        `${baseURL}/api/client/withdrawRequest/${clientId}`,
+        amount,
+        config
+      );
+      dispatch({
+        type: CLIENT_WITHDRAW_SUCCESS,
+        payload: data,
+      });
+      setTimeout(() => {
+        dispatch({
+          type: CLIENT_WITHDRAW_RESET,
+        });
+      }, 1000);
+    } catch (error) {
+      dispatch({
+        type: CLIENT_WITHDRAW_FAILED,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+
       dispatch({
         type: CLIENT_WITHDRAW_RESET,
       });
-    }, 1000);
-  } catch (error) {
-    dispatch({
-      type: CLIENT_WITHDRAW_FAILED,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
-    });
+    }
+  };
 
-    dispatch({
-      type: CLIENT_WITHDRAW_RESET,
-    });
-  }
-};
+export const getWithdrawHistoryByC =
+  (clientId) => async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: GET_WITHDRAW_HISTORY_BYC_REQUEST,
+      });
+      const {
+        loginClient: { cInfo },
+      } = getState();
 
-export const getWithdrawHistoryByC = (clientId) => async (
-  dispatch,
-  getState
-) => {
-  try {
-    dispatch({
-      type: GET_WITHDRAW_HISTORY_BYC_REQUEST,
-    });
-    const {
-      loginClient: { cInfo },
-    } = getState();
-
-    const config = {
-      headers: {
-        Authorization: `Bearer ${cInfo._ctoken}`,
-      },
-    };
-    const { data } = await axios.get(
-      `${baseURL}/api/client/getWithdrawHistory/${clientId}`,
-      config
-    );
-    dispatch({
-      type: GET_WITHDRAW_HISTORY_BYC_SUCCESS,
-      payload: data,
-    });
-  } catch (error) {
-    dispatch({
-      type: GET_WITHDRAW_HISTORY_BYC_FAILED,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
-    });
-  }
-};
+      const config = {
+        headers: {
+          Authorization: `Bearer ${cInfo._ctoken}`,
+        },
+      };
+      const { data } = await axios.get(
+        `${baseURL}/api/client/getWithdrawHistory/${clientId}`,
+        config
+      );
+      dispatch({
+        type: GET_WITHDRAW_HISTORY_BYC_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: GET_WITHDRAW_HISTORY_BYC_FAILED,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };

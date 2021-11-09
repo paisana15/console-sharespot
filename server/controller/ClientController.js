@@ -12,6 +12,7 @@ import ManualWithdrawHistory from '../models/ManualWithdrawHistoryModel.js';
 import QRCode from 'qrcode';
 import nodemailer from 'nodemailer';
 import emailValidator from 'email-validator';
+import { sendEmail } from '../utils/sendEmail.js';
 
 // desc: client login
 // routes: host_url/api/client/login              host_url means '127.0.0.1:5001' (localhost) or 'prod server url' (e.g: api.somthing.likethis)
@@ -300,79 +301,56 @@ const clientWithdrawRequest = asyncHandler(async (req, res) => {
               parseFloat(clientWallet.totalRewards) -
               parseFloat(clientWallet.totalWithdraw);
             clientWallet.pendingPayment = amount;
+            const balanceUpdate = await clientWallet.save();
 
-            //sending mail to admin
-            const email = client_user.email;
+            // create withdraw history (status => pending)
+            const newWithdrawHistory = await WithdrawHistory.create({
+              client: clientId,
+              amount: amount,
+              status: 'Pending',
+              wReqId: newWithdrawRequest._id,
+            });
 
-            const valid_email = emailValidator.validate(email);
-
-            if (valid_email) {
-              const transporter = nodemailer.createTransport({
-                host: 'smtp.gmail.com',
-                port: 465,
-                secure: true,
-                auth: {
-                  user: process.env.EMAIL,
-                  pass: process.env.PASSE,
-                },
-              });
-
-              const emailSent = await transporter.sendMail({
-                from: process.env.EMAIL,
-                to: 'payments@sharespot.pt',          
-                subject: `New withdraw request from ${
+            if (balanceUpdate && newWithdrawHistory) {
+              //sending mail to admin
+              await sendEmail(
+                process.env.EMAIL,
+                'payments@sharespot.pt',
+                `New withdraw request from ${
                   client_user?.firstname + ' ' + client_user?.lastname
                 }.`,
-                text: '',
-                html: `
+                '',
+                `
                   <html>
                     <body>       
                       <div>
                       <div>
                       <h3>Wallet QR Code</h3>
-                      <p>http://api.qrserver.com/v1/create-qr-code/?color=000000&bgcolor=FFFFFF&data=${client_user?.wallet_address}&qzone=1&margin=0&size=400x400&ecc=L</p>                            
+                      <p>http://api.qrserver.com/v1/create-qr-code/?color=000000&bgcolor=FFFFFF&data=${
+                        client_user?.wallet_address
+                      }&qzone=1&margin=0&size=400x400&ecc=L</p>                            
                       </div> 
                       <div>
-                      <p>Client: ${client_user?.firstname + ' ' + client_user?.lastname}</p>
+                      <p>Client: ${
+                        client_user?.firstname + ' ' + client_user?.lastname
+                      }</p>
                       <p>Wallet Address: ${client_user?.wallet_address}</p>
                       <p>Amount: HNT ${amount}</p>
-                      <p>Date: ${moment(newWithdrawRequest?.createdAt).format('LLL')}</p>
+                      <p>Date: ${moment(newWithdrawRequest?.createdAt).format(
+                        'LLL'
+                      )}</p>
                       </div>
                       </div>               
                    </body>
                  </html>
-                `,
-              });
-              if (transporter && emailSent) {
-                const balanceUpdate = await clientWallet.save();
-                if (balanceUpdate) {
-                  const newWithdrawHistory = await WithdrawHistory.create({
-                    client: clientId,
-                    amount: amount,
-                    status: 'Pending',
-                    wReqId: newWithdrawRequest._id,
-                  });
-                  if (newWithdrawHistory) {
-                    res
-                      .status(201)
-                      .json({ message: 'Withdraw Request Received!' });
-                  } else {
-                    res.status(500);
-                    throw new Error(
-                      'Could not receive withdrawal request! Failed to create history!'
-                    );
-                  }
-                } else {
-                  res.status(500);
-                  throw new Error('Failed to update wallet balance!');
-                }
-              } else {
-                res.status(500);
-                throw new Error('Failed to send email!');
-              }
+                `
+              );
+              res.status(201).json({ message: 'Withdraw Request Received!' });
             } else {
-              res.status(400);
-              throw new Error('Invalid email');
+              res.status(500);
+              throw new Error(
+                'Failed to create withdraw history / wallet not updating!'
+              );
             }
           } else {
             res.status(500);
