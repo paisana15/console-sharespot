@@ -8,7 +8,7 @@ import {
   clientWithdrawRequest,
   getWithdrawHistory,
 } from '../controller/ClientController.js';
-import { protect } from '../middleware/authMiddleware.js';
+import { protect, verifyAdmin } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 router.route('/login').post(clientLogin);
@@ -18,6 +18,9 @@ router
 router
   .route('/editSingleClientByClient/:clientId')
   .put(protect, editSingleClientByClient);
+router
+  .route('/resetPassword/byAdmin/:clientId')
+  .put(verifyAdmin, resetPassword);
 router.route('/resetPassword/:clientId').put(protect, resetPassword);
 router
   .route('/getRewardByClient/:clientId')

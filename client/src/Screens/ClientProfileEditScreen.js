@@ -2,10 +2,10 @@ import React, { useEffect } from 'react';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 import MyTextField from '../components/MyTextField';
-import { Box, Button, Text, useToast } from '@chakra-ui/react';
+import { Box, Button, Text, useToast, Flex } from '@chakra-ui/react';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateClient } from '../redux/action/AdminAction';
-import { useHistory } from 'react-router';
+import { useHistory } from 'react-router-dom';
 
 const ClientProfileEditScreen = ({ client_details }) => {
   const dispatch = useDispatch();
@@ -23,7 +23,7 @@ const ClientProfileEditScreen = ({ client_details }) => {
         duration: 5000,
         isClosable: true,
       });
-      // history.push(`/h/client/${client_details?.client?._id}`);
+      history.goBack();
     }
     if (error) {
       toast({
@@ -76,8 +76,9 @@ const ClientProfileEditScreen = ({ client_details }) => {
             wallet_address: client_details?.client?.wallet_address,
           }}
           validationSchema={fieldValidationSchema}
-          onSubmit={(data) => {
+          onSubmit={(data, { resetForm }) => {
             dispatch(updateClient(client_details?.client?._id, data));
+            resetForm();
           }}
         >
           {({ handleSubmit }) => (
@@ -118,16 +119,30 @@ const ClientProfileEditScreen = ({ client_details }) => {
                 name='wallet_address'
                 placeholder='Choose wallet address'
               />
+              <Flex mt='2'>
+                <Button
+                  type='submit'
+                  isLoading={loading}
+                  loadingText='Updating...'
+                  colorScheme='facebook'
+                >
+                  Update
+                </Button>
 
-              <Button
-                mt='2'
-                type='submit'
-                isLoading={loading}
-                loadingText='Updating...'
-                colorScheme='facebook'
-              >
-                Update
-              </Button>
+                <Button
+                  colorScheme='whatsapp'
+                  ml='2'
+                  onClick={() => {
+                    if (client_details) {
+                      history.push(
+                        `/h/client/${client_details.client._id}/reset-password`
+                      );
+                    }
+                  }}
+                >
+                  Reset Password
+                </Button>
+              </Flex>
             </form>
           )}
         </Formik>

@@ -37,11 +37,9 @@ const AdminDashboard = () => {
               path={`${path}/client/:clientId`}
               component={ClientDetailsByAdmin}
             />
+
             <Route path={`${path}/add-hotspot`} component={AddHotspotScreen} />
-            <Route
-              path={`${path}/hotspots`}
-              component={AllHotspotsScreen}
-            />
+            <Route path={`${path}/hotspots`} component={AllHotspotsScreen} />
             <Route
               path={`${path}/add-new-client`}
               component={AddClientScreen}

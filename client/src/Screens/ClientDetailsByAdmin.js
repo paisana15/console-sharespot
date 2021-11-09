@@ -9,6 +9,7 @@ import HotspotEditScreen from './HotspotEditScreen';
 import { getSingleClient } from '../redux/action/AdminAction';
 import ClientProfileScreenByAdmin from './ClientProfileScreenByAdmin';
 import { Helmet } from 'react-helmet';
+import ClientResetPasswordByAdmin from './ClientResetPasswordByAdmin';
 
 const ClientDetailsByAdmin = () => {
   const { path } = useRouteMatch();
@@ -49,6 +50,10 @@ const ClientDetailsByAdmin = () => {
             component={() => (
               <ClientProfileEditScreen client_details={clientData} />
             )}
+          />
+          <Route
+            path={`${path}/reset-password`}
+            component={ClientResetPasswordByAdmin}
           />
           <Route
             path={`${path}/hotspot/:hotspotId/edit`}

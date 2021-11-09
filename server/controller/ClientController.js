@@ -144,30 +144,25 @@ const resetPassword = asyncHandler(async (req, res) => {
   if (client) {
     const { preP, newP, conP } = req.body;
 
-    if (client?._id.equals(req.user?._id)) {
-      if (await client.verifyPassword(preP)) {
-        if (newP.toString() === conP.toString()) {
-          client.password = newP;
-          const update = await client.save();
-          if (update) {
-            res.status(200).json({
-              message: 'Password Reset Successfull!',
-            });
-          } else {
-            res.status(500);
-            throw new Error();
-          }
+    if (await client.verifyPassword(preP)) {
+      if (newP.toString() === conP.toString()) {
+        client.password = newP;
+        const update = await client.save();
+        if (update) {
+          res.status(200).json({
+            message: 'Password Reset Successful!',
+          });
         } else {
-          res.status(400);
-          throw new Error('New Password does not match!');
+          res.status(500);
+          throw new Error();
         }
       } else {
         res.status(400);
-        throw new Error('Previous password does not match!');
+        throw new Error('New Password does not match!');
       }
     } else {
       res.status(400);
-      throw new Error('You are not authorized to edit this information!');
+      throw new Error('Previous password does not match!');
     }
   } else {
     res.status(404);
