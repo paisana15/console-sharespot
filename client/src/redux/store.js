@@ -20,6 +20,7 @@ import {
   GetSingleClientReducer,
   GetWithdrawalRequestReducer,
   HotspotUpdateReducer,
+  MultipleWithdrawRequestsAcceptReducer,
   RejectWithdrawReducer,
   WithdrawHistoryByAReducer,
 } from './reducer/AdminReducer';
@@ -57,6 +58,7 @@ const reducer = combineReducers({
   deleteMWHistory: DeleteMWHistoriesReducer,
   getRewardByA: GetRewardByAdminReducer,
   agreementGet: GetAgreementsReducer,
+  multipleWithdrawRequestsAccept: MultipleWithdrawRequestsAcceptReducer,
 });
 
 const verifyToken = (token, lsItem) => {

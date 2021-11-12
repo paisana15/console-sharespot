@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { sleep } from '../../utils/sleep';
 import { baseURL } from '../../constants';
 
 import {
@@ -66,6 +67,10 @@ import {
   GET_AGREEMENTS_REQUEST,
   GET_AGREEMENTS_SUCCESS,
   GET_AGREEMENTS_FAILED,
+  MULTIPLE_WITHDRAW_REQUESTS_ACCEPT_REQUEST,
+  MULTIPLE_WITHDRAW_REQUESTS_ACCEPT_SUCCESS,
+  MULTIPLE_WITHDRAW_REQUESTS_ACCEPT_FAILED,
+  MULTIPLE_WITHDRAW_REQUESTS_ACCEPT_RESET,
 } from '../actionTypes';
 
 export const adminLogin = (credentials) => async (dispatch) => {
@@ -758,3 +763,52 @@ export const getAgreements = (hotspotAdress) => async (dispatch, getState) => {
     });
   }
 };
+
+export const acceptMultipleWithdrawRequests =
+  (requestIds) => async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: MULTIPLE_WITHDRAW_REQUESTS_ACCEPT_REQUEST,
+      });
+      const {
+        loginAdmin: { aInfo },
+      } = getState();
+
+      const config = {
+        headers: {
+          Authorization: `Bearer ${aInfo._atoken}`,
+        },
+      };
+      const { data } = await axios.post(
+        `${baseURL}/api/admin/acceptMultipleWithdrawRequests`,
+        { requestIds },
+        config
+      );
+
+      dispatch({
+        type: GET_WITHDRAWAL_SUCCESS,
+        payload: data,
+      });
+
+      dispatch({
+        type: MULTIPLE_WITHDRAW_REQUESTS_ACCEPT_SUCCESS,
+      });
+
+      await sleep(1000);
+
+      dispatch({
+        type: MULTIPLE_WITHDRAW_REQUESTS_ACCEPT_RESET,
+      });
+    } catch (error) {
+      dispatch({
+        type: MULTIPLE_WITHDRAW_REQUESTS_ACCEPT_FAILED,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+      dispatch({
+        type: MULTIPLE_WITHDRAW_REQUESTS_ACCEPT_RESET,
+      });
+    }
+  };

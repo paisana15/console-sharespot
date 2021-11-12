@@ -45,7 +45,7 @@ const ClientResetPasswordByAdmin = () => {
         isClosable: true,
       });
     }
-  }, [success, error, toast]);
+  }, [history, success, error, toast]);
 
   const submitHandler = (e) => {
     e.preventDefault();

@@ -1,3 +1,4 @@
+dotenv.config();
 import express from 'express';
 import dotenv from 'dotenv';
 import connectDB from './config/db.js';
@@ -8,8 +9,6 @@ import clientRoutes from './routes/ClientRoutes.js';
 import axios from 'axios';
 import cors from 'cors';
 import { corsWithOptions } from './routes/cors.js';
-
-dotenv.config();
 
 // db connect
 connectDB();

@@ -63,6 +63,10 @@ import {
   GET_AGREEMENTS_REQUEST,
   GET_AGREEMENTS_SUCCESS,
   GET_AGREEMENTS_FAILED,
+  MULTIPLE_WITHDRAW_REQUESTS_ACCEPT_REQUEST,
+  MULTIPLE_WITHDRAW_REQUESTS_ACCEPT_SUCCESS,
+  MULTIPLE_WITHDRAW_REQUESTS_ACCEPT_FAILED,
+  MULTIPLE_WITHDRAW_REQUESTS_ACCEPT_RESET,
 } from '../actionTypes';
 
 export const AdminLoginReducer = (state = {}, action) => {
@@ -318,6 +322,21 @@ export const GetAgreementsReducer = (state = { agreements: [] }, action) => {
       return { loading: false, agreements: action.payload };
     case GET_AGREEMENTS_FAILED:
       return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+export const MultipleWithdrawRequestsAcceptReducer = (state = {}, action) => {
+  switch (action.type) {
+    case MULTIPLE_WITHDRAW_REQUESTS_ACCEPT_REQUEST:
+      return { loading: true };
+    case MULTIPLE_WITHDRAW_REQUESTS_ACCEPT_SUCCESS:
+      return { loading: false, success: true };
+    case MULTIPLE_WITHDRAW_REQUESTS_ACCEPT_FAILED:
+      return { loading: false, error: action.payload };
+    case MULTIPLE_WITHDRAW_REQUESTS_ACCEPT_RESET:
+      return {};
     default:
       return state;
   }

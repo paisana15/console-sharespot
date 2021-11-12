@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Badge, Box, Heading, Spacer, Text } from '@chakra-ui/layout';
+import { Badge, Box, Flex, Heading, Spacer, Text } from '@chakra-ui/layout';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  getWithdrawalRequets,
   rejectWithdrawRequest,
   acceptWithdrawRequest,
+  acceptMultipleWithdrawRequests,
 } from '../redux/action/AdminAction';
 import moment from 'moment';
 import { useColorMode } from '@chakra-ui/color-mode';
@@ -28,6 +28,7 @@ import { useDisclosure } from '@chakra-ui/hooks';
 import { Image } from '@chakra-ui/image';
 import axios from 'axios';
 import { Table, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/table';
+import QRCode from 'qrcode.react';
 
 const WithdrawRequestScreen = () => {
   const dispatch = useDispatch();
@@ -38,6 +39,16 @@ const WithdrawRequestScreen = () => {
   const [pendingTransactions, setPendingTransaction] = useState([]);
   const [pendingTLoading, setPendingLoading] = useState(true);
   const [refresh, setRefresh] = useState(false);
+  const [withdrawRequests, setWithdrawRequests] = useState({
+    type: 'payment',
+    payees: {},
+  });
+
+  const {
+    loading: multipleWRAcceptLoading,
+    success: multipleWRAcceptSuccess,
+    error: multipleWRAcceptError,
+  } = useSelector((state) => state.multipleWithdrawRequestsAccept);
 
   const { onOpen, isOpen, onClose } = useDisclosure();
   const {
@@ -50,6 +61,11 @@ const WithdrawRequestScreen = () => {
     isOpen: isQROpen,
     onClose: onQRClose,
   } = useDisclosure();
+  const {
+    onOpen: onMultiQROpen,
+    isOpen: isMultiQROpen,
+    onClose: onMultiQRClose,
+  } = useDisclosure();
 
   const withdrawRequestGet = useSelector((state) => state.withdrawRequestGet);
   const { loading, wRequests, error } = withdrawRequestGet;
@@ -61,12 +77,11 @@ const WithdrawRequestScreen = () => {
     error: rejectError,
   } = withdrawReject;
 
-  const withdrawAccept = useSelector((state) => state.withdrawAccept);
   const {
     loading: acceptLoading,
     success: acceptSuccess,
     error: acceptError,
-  } = withdrawAccept;
+  } = useSelector((state) => state.withdrawAccept);
 
   useEffect(() => {
     if (rejectSuccess) {
@@ -109,7 +124,6 @@ const WithdrawRequestScreen = () => {
         isClosable: true,
       });
     }
-    dispatch(getWithdrawalRequets());
     return () => {};
   }, [
     dispatch,
@@ -123,7 +137,33 @@ const WithdrawRequestScreen = () => {
   ]);
 
   useEffect(() => {
-    async function fetPendinTransactionData() {
+    if (wRequests) {
+      const objects = {};
+      for (const req of wRequests) {
+        objects[req.client.wallet_address] = req.amount;
+      }
+      setWithdrawRequests((prev) => ({ ...prev, payees: objects }));
+    }
+  }, [wRequests]);
+
+  useEffect(() => {
+    if (multipleWRAcceptSuccess) {
+      onMultiQRClose();
+    }
+    if (multipleWRAcceptError) {
+      onMultiQRClose();
+      toast({
+        title: 'Failed!',
+        status: 'error',
+        description: multipleWRAcceptError,
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+  }, [multipleWRAcceptSuccess, onMultiQRClose, multipleWRAcceptError, toast]);
+
+  useEffect(() => {
+    async function fetchPendingTransactionData() {
       try {
         const response = await axios.get(
           `https://api.helium.io/v1/accounts/13ESLoXiie3eXoyitxryNQNamGAnJjKt2WkiB4gNq95knxAiGEp/pending_transactions`
@@ -139,7 +179,7 @@ const WithdrawRequestScreen = () => {
       }
     }
     if (refresh || !refresh) {
-      fetPendinTransactionData();
+      fetchPendingTransactionData();
     }
     return () => {};
   }, [refresh]);
@@ -151,18 +191,26 @@ const WithdrawRequestScreen = () => {
     dispatch(acceptWithdrawRequest(wrId));
   };
 
+  const onMultipleWithdrawRequestAcceptClick = (requestIds) => {
+    console.log({ requestIds });
+    dispatch(acceptMultipleWithdrawRequests(requestIds));
+  };
+
   return (
     <Box p={{ md: 4 }}>
       <Helmet>
         <title>Withdrawal Request | Admin Dashboard</title>
       </Helmet>
-      <Text
-        fontSize={{ base: 'md', md: '2xl' }}
-        display='inline-block'
-        className='adminPageHeader'
-      >
-        Withdrawal Requests ({wRequests ? wRequests?.length : '0'})
-      </Text>
+      <Flex justifyContent='space-between'>
+        <Text
+          fontSize={{ base: 'md', md: '2xl' }}
+          display='inline-block'
+          className='adminPageHeader'
+        >
+          Withdrawal Requests ({wRequests ? wRequests?.length : '0'})
+        </Text>
+        <Button onClick={() => onMultiQROpen()}>Multi QR Code</Button>
+      </Flex>
       <Box mt='3'>
         {loading ? (
           <Loader />
@@ -441,6 +489,47 @@ const WithdrawRequestScreen = () => {
               <Button variant='outline' colorScheme='blue' onClick={onQRClose}>
                 Close
               </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+        <Modal isOpen={isMultiQROpen} onClose={onMultiQRClose}>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>All Wallet Address</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <Box w='100%' margin='0 auto'>
+                <QRCode
+                  value={JSON.stringify(withdrawRequests)}
+                  size={256}
+                  style={{ margin: '0 auto' }}
+                  width='100%'
+                />
+              </Box>
+              {acceptLoading && <Loader />}
+            </ModalBody>
+
+            <ModalFooter>
+              <Flex>
+                <Button
+                  onClick={() => {
+                    const requestIds = wRequests?.map((req) => req._id);
+                    onMultipleWithdrawRequestAcceptClick(requestIds);
+                  }}
+                  mr='2'
+                  colorScheme='whatsapp'
+                  isLoading={multipleWRAcceptLoading}
+                >
+                  Accept All
+                </Button>
+                <Button
+                  variant='outline'
+                  colorScheme='blue'
+                  onClick={onMultiQRClose}
+                >
+                  Close
+                </Button>
+              </Flex>
             </ModalFooter>
           </ModalContent>
         </Modal>
