@@ -149,6 +149,13 @@ const WithdrawRequestScreen = () => {
   useEffect(() => {
     if (multipleWRAcceptSuccess) {
       onMultiQRClose();
+      toast({
+        title: 'Success!',
+        status: 'success',
+        description: 'All payments succeed',
+        duration: 3000,
+        isClosable: true,
+      });
     }
     if (multipleWRAcceptError) {
       onMultiQRClose();
