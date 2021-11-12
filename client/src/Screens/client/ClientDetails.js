@@ -4,9 +4,9 @@ import { Box, useColorMode } from '@chakra-ui/react';
 import { Switch, Route, useRouteMatch, useParams } from 'react-router';
 import ClientProfileScreen from './ClientProfileScreen';
 import { useDispatch, useSelector } from 'react-redux';
-import { getClientProfileByClient } from '../redux/action/ClientAction';
-import Loader from '../components/Loader';
-import AlertMessage from '../components/Alert';
+import { getClientProfileByClient } from '../../redux/action/ClientAction';
+import Loader from '../../components/Loader';
+import AlertMessage from '../../components/Alert';
 import ClientProfileEditByClient from './ClientProfileEditByClient';
 import WithDrawScreen from './WithDrawScreen';
 import { Helmet } from 'react-helmet';
@@ -15,7 +15,7 @@ const ClientDetails = () => {
   const { path } = useRouteMatch();
   const { clientId } = useParams();
 
-  const { colorMode } = useColorMode()
+  const { colorMode } = useColorMode();
 
   const dispatch = useDispatch();
 
@@ -30,7 +30,10 @@ const ClientDetails = () => {
   }, [dispatch, clientId, cInfo]);
 
   return (
-    <Box p='4' backgroundColor={`${colorMode === 'light' ? '#fff' : '#0E0C1C'}`}>
+    <Box
+      p='4'
+      backgroundColor={`${colorMode === 'light' ? '#fff' : '#0E0C1C'}`}
+    >
       <Helmet>
         <title>My Account</title>
       </Helmet>

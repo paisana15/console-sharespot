@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import { Formik } from 'formik';
 import * as yup from 'yup';
-import MyTextField from '../components/MyTextField';
+import MyTextField from '../../components/MyTextField';
 import { Box, Button, Text, useToast, Flex } from '@chakra-ui/react';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateClient } from '../redux/action/AdminAction';
+import { updateClient } from '../../redux/action/AdminAction';
 import { useHistory } from 'react-router-dom';
 
 const ClientProfileEditScreen = ({ client_details }) => {

@@ -4,7 +4,7 @@ import { Redirect, Route, Switch, useRouteMatch } from 'react-router';
 import AllClients from './AllClients';
 import AddClientScreen from './AddClientScreen';
 import AddHotspotScreen from './AddHotspotScreen';
-import AdminNavbar from '../components/AdminNavbar';
+import AdminNavbar from '../../components/AdminNavbar';
 import { useColorMode } from '@chakra-ui/color-mode';
 import ClientDetailsByAdmin from './ClientDetailsByAdmin';
 import WithdrawRequestScreen from './WithdrawRequestScreen';

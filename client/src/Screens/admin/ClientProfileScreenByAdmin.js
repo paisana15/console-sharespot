@@ -29,7 +29,7 @@ import {
 } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import { useHistory, useRouteMatch } from 'react-router';
-import AlertMessage from '../components/Alert';
+import AlertMessage from '../../components/Alert';
 import { DeleteIcon, EditIcon } from '@chakra-ui/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -39,10 +39,10 @@ import {
   addManulaWithdrawHistory,
   deleteManulaWithdrawHistory,
   getWithdrawHistoryByA,
-} from '../redux/action/AdminAction';
-import Loader from '../components/Loader';
+} from '../../redux/action/AdminAction';
+import Loader from '../../components/Loader';
 import moment from 'moment';
-import MyTextField from '../components/MyTextField';
+import MyTextField from '../../components/MyTextField';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 import NumberFormat from 'react-number-format';

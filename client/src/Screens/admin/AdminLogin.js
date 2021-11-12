@@ -4,8 +4,8 @@ import { Input } from '@chakra-ui/input';
 import { FormLabel } from '@chakra-ui/form-control';
 import { Box, Button, Heading, useColorMode, useToast } from '@chakra-ui/react';
 import { useDispatch, useSelector } from 'react-redux';
-import { adminLogin } from '../redux/action/AdminAction';
-import AlertMessage from '../components/Alert';
+import { adminLogin } from '../../redux/action/AdminAction';
+import AlertMessage from '../../components/Alert';
 
 const AdminLogin = ({ history }) => {
   const dispatch = useDispatch();

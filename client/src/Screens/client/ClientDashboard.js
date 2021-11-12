@@ -3,7 +3,7 @@ import { Box, Container } from '@chakra-ui/layout';
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router';
 import ClientDetails from './ClientDetails';
 import { useColorMode } from '@chakra-ui/color-mode';
-import ClientNavbar from '../components/ClientNavbar';
+import ClientNavbar from '../../components/ClientNavbar';
 import ClientResetPasswordScreen from './ClientResetPasswordScreen';
 import { Helmet } from 'react-helmet';
 
@@ -19,7 +19,8 @@ const ClientDashboard = () => {
       <ClientNavbar />
       <Container
         maxW='container.xl'
-        backgroundColor={`${colorMode === 'light' ? '#fff' : '#0E0C1C'}`}>
+        backgroundColor={`${colorMode === 'light' ? '#fff' : '#0E0C1C'}`}
+      >
         <Box
           w='100%'
           h='-moz-max-content'

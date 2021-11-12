@@ -1,12 +1,12 @@
 import React from 'react';
 import './App.scss';
 import { Redirect, Route, Switch } from 'react-router';
-import AdminLogin from './Screens/AdminLogin';
-import AdminDashboard from './Screens/AdminDashboard';
+import AdminLogin from './Screens/admin/AdminLogin';
+import AdminDashboard from './Screens/admin/AdminDashboard';
 import { useSelector } from 'react-redux';
-import ClientDashboard from './Screens/ClientDashboard';
-import ClientLogin from './Screens/ClientLogin';
-import RecoverPassword from './Screens/RecoverPassword';
+import ClientDashboard from './Screens/client/ClientDashboard';
+import ClientLogin from './Screens/client/ClientLogin';
+import RecoverPassword from './Screens/client/RecoverPassword';
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
   const loginAdmin = useSelector((state) => state.loginAdmin);

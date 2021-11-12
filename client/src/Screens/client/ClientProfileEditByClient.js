@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
 import { Formik } from 'formik';
 import * as yup from 'yup';
-import MyTextField from '../components/MyTextField';
-import MyTextFieldReadOnly from '../components/MyTextFieldReadOnly';
+import MyTextField from '../../components/MyTextField';
+import MyTextFieldReadOnly from '../../components/MyTextFieldReadOnly';
 import { Heading, Box, Button, useToast, useColorMode } from '@chakra-ui/react';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateClientByClient } from '../redux/action/ClientAction';
+import { updateClientByClient } from '../../redux/action/ClientAction';
 import { useHistory } from 'react-router';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
@@ -77,9 +77,12 @@ const ClientProfileEditByClient = ({ client_details }) => {
         display='inline-block'
       >
         Edit Profile
-        <hr/>
+        <hr />
       </Heading>
-      <Box className='mt-5' backgroundColor={`${colorMode === 'light' ? '#fff' : '#0E0C1C'}`}>
+      <Box
+        className='mt-5'
+        backgroundColor={`${colorMode === 'light' ? '#fff' : '#0E0C1C'}`}
+      >
         <Formik
           initialValues={{
             firstname: client_details?.client?.firstname,

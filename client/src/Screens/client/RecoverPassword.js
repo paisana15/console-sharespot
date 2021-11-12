@@ -1,6 +1,6 @@
 import React from 'react';
 import { Heading } from '@chakra-ui/react';
-import NavbarLogin from '../components/NavbarLogin';
+import NavbarLogin from '../../components/NavbarLogin';
 import { Link } from 'react-router-dom';
 import { Button } from '@chakra-ui/button';
 
@@ -10,7 +10,11 @@ const RecoverPassword = () => {
       <NavbarLogin />
       <div className='login-card'>
         <div className='d-flex justify-content-space-between'>
-          <Heading className='title-underline text-color-black' as='h5' size='lg'>
+          <Heading
+            className='title-underline text-color-black'
+            as='h5'
+            size='lg'
+          >
             Recover Password
             <hr />
           </Heading>

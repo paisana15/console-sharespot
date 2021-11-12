@@ -24,9 +24,9 @@ import {
   getAllClients,
   getMWSWCWbalances,
   getRewardByAdmin,
-} from '../redux/action/AdminAction';
-import Loader from '../components/Loader';
-import AlertMessage from '../components/Alert';
+} from '../../redux/action/AdminAction';
+import Loader from '../../components/Loader';
+import AlertMessage from '../../components/Alert';
 import { Helmet } from 'react-helmet';
 import NumberFormat from 'react-number-format';
 import { Bar as Barchart } from 'react-chartjs-2';

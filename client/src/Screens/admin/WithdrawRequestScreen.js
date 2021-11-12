@@ -5,11 +5,11 @@ import {
   rejectWithdrawRequest,
   acceptWithdrawRequest,
   acceptMultipleWithdrawRequests,
-} from '../redux/action/AdminAction';
+} from '../../redux/action/AdminAction';
 import moment from 'moment';
 import { useColorMode } from '@chakra-ui/color-mode';
-import AlertMessage from '../components/Alert';
-import Loader from '../components/Loader';
+import AlertMessage from '../../components/Alert';
+import Loader from '../../components/Loader';
 import { Button } from '@chakra-ui/button';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet';

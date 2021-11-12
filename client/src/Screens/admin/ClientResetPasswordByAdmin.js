@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { Heading, Box } from '@chakra-ui/layout';
 import { Input } from '@chakra-ui/input';
 import { FormControl, FormLabel } from '@chakra-ui/form-control';
 import { Button } from '@chakra-ui/button';
 import { useDispatch, useSelector } from 'react-redux';
-import { passwordReset } from '../redux/action/ClientAction';
+import { passwordReset } from '../../redux/action/ClientAction';
 import { useToast } from '@chakra-ui/toast';
 import { Helmet } from 'react-helmet';
 
-const ClientResetPasswordScreen = () => {
+const ClientResetPasswordByAdmin = () => {
   const dispatch = useDispatch();
   const toast = useToast();
+  const history = useHistory();
 
   const [preP, setPP] = useState('');
   const [newP, setNP] = useState('');
@@ -20,18 +21,20 @@ const ClientResetPasswordScreen = () => {
   const resetPassword = useSelector((state) => state.resetPassword);
   const { loading, error, success } = resetPassword;
 
-  const loginClient = useSelector((state) => state.loginClient);
-  const { cInfo } = loginClient;
+  const { client } = useSelector((state) => state.singleClientsGet.clientData);
+
+  console.log(client);
 
   useEffect(() => {
     if (success) {
       toast({
         title: 'Success!',
         status: 'success',
-        description: 'Password Reset Sucessfull!',
+        description: 'Password Reset Sucessful!',
         duration: 5000,
         isClosable: true,
       });
+      history.goBack();
     }
     if (error) {
       toast({
@@ -42,7 +45,7 @@ const ClientResetPasswordScreen = () => {
         isClosable: true,
       });
     }
-  }, [success, error, toast]);
+  }, [history, success, error, toast]);
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -51,19 +54,21 @@ const ClientResetPasswordScreen = () => {
       newP,
       conP,
     };
-    dispatch(passwordReset(cInfo?._id, data));
+    if (client) {
+      dispatch(passwordReset(client._id, data, true));
+    }
   };
   return (
     <Box p='7'>
       <Helmet>
-        <title>Reset Password</title>
+        <title>Client Reset Password</title>
       </Helmet>
       <Heading
         className='heading-dashboard mb-3 mt-2'
         fontSize='2xl'
         display='inline-block'
       >
-        Reset Password
+        Client Reset Password
         <hr />
       </Heading>
       <Box>
@@ -115,11 +120,14 @@ const ClientResetPasswordScreen = () => {
             >
               Reset
             </Button>
-            <Link to='/c/profile/edit'>
-              <Button className='back-btn ml-0' mt='2'>
-                Back
-              </Button>
-            </Link>
+
+            <Button
+              className='back-btn ml-0'
+              mt='2'
+              onClick={() => history.goBack()}
+            >
+              Back
+            </Button>
           </div>
         </form>
       </Box>
@@ -127,4 +135,4 @@ const ClientResetPasswordScreen = () => {
   );
 };
 
-export default ClientResetPasswordScreen;
+export default ClientResetPasswordByAdmin;

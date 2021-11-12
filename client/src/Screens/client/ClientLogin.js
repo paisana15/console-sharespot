@@ -3,9 +3,9 @@ import { FormControl } from '@chakra-ui/form-control';
 import { Input } from '@chakra-ui/input';
 import { Box, Button, Heading, useToast } from '@chakra-ui/react';
 import { useDispatch, useSelector } from 'react-redux';
-import { clientLogin } from '../redux/action/ClientAction';
-import NavbarLogin from '../components/NavbarLogin';
-import AlertMessage from '../components/Alert';
+import { clientLogin } from '../../redux/action/ClientAction';
+import NavbarLogin from '../../components/NavbarLogin';
+import AlertMessage from '../../components/Alert';
 import { useHistory } from 'react-router';
 import { Link } from 'react-router-dom';
 import HelpIcon from 'mdi-react/HelpIcon';
@@ -39,9 +39,8 @@ const ClientLogin = () => {
   };
 
   return (
-    
     <div className='login-screen'>
-      <NavbarLogin/>
+      <NavbarLogin />
       <div className='login-card'>
         <div className='d-flex justify-content-space-between'>
           <Heading
@@ -52,11 +51,14 @@ const ClientLogin = () => {
             Client Login
             <hr />
           </Heading>
-          <button className='circle-help' onClick = {() => setHelpInfo(!helpInfo)}>
+          <button
+            className='circle-help'
+            onClick={() => setHelpInfo(!helpInfo)}
+          >
             <HelpIcon className='help-icon font-weight-bold' size={20} />
           </button>
         </div>
-        {helpInfo && 
+        {helpInfo && (
           <div className='d-flex flex-column position-relative'>
             <div className='container-reach text-center align-items-center p-3 text-color-black'>
               <div className='arrow-left'></div>
@@ -64,13 +66,17 @@ const ClientLogin = () => {
                 <span>If you haven't received your</span>
                 <span>credentials, please reach us.</span>
               </div>
-              <br/>
-              <a href='mailto:support@sharespot.pt' target='_blank' rel='noopener noreferrer'>
+              <br />
+              <a
+                href='mailto:support@sharespot.pt'
+                target='_blank'
+                rel='noopener noreferrer'
+              >
                 <span className='font-weight-bold'>support@sharespot.pt</span>
               </a>
             </div>
           </div>
-        }
+        )}
         <form onSubmit={submitHandler}>
           <FormControl id='first-name' isRequired>
             <Input
@@ -97,8 +103,17 @@ const ClientLogin = () => {
               </div>
               <span className='text-color-black'>save login information</span>
             </div>
-            <Link className='underline-none ml-3 ml-md-0' to={`/recover-password`}>
-              <Button className='font-weight-lighter font-italic mt-3 mt-md-0 text-color-black' colorScheme='transparent' variant='link'>recover password</Button>
+            <Link
+              className='underline-none ml-3 ml-md-0'
+              to={`/recover-password`}
+            >
+              <Button
+                className='font-weight-lighter font-italic mt-3 mt-md-0 text-color-black'
+                colorScheme='transparent'
+                variant='link'
+              >
+                recover password
+              </Button>
             </Link>
           </div>
           <Button
@@ -114,8 +129,13 @@ const ClientLogin = () => {
           {error && <AlertMessage status='error' error={error} />}
         </Box>
       </div>
-      <a className='mt-4' href='https://sharespot.pt' target='_blank' rel='noopener noreferrer'>
-          <span className='sharespot-bottom font-weight-bold'>sharespot.pt</span>
+      <a
+        className='mt-4'
+        href='https://sharespot.pt'
+        target='_blank'
+        rel='noopener noreferrer'
+      >
+        <span className='sharespot-bottom font-weight-bold'>sharespot.pt</span>
       </a>
     </div>
   );

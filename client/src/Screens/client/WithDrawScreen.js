@@ -14,12 +14,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   getWithdrawHistoryByC,
   withdrawRequestByClient,
-} from '../redux/action/ClientAction';
+} from '../../redux/action/ClientAction';
 import { Helmet } from 'react-helmet';
-import Loader from '../components/Loader';
-import AlertMessage from '../components/Alert';
+import Loader from '../../components/Loader';
+import AlertMessage from '../../components/Alert';
 import moment from 'moment';
-import WalletCircleIcon from '../assets/icons/wallet-circle-icon.svg';
+import WalletCircleIcon from '../../assets/icons/wallet-circle-icon.svg';
 
 const WithDrawScreen = ({ wallet }) => {
   const dispatch = useDispatch();

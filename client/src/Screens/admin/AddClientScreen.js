@@ -3,8 +3,8 @@ import { Box, Text } from '@chakra-ui/layout';
 import { Button } from '@chakra-ui/button';
 import { Formik } from 'formik';
 import * as yup from 'yup';
-import MyTextField from '../components/MyTextField';
-import { addNewClient } from '../redux/action/AdminAction';
+import MyTextField from '../../components/MyTextField';
+import { addNewClient } from '../../redux/action/AdminAction';
 import { useDispatch, useSelector } from 'react-redux';
 import { useToast } from '@chakra-ui/toast';
 

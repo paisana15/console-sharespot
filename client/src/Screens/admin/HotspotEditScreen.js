@@ -9,7 +9,7 @@ import * as yup from 'yup';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { useToast } from '@chakra-ui/toast';
-import { updateHotspot } from '../redux/action/AdminAction';
+import { updateHotspot } from '../../redux/action/AdminAction';
 import { useParams } from 'react-router';
 import moment from 'moment';
 import { Helmet } from 'react-helmet';
