@@ -192,7 +192,6 @@ const WithdrawRequestScreen = () => {
   };
 
   const onMultipleWithdrawRequestAcceptClick = (requestIds) => {
-    console.log({ requestIds });
     dispatch(acceptMultipleWithdrawRequests(requestIds));
   };
 
@@ -209,7 +208,9 @@ const WithdrawRequestScreen = () => {
         >
           Withdrawal Requests ({wRequests ? wRequests?.length : '0'})
         </Text>
-        <Button onClick={() => onMultiQROpen()}>Multi QR Code</Button>
+        {wRequests?.length > 0 && (
+          <Button onClick={() => onMultiQROpen()}>Multi QR Code</Button>
+        )}
       </Flex>
       <Box mt='3'>
         {loading ? (
