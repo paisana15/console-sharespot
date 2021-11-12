@@ -20,7 +20,9 @@ import {
   deleteManualWithdraw,
   getWithdrawHistoryByAdmin,
   getHotspotRewardByS,
-  getHotspotRewardByAdmin, getHotspotAgreements
+  getHotspotRewardByAdmin,
+  getHotspotAgreements,
+  acceptMultipleWithdrawRequests,
 } from '../controller/AdminController.js';
 import { verifyAdmin } from '../middleware/authMiddleware.js';
 
@@ -62,6 +64,11 @@ router
 router
   .route('/getWithdrawHistoryByAdmin/:clientId')
   .get(verifyAdmin, getWithdrawHistoryByAdmin);
-router.route('/getHotspotAgreements/:hotspotId').get(verifyAdmin, getHotspotAgreements)
+router
+  .route('/getHotspotAgreements/:hotspotId')
+  .get(verifyAdmin, getHotspotAgreements);
+router
+  .route('/acceptMultipleWithdrawRequests/')
+  .post(verifyAdmin, acceptMultipleWithdrawRequests);
 
 export default router;
