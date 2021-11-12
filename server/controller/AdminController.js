@@ -613,17 +613,18 @@ const withdrawalRequestAccept = asyncHandler(async (req, res) => {
     const withdrawAmount = withdraw_request.amount;
     const email = client_user.email;
 
-    await sendEmail(
-      process.env.EMAIL,
-      email,
-      'Sharespot Portugal',
-      '',
-      htmlBodyClientEmail(
-        client_user.firstname,
-        client_user.lastname,
-        withdrawAmount
-      )
-    );
+    // send email to client
+    // await sendEmail(
+    //   process.env.EMAIL,
+    //   email,
+    //   'Sharespot Portugal',
+    //   '',
+    //   htmlBodyClientEmail(
+    //     client_user.firstname,
+    //     client_user.lastname,
+    //     withdrawAmount
+    //   )
+    // );
 
     // withdraw request remove
     await withdraw_request.remove();

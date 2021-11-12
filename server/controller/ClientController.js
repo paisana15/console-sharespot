@@ -308,38 +308,38 @@ const clientWithdrawRequest = asyncHandler(async (req, res) => {
 
             if (balanceUpdate && newWithdrawHistory) {
               //sending mail to admin
-              await sendEmail(
-                process.env.EMAIL,
-                'payments@sharespot.pt',
-                `New withdraw request from ${
-                  client_user?.firstname + ' ' + client_user?.lastname
-                }.`,
-                '',
-                `
-                  <html>
-                    <body>       
-                      <div>
-                      <div>
-                      <h3>Wallet QR Code</h3>
-                      <p>http://api.qrserver.com/v1/create-qr-code/?color=000000&bgcolor=FFFFFF&data=${
-                        client_user?.wallet_address
-                      }&qzone=1&margin=0&size=400x400&ecc=L</p>                            
-                      </div> 
-                      <div>
-                      <p>Client: ${
-                        client_user?.firstname + ' ' + client_user?.lastname
-                      }</p>
-                      <p>Wallet Address: ${client_user?.wallet_address}</p>
-                      <p>Amount: HNT ${amount}</p>
-                      <p>Date: ${moment(newWithdrawRequest?.createdAt).format(
-                        'LLL'
-                      )}</p>
-                      </div>
-                      </div>               
-                   </body>
-                 </html>
-                `
-              );
+              // await sendEmail(
+              //   process.env.EMAIL,
+              //   'payments@sharespot.pt',
+              //   `New withdraw request from ${
+              //     client_user?.firstname + ' ' + client_user?.lastname
+              //   }.`,
+              //   '',
+              //   `
+              //     <html>
+              //       <body>
+              //         <div>
+              //         <div>
+              //         <h3>Wallet QR Code</h3>
+              //         <p>http://api.qrserver.com/v1/create-qr-code/?color=000000&bgcolor=FFFFFF&data=${
+              //           client_user?.wallet_address
+              //         }&qzone=1&margin=0&size=400x400&ecc=L</p>
+              //         </div>
+              //         <div>
+              //         <p>Client: ${
+              //           client_user?.firstname + ' ' + client_user?.lastname
+              //         }</p>
+              //         <p>Wallet Address: ${client_user?.wallet_address}</p>
+              //         <p>Amount: HNT ${amount}</p>
+              //         <p>Date: ${moment(newWithdrawRequest?.createdAt).format(
+              //           'LLL'
+              //         )}</p>
+              //         </div>
+              //         </div>
+              //      </body>
+              //    </html>
+              //   `
+              // );
               res.status(201).json({ message: 'Withdraw Request Received!' });
             } else {
               res.status(500);
