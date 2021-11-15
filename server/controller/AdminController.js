@@ -916,6 +916,24 @@ const acceptMultipleWithdrawRequests = asyncHandler(async (req, res) => {
     .populate('client');
   res.status(200).json(withdrawRequests);
 });
+// desc: admin reset client password
+// endpoint: host_url/api/admin/passwordReset/client
+// access: private
+// method: put
+const passwordResetClient = asyncHandler(async (req, res) => {
+  const { clientId } = req.body;
+  const client = await Client.findById(clientId);
+  if (client) {
+    client.password = 'resetpass';
+    await client.save();
+    res.status(200).json({
+      message: 'Client passsword reseted successfully!',
+    });
+  } else {
+    res.status(404);
+    throw new Error('Client not found!');
+  }
+});
 
 export {
   adminLogin,
@@ -942,4 +960,5 @@ export {
   getHotspotRewardByAdmin,
   getHotspotAgreements,
   acceptMultipleWithdrawRequests,
+  passwordResetClient,
 };

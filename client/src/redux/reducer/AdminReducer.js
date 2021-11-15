@@ -67,6 +67,10 @@ import {
   MULTIPLE_WITHDRAW_REQUESTS_ACCEPT_SUCCESS,
   MULTIPLE_WITHDRAW_REQUESTS_ACCEPT_FAILED,
   MULTIPLE_WITHDRAW_REQUESTS_ACCEPT_RESET,
+  ADMIN_RESET_CLIENT_PASSWORD_REQUEST,
+  ADMIN_RESET_CLIENT_PASSWORD_SUCCESS,
+  ADMIN_RESET_CLIENT_PASSWORD_FAILED,
+  ADMIN_RESET_CLIENT_PASSWORD_RESET,
 } from '../actionTypes';
 
 export const AdminLoginReducer = (state = {}, action) => {
@@ -336,6 +340,21 @@ export const MultipleWithdrawRequestsAcceptReducer = (state = {}, action) => {
     case MULTIPLE_WITHDRAW_REQUESTS_ACCEPT_FAILED:
       return { loading: false, error: action.payload };
     case MULTIPLE_WITHDRAW_REQUESTS_ACCEPT_RESET:
+      return {};
+    default:
+      return state;
+  }
+};
+
+export const AdminResetClientPasswordReducer = (state = {}, action) => {
+  switch (action.type) {
+    case ADMIN_RESET_CLIENT_PASSWORD_REQUEST:
+      return { loading: true };
+    case ADMIN_RESET_CLIENT_PASSWORD_SUCCESS:
+      return { loading: false, success: true };
+    case ADMIN_RESET_CLIENT_PASSWORD_FAILED:
+      return { loading: false, error: action.payload };
+    case ADMIN_RESET_CLIENT_PASSWORD_RESET:
       return {};
     default:
       return state;

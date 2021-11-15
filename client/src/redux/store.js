@@ -9,6 +9,7 @@ import {
   AddMWHistoriesReducer,
   AddNewClientReducer,
   AdminLoginReducer,
+  AdminResetClientPasswordReducer,
   ClientUpdateReducer,
   DeleteMWHistoriesReducer,
   DelSingleClientReducer,
@@ -59,6 +60,7 @@ const reducer = combineReducers({
   getRewardByA: GetRewardByAdminReducer,
   agreementGet: GetAgreementsReducer,
   multipleWithdrawRequestsAccept: MultipleWithdrawRequestsAcceptReducer,
+  adminResetClientPassword: AdminResetClientPasswordReducer,
 });
 
 const verifyToken = (token, lsItem) => {

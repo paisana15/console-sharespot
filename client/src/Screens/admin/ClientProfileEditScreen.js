@@ -4,7 +4,10 @@ import * as yup from 'yup';
 import MyTextField from '../../components/MyTextField';
 import { Box, Button, Text, useToast, Flex } from '@chakra-ui/react';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateClient } from '../../redux/action/AdminAction';
+import {
+  resetClientPassword,
+  updateClient,
+} from '../../redux/action/AdminAction';
 import { useHistory } from 'react-router-dom';
 
 const ClientProfileEditScreen = ({ client_details }) => {
@@ -13,6 +16,12 @@ const ClientProfileEditScreen = ({ client_details }) => {
   const history = useHistory();
   const clientUpdate = useSelector((state) => state.clientUpdate);
   const { loading, success, error } = clientUpdate;
+
+  const {
+    loading: clientResetPassLoading,
+    error: clientResetPassError,
+    success: clientResetPassSuccess,
+  } = useSelector((state) => state.adminResetClientPassword);
 
   useEffect(() => {
     if (success) {
@@ -35,6 +44,27 @@ const ClientProfileEditScreen = ({ client_details }) => {
       });
     }
   }, [history, toast, success, error, client_details]);
+
+  useEffect(() => {
+    if (clientResetPassSuccess) {
+      toast({
+        title: 'Success!',
+        status: 'success',
+        description: 'Client password reseted!',
+        duration: 5000,
+        isClosable: true,
+      });
+    }
+    if (clientResetPassError) {
+      toast({
+        title: 'Failed!',
+        status: 'error',
+        description: clientResetPassError,
+        duration: 5000,
+        isClosable: true,
+      });
+    }
+  }, [toast, clientResetPassSuccess, clientResetPassError]);
 
   const fieldValidationSchema = yup.object({
     firstname: yup
@@ -132,13 +162,17 @@ const ClientProfileEditScreen = ({ client_details }) => {
                 <Button
                   colorScheme='whatsapp'
                   ml='2'
-                  onClick={() => {
-                    if (client_details) {
-                      history.push(
-                        `/h/client/${client_details.client._id}/reset-password`
-                      );
-                    }
-                  }}
+                  // onClick={() => {
+                  //   if (client_details) {
+                  //     history.push(
+                  //       `/h/client/${client_details.client._id}/reset-password`
+                  //     );
+                  //   }
+                  // }}
+                  isLoading={clientResetPassLoading}
+                  onClick={() =>
+                    dispatch(resetClientPassword(client_details?.client?._id))
+                  }
                 >
                   Reset Password
                 </Button>

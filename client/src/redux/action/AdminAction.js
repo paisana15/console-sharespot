@@ -71,6 +71,10 @@ import {
   MULTIPLE_WITHDRAW_REQUESTS_ACCEPT_SUCCESS,
   MULTIPLE_WITHDRAW_REQUESTS_ACCEPT_FAILED,
   MULTIPLE_WITHDRAW_REQUESTS_ACCEPT_RESET,
+  ADMIN_RESET_CLIENT_PASSWORD_REQUEST,
+  ADMIN_RESET_CLIENT_PASSWORD_SUCCESS,
+  ADMIN_RESET_CLIENT_PASSWORD_RESET,
+  ADMIN_RESET_CLIENT_PASSWORD_FAILED,
 } from '../actionTypes';
 
 export const adminLogin = (credentials) => async (dispatch) => {
@@ -812,3 +816,47 @@ export const acceptMultipleWithdrawRequests =
       });
     }
   };
+
+export const resetClientPassword = (clientId) => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: ADMIN_RESET_CLIENT_PASSWORD_REQUEST,
+    });
+    const {
+      loginAdmin: { aInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${aInfo._atoken}`,
+      },
+    };
+
+    await axios.put(
+      `${baseURL}/api/admin/passwordReset/client`,
+      { clientId },
+      config
+    );
+
+    dispatch({
+      type: ADMIN_RESET_CLIENT_PASSWORD_SUCCESS,
+    });
+
+    await sleep(1000);
+
+    dispatch({
+      type: ADMIN_RESET_CLIENT_PASSWORD_RESET,
+    });
+  } catch (error) {
+    dispatch({
+      type: ADMIN_RESET_CLIENT_PASSWORD_FAILED,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+    dispatch({
+      type: ADMIN_RESET_CLIENT_PASSWORD_RESET,
+    });
+  }
+};

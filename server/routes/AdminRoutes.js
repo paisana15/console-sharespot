@@ -23,6 +23,7 @@ import {
   getHotspotRewardByAdmin,
   getHotspotAgreements,
   acceptMultipleWithdrawRequests,
+  passwordResetClient,
 } from '../controller/AdminController.js';
 import { verifyAdmin } from '../middleware/authMiddleware.js';
 
@@ -70,5 +71,6 @@ router
 router
   .route('/acceptMultipleWithdrawRequests/')
   .post(verifyAdmin, acceptMultipleWithdrawRequests);
+router.route('/passwordReset/client').put(verifyAdmin, passwordResetClient);
 
 export default router;

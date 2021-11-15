@@ -519,7 +519,7 @@ const WithdrawRequestScreen = () => {
 
             <ModalFooter>
               <Flex>
-                <Button
+                {/* <Button
                   onClick={() => {
                     const requestIds = wRequests?.map((req) => req._id);
                     onMultipleWithdrawRequestAcceptClick(requestIds);
@@ -529,7 +529,7 @@ const WithdrawRequestScreen = () => {
                   isLoading={multipleWRAcceptLoading}
                 >
                   Accept All
-                </Button>
+                </Button> */}
                 <Button
                   variant='outline'
                   colorScheme='blue'
