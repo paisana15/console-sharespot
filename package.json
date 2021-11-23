@@ -13,19 +13,24 @@
   "keywords": [],
   "author": "Saiful Islam Shihab",
   "license": "ISC",
+  "engines": {
+    "node": ">=14.18.0"
+  },
   "dependencies": {
-    "axios": "^0.21.1",
+    "axios": "^0.24.0",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "email-validator": "^2.0.4",
     "express": "^4.17.1",
-    "express-async-handler": "^1.1.4",
+    "express-async-handler": "^1.2.0",
+    "got": "^11.8.3",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.21",
     "moment": "^2.29.1",
     "mongoose": "^5.12.0",
     "morgan": "^1.10.0",
+    "node-fetch": "^3.1.0",
     "nodemailer": "^6.5.0",
     "nodemon": "^2.0.7",
     "qrcode": "^1.4.4"
