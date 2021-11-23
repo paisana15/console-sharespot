@@ -509,25 +509,25 @@ const getHotspotRewardByAdmin = asyncHandler(async (req, res) => {
         }
       );
 
-      const response2 = await fetch(
-        'https://api.helium.io/v1/accounts/13RUgCBbhLM2jNnzUhY7VRTAgdTi4bUi1o1eW3wV81wquavju7p/stats',
-        {
-          headers: {
-            'User-Agent': 'HAHA',
-          },
-        }
-      );
+      // const response2 = await fetch(
+      //   'https://api.helium.io/v1/accounts/13RUgCBbhLM2jNnzUhY7VRTAgdTi4bUi1o1eW3wV81wquavju7p/stats',
+      //   {
+      //     headers: {
+      //       'User-Agent': 'HAHA',
+      //     },
+      //   }
+      // );
 
-      if (response1 && response2) {
-        // const response1Data = await response1.json();
+      if (response1) {
+        const response1Data = await response1.json();
         // const response2Data = await response2.json();
 
-        // const mw_b = response1Data?.data?.last_day[0]?.balance * 0.00000001;
+        const mw_b = response1Data?.data?.last_day[0]?.balance * 0.00000001;
         // const sw_b = response2Data?.data?.last_day[0]?.balance * 0.00000001;
 
-        // const mwsw = await MwSwBalance.find({});
-        // mwsw[0].mw_balance = mw_b + sw_b;
-        // await mwsw[0].save();
+        const mwsw = await MwSwBalance.find({});
+        mwsw[0].mw_balance = mw_b;
+        await mwsw[0].save();
         res.status(200).json({ message: 'Reward fetched!' });
       } else {
         res.status(500);
