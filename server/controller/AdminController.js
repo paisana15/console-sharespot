@@ -12,6 +12,7 @@ import Wallet from '../models/WalletModel.js';
 import WithdrawHistory from '../models/WithdrawHistoryModel.js';
 import WithdrawRequest from '../models/WithdrawRequestModel.js';
 import { generateToken } from '../utils/generateToken.js';
+import { sleep } from '../utils/sleep.js';
 import fetch from 'node-fetch';
 // desc: admin login
 // endpoint: host_url/api/admin/login         host_url means '127.0.0.1:5001' (localhost) or 'prod server url' (e.g: api.somthing.likethis)
@@ -380,45 +381,48 @@ const updateWalletBalance = async (clientId, balance, deleteHotspot) => {
 // sum client assigned hotspots reward total and pass the value
 const calHotspotTotal = async (assigned_hotspots) => {
   try {
-    // const promises = [];
+    const promises = [];
 
-    // for (const hotspot of assigned_hotspots) {
-    //   const minTime = moment(hotspot?.startDate).format('YYYY-MM-DD');
-    //   const maxTime = moment(hotspot?.endDate).format('YYYY-MM-DD');
-    //   const url = `https://api.helium.io/v1/hotspots/${data?.hotspot_address}/rewards/sum?max_time=${maxTime}&min_time=${minTime}`;
-    //   console.log(url);
-    //   const response = await got(url);
-    //   console.log(response);
-    //   const responseData = JSON.parse(response.body);
-    //   if (responseData) {
-    //     const val = (responseData.data?.total * data?.percentage) / 100;
-    //     data.total_earned = val;
-    //     await data.save();
-    //     promises.push(responseData.data);
-    //   } else {
-    //     throw new Error('Helium API Failed, Try again later...');
-    //   }
-    // }
-    // const responses = await Promise.all(promises);
+    for (const data of assigned_hotspots) {
+      await sleep(3000);
+      console.log('\ncalculating assigniong hotspots');
+      const minTime = moment(data?.startDate).format('YYYY-MM-DD');
+      const maxTime = moment(data?.endDate).format('YYYY-MM-DD');
+      const url = `https://api.helium.io/v1/hotspots/${data?.hotspot_address}/rewards/sum?max_time=${maxTime}&min_time=${minTime}`;
+      const response = await got(url);
+      const responseData = JSON.parse(response.body);
+      if (responseData) {
+        const val = (responseData.data?.total * data?.percentage) / 100;
+        data.total_earned = val;
+        await data.save();
+        promises.push(responseData.data);
+      } else {
+        throw new Error('Helium API Failed, Try again later...');
+      }
+    }
 
-    const responses = await Promise.all(
-      assigned_hotspots?.map(async (data) => {
-        // await sleep(2000);
-        const minTime = moment(data?.startDate).format('YYYY-MM-DD');
-        const maxTime = moment(data?.endDate).format('YYYY-MM-DD');
-        const url = `https://api.helium.io/v1/hotspots/${data?.hotspot_address}/rewards/sum?max_time=${maxTime}&min_time=${minTime}`;
-        const response = await got(url);
-        const responseData = JSON.parse(response.body);
-        if (responseData) {
-          const val = (responseData.data?.total * data?.percentage) / 100;
-          data.total_earned = val;
-          await data.save();
-          return responseData.data;
-        } else {
-          throw new Error('Helium API Failed, Try again later...');
-        }
-      })
-    );
+    const responses = await Promise.all(promises);
+
+    // const responses = await Promise.all(
+    //   assigned_hotspots?.map(async (data) => {
+    //     await sleep(3000);
+    //     console.log('\ncalculating assigniong hotspots');
+    //     const minTime = moment(data?.startDate).format('YYYY-MM-DD');
+    //     const maxTime = moment(data?.endDate).format('YYYY-MM-DD');
+    //     const url = `https://api.helium.io/v1/hotspots/${data?.hotspot_address}/rewards/sum?max_time=${maxTime}&min_time=${minTime}`;
+    //     const response = await got(url);
+    //     const responseData = JSON.parse(response.body);
+    //     if (responseData) {
+    //       const val = (responseData.data?.total * data?.percentage) / 100;
+    //       data.total_earned = val;
+    //       await data.save();
+    //       return responseData.data;
+    //     } else {
+    //       throw new Error('Helium API Failed, Try again later...');
+    //     }
+    //   })
+    // );
+
     if (responses.length > 0) {
       const clientHotspotsTotal = responses?.map((response, i) => {
         return {
@@ -436,30 +440,57 @@ const calHotspotTotal = async (assigned_hotspots) => {
 // get hotspot reward for multiple clients
 const getHotspotReward = async (clients_list) => {
   try {
-    const results = await Promise.all(
-      clients_list?.map(async (clientId) => {
-        // await sleep(2000);
-        const client_assigned_hotspot = await ClientHotspot.find({
-          client_id: clientId,
-        });
-        const clientHotspotsTotal = await calHotspotTotal(
-          client_assigned_hotspot
-        );
+    // const results = await Promise.all(
+    //   clients_list?.map(async (clientId) => {
+    //     await sleep(3000);
+    //     console.log(`\nrequest send for client ${clientId}`);
+    //     const client_assigned_hotspot = await ClientHotspot.find({
+    //       client_id: clientId,
+    //     });
+    //     const clientHotspotsTotal = await calHotspotTotal(
+    //       client_assigned_hotspot
+    //     );
 
-        if (clientHotspotsTotal) {
-          const total = clientHotspotsTotal
-            ?.map((data) => data.total)
-            .reduce((acc, curr) => {
-              return acc + curr;
-            }, 0);
-          const totalEarn = total.toFixed(2);
-          await updateWalletBalance(clientId, totalEarn, false);
-          return true;
-        } else {
-          throw new Error('API Failed!');
-        }
-      })
-    );
+    //     if (clientHotspotsTotal) {
+    //       const total = clientHotspotsTotal
+    //         ?.map((data) => data.total)
+    //         .reduce((acc, curr) => {
+    //           return acc + curr;
+    //         }, 0);
+    //       const totalEarn = total.toFixed(2);
+    //       await updateWalletBalance(clientId, totalEarn, false);
+    //       return true;
+    //     } else {
+    //       throw new Error('API Failed!');
+    //     }
+    //   })
+
+    const results = [];
+
+    for (const clientId of clients_list) {
+      await sleep(3000);
+      console.log(`\nrequest send for client ${clientId}`);
+      const client_assigned_hotspot = await ClientHotspot.find({
+        client_id: clientId,
+      });
+      const clientHotspotsTotal = await calHotspotTotal(
+        client_assigned_hotspot
+      );
+
+      if (clientHotspotsTotal) {
+        const total = clientHotspotsTotal
+          ?.map((data) => data.total)
+          .reduce((acc, curr) => {
+            return acc + curr;
+          }, 0);
+        const totalEarn = total.toFixed(2);
+        await updateWalletBalance(clientId, totalEarn, false);
+        results.push(true);
+      } else {
+        throw new Error('API Failed!');
+      }
+    }
+
     const status = results.map((data) => (data === false ? false : true));
     return status;
   } catch (error) {
