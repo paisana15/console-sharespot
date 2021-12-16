@@ -385,7 +385,6 @@ const calHotspotTotal = async (assigned_hotspots) => {
 
     for (const data of assigned_hotspots) {
       await sleep(3000);
-      console.log('\ncalculating assigniong hotspots');
       const minTime = moment(data?.startDate).format('YYYY-MM-DD');
       const maxTime = moment(data?.endDate).format('YYYY-MM-DD');
       const url = `https://api.helium.io/v1/hotspots/${data?.hotspot_address}/rewards/sum?max_time=${maxTime}&min_time=${minTime}`;
@@ -469,7 +468,6 @@ const getHotspotReward = async (clients_list) => {
 
     for (const clientId of clients_list) {
       await sleep(3000);
-      console.log(`\nrequest send for client ${clientId}`);
       const client_assigned_hotspot = await ClientHotspot.find({
         client_id: clientId,
       });
