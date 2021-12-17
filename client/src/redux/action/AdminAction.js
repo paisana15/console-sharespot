@@ -118,7 +118,7 @@ export const adminLogout = () => async (dispatch) => {
   }
 };
 
-export const getAllClients = () => async (dispatch, getState) => {
+export const getAllClients = (pageNo) => async (dispatch, getState) => {
   try {
     dispatch({
       type: GET_ALL_CLIENTS_REQUEST,
@@ -134,7 +134,7 @@ export const getAllClients = () => async (dispatch, getState) => {
       },
     };
     const { data } = await axios.get(
-      `${baseURL}/api/admin/getAllClients`,
+      `${baseURL}/api/admin/getAllClients/${pageNo}`,
       config
     );
     dispatch({
@@ -699,7 +699,7 @@ export const getWithdrawHistoryByA =
     }
   };
 
-export const getRewardByAdmin = () => async (dispatch, getState) => {
+export const getRewardByAdmin = (clientIds) => async (dispatch, getState) => {
   try {
     dispatch({
       type: GET_REWARD_BY_ADMIN_REQUEST,
@@ -713,7 +713,11 @@ export const getRewardByAdmin = () => async (dispatch, getState) => {
         Authorization: `Bearer ${aInfo._atoken}`,
       },
     };
-    await axios.put(`${baseURL}/api/admin/getRewardsByAdmin`, {}, config);
+    await axios.put(
+      `${baseURL}/api/admin/getRewardsByAdmin`,
+      { clientIds },
+      config
+    );
     dispatch({
       type: GET_REWARD_BY_ADMIN_SUCCESS,
     });

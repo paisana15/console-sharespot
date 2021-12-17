@@ -33,6 +33,7 @@ import { Bar as Barchart } from 'react-chartjs-2';
 import axios from 'axios';
 import moment from 'moment';
 import { SearchIcon } from '@chakra-ui/icons';
+import { Pagination } from '../../components/Pagination';
 
 const AllClients = () => {
   const dispatch = useDispatch();
@@ -47,12 +48,15 @@ const AllClients = () => {
     time: '30',
     bucket: 'day',
   });
+  const [pageNo, setPageNo] = useState(1);
 
   const allClientsGet = useSelector((state) => state.allClientsGet);
-  const { loading, clients, error } = allClientsGet;
+  const { loading, clients, count: totalClientsCount, error } = allClientsGet;
 
   const MWSWCWget = useSelector((state) => state.MWSWCWget);
   const { loading: mwLoading, balances, error: mwError } = MWSWCWget;
+
+  const [chartDataLoading, setChartDataLoading] = useState(false);
 
   const getRewardByA = useSelector((state) => state.getRewardByA);
   const {
@@ -62,13 +66,6 @@ const AllClients = () => {
   } = getRewardByA;
 
   useEffect(() => {
-    const abortController = new AbortController();
-
-    dispatch(getAllClients());
-
-    if ((balances && Object.keys(balances)?.length < 1) || rewardFSuccess) {
-      dispatch(getMWSWCWbalances());
-    }
     if (rewardFSuccess) {
       toast({
         status: 'success',
@@ -87,9 +84,21 @@ const AllClients = () => {
         isClosable: true,
       });
     }
+  }, [toast, rewardFSuccess, rewardFError]);
+
+  useEffect(() => {
+    if ((balances && Object.keys(balances)?.length < 1) || rewardFSuccess) {
+      dispatch(getMWSWCWbalances());
+    }
+    dispatch(getAllClients(pageNo));
+  }, [dispatch, balances, pageNo, rewardFSuccess]);
+
+  useEffect(() => {
+    const abortController = new AbortController();
     // fetching chart data
     async function fetchChartData() {
       try {
+        setChartDataLoading(true);
         const response = await axios.get(
           `https://api.helium.io/v1/accounts/13ESLoXiie3eXoyitxryNQNamGAnJjKt2WkiB4gNq95knxAiGEp/rewards/sum?min_time=-${chartInitial?.time}%20day&bucket=${chartInitial?.bucket}
         `
@@ -103,6 +112,7 @@ const AllClients = () => {
 
           if (result?.length > 0) {
             setChartData(result?.reverse());
+            setChartDataLoading(false);
           } else {
             throw new Error();
           }
@@ -118,15 +128,7 @@ const AllClients = () => {
     return () => {
       abortController.abort();
     };
-  }, [
-    dispatch,
-    toast,
-    rewardFSuccess,
-    rewardFError,
-    balances,
-    chartInitial?.time,
-    chartInitial?.bucket,
-  ]);
+  }, [chartInitial?.time, chartInitial?.bucket]);
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -164,6 +166,13 @@ const AllClients = () => {
       abortController.abort();
     };
   }, [thirtyDR, sevenDR, lastDR]);
+
+  const onFetchRewardButtonClick = () => {
+    if (clients && clients.length > 0) {
+      const clientIds = clients.map((client) => client.client_id._id);
+      dispatch(getRewardByAdmin(clientIds));
+    }
+  };
 
   const clientsList = clients?.filter((client) => {
     return clientSearchText !== ''
@@ -367,37 +376,43 @@ const AllClients = () => {
               : 'Last 30 Days Record'}
           </Button>
         </Box>
-        <Box>
-          <Barchart
-            data={{
-              labels: chartData?.map((data) => data?.date),
-              datasets: [
-                {
-                  label: 'Total Rewards',
-                  data: chartData?.map((data) => data?.total.toFixed(2)),
-                  backgroundColor: 'rgba(153, 102, 255, 0.2)',
-                  borderColor: 'rgb(153, 102, 255)',
-                  borderWidth: 1,
-                },
-              ],
-            }}
-            options={{
-              scales: {
-                yAxes: [
+        <Box minH={560}>
+          {chartDataLoading ? (
+            <Box mt='5'>
+              <Loader />
+            </Box>
+          ) : (
+            <Barchart
+              data={{
+                labels: chartData?.map((data) => data?.date),
+                datasets: [
                   {
-                    ticks: {
-                      beginAtZero: true,
-                    },
+                    label: 'Total Rewards',
+                    data: chartData?.map((data) => data?.total.toFixed(2)),
+                    backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                    borderColor: 'rgb(153, 102, 255)',
+                    borderWidth: 1,
                   },
                 ],
-              },
-            }}
-          />
+              }}
+              options={{
+                scales: {
+                  yAxes: [
+                    {
+                      ticks: {
+                        beginAtZero: true,
+                      },
+                    },
+                  ],
+                },
+              }}
+            />
+          )}
         </Box>
       </Box>
       <Box display={{ sm: 'flex' }} mt='3' mb='3' alignItems='center'>
         <Text fontSize='2xl' className='adminPageHeader'>
-          All Clients ({clients ? clients?.length : '0'})
+          Clients
         </Text>
         <Spacer />
         <Box d={{ base: 'block', md: 'flex' }}>
@@ -477,22 +492,36 @@ const AllClients = () => {
           <AlertMessage status='error' error='No clients found!' />
         )}
       </Box>
-      <Box mt='2'>
+
+      <Box
+        mt='10'
+        display='flex'
+        alignItems='center'
+        justifyContent='space-between'
+      >
         <Button
           w={{ base: '100%', md: 'auto' }}
           mr={{ md: 2 }}
           mt={{ base: 2, md: 0 }}
           colorScheme='orange'
           variant='outline'
+          disabled={loading || !clients?.length}
           isLoading={rewardFLoading}
           loadingText='Fetching...'
-          onClick={() => {
-            dispatch(getRewardByAdmin());
-          }}
+          onClick={onFetchRewardButtonClick}
         >
           <i style={{ marginRight: 5 }} className='fas fa-download'></i>Fetch
           Reward
         </Button>
+
+        <Pagination
+          data={clients}
+          pageNo={pageNo}
+          setPageNo={setPageNo}
+          dataLoading={loading}
+          count={totalClientsCount}
+          dataPerPage={100}
+        />
       </Box>
     </Box>
   );

@@ -88,12 +88,19 @@ export const AdminLoginReducer = (state = {}, action) => {
   }
 };
 
-export const GetAllClientsReducer = (state = { clients: [] }, action) => {
+export const GetAllClientsReducer = (
+  state = { clients: [], count: 0 },
+  action
+) => {
   switch (action.type) {
     case GET_ALL_CLIENTS_REQUEST:
       return { loading: true };
     case GET_ALL_CLIENTS_SUCCESS:
-      return { loading: false, clients: action.payload };
+      return {
+        loading: false,
+        clients: action.payload.clients,
+        count: action.payload.count,
+      };
     case GET_ALL_CLIENTS_FAILED:
       return { loading: false, error: action.payload };
 

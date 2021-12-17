@@ -35,7 +35,7 @@ router.route('/getClientsHotspot').get(verifyAdmin, getClientsHotspot);
 router
   .route('/getSingleClientHotspots/:clientId')
   .get(verifyAdmin, getSingleClientHotspots);
-router.route('/getAllClients').get(verifyAdmin, getAllClients);
+router.route('/getAllClients/:pageNo').get(verifyAdmin, getAllClients);
 router.route('/addHotspot').post(verifyAdmin, addHotspotToClient);
 router.route('/getRewardsByServer').put(getHotspotRewardByS);
 router.route('/getRewardsByAdmin').put(verifyAdmin, getHotspotRewardByAdmin);
