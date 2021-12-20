@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   rejectWithdrawRequest,
   acceptWithdrawRequest,
-  acceptMultipleWithdrawRequests,
 } from '../../redux/action/AdminAction';
 import moment from 'moment';
 import { useColorMode } from '@chakra-ui/color-mode';
@@ -45,7 +44,7 @@ const WithdrawRequestScreen = () => {
   });
 
   const {
-    loading: multipleWRAcceptLoading,
+    // loading: multipleWRAcceptLoading,
     success: multipleWRAcceptSuccess,
     error: multipleWRAcceptError,
   } = useSelector((state) => state.multipleWithdrawRequestsAccept);
@@ -198,9 +197,9 @@ const WithdrawRequestScreen = () => {
     dispatch(acceptWithdrawRequest(wrId));
   };
 
-  const onMultipleWithdrawRequestAcceptClick = (requestIds) => {
-    dispatch(acceptMultipleWithdrawRequests(requestIds));
-  };
+  // const onMultipleWithdrawRequestAcceptClick = (requestIds) => {
+  //   dispatch(acceptMultipleWithdrawRequests(requestIds));
+  // };
 
   return (
     <Box p={{ md: 4 }}>
@@ -500,7 +499,7 @@ const WithdrawRequestScreen = () => {
             </ModalFooter>
           </ModalContent>
         </Modal>
-        <Modal isOpen={isMultiQROpen} onClose={onMultiQRClose}>
+        <Modal isOpen={isMultiQROpen} onClose={onMultiQRClose} size='100%'>
           <ModalOverlay />
           <ModalContent>
             <ModalHeader>All Wallet Address</ModalHeader>
@@ -509,7 +508,7 @@ const WithdrawRequestScreen = () => {
               <Box w='100%' margin='0 auto'>
                 <QRCode
                   value={JSON.stringify(withdrawRequests)}
-                  size={256}
+                  size={380}
                   style={{ margin: '0 auto' }}
                   width='100%'
                 />
