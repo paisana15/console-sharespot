@@ -499,7 +499,7 @@ const WithdrawRequestScreen = () => {
             </ModalFooter>
           </ModalContent>
         </Modal>
-        <Modal isOpen={isMultiQROpen} onClose={onMultiQRClose} size='100%'>
+        <Modal isOpen={isMultiQROpen} onClose={onMultiQRClose} size='2xl'>
           <ModalOverlay />
           <ModalContent>
             <ModalHeader>All Wallet Address</ModalHeader>
