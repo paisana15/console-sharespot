@@ -507,6 +507,7 @@ const WithdrawRequestScreen = () => {
             <ModalBody>
               <Box w='100%' margin='0 auto'>
                 <QRCode
+                  className="qr-code-img"
                   value={JSON.stringify(withdrawRequests)}
                   size={380}
                   style={{ margin: '0 auto' }}
