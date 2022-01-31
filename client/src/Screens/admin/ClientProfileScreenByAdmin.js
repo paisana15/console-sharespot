@@ -253,7 +253,7 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
           </Text>
         </Box>
       </Box>
-      <Box d={{ md: 'flex' }} color='white' mt='3'>
+      <Box d={{ md: 'flex' }} color='white' mt='5'>
         <Box
           boxShadow='base'
           textAlign='center'
@@ -321,8 +321,8 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
         </Box>
       </Box>
       <Box>
-        <Box boxShadow='md' borderRadius='md' p='3'>
-          {chartData?.length > 0 ? (
+        {chartData?.length > 0 ? (
+          <Box boxShadow='md' borderRadius='md' p='3'>
             <Box p='3'>
               <Text fontSize='lg' fontWeight='semibold'>
                 Daily Reward
@@ -382,19 +382,14 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
                 </Badge>
               </Box>
             </Box>
-          ) : null}
-        </Box>
+          </Box>
+        ) : null}
       </Box>
-      <Box mt='4'>
-        <Heading mb='3' pl='3' size='xs'>
+      <Box mt='4' boxShadow='md'>
+        <Heading pl='3' size='xs'>
           Assigned Hotspot ({client?.total_hotspot})
         </Heading>
-        <Box
-          boxShadow='md'
-          borderRadius='md'
-          p='4'
-          className='assigned_hotspot_wrapper'
-        >
+        <Box p='4' className='assigned_hotspot_wrapper'>
           {client_hotspot?.length > 0 ? (
             client_hotspot.map((hotspot) => (
               <Box
