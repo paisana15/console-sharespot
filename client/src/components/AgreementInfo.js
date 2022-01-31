@@ -34,8 +34,8 @@ const AgreementInfo = ({ agreement }) => {
           color={colorMode === 'light' ? 'gray.400' : 'gray.300'}
         >
           <i className='fas fa-calendar-day mr-1'></i>
-          {moment(agreement?.startDate).format('L')} -{' '}
-          {moment(agreement?.endDate).format('L')}
+          {moment(agreement?.startDate).format('DD-MM-YYYY')} -{' '}
+          {moment(agreement?.endDate).format('DD-MM-YYYY')}
         </Text>
       </Box>
       <Box display='flex' className='mt-2 align-items-center '>

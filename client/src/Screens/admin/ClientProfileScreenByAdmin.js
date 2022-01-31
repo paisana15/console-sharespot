@@ -135,7 +135,7 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
         if (response) {
           const result = response?.data?.data?.map((item) => {
             const total = (item?.total * hotspotPercent) / 100;
-            const date = moment(item?.timestamp).format('YYYY-MM-DD');
+            const date = moment(item?.timestamp).format('DD-MM-YYYY');
             return { total, date };
           });
 
@@ -228,21 +228,28 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
         </Flex>
         <Box display={{ md: 'flex' }}>
           <Text color='gray.500' fontSize='sm'>
-            <i className='fas fa-user'></i> Username : {client?.username}
+            <i className='fas fa-user'></i>
+            <span style={{ padding: '0 4px' }} />
+            Username : {client?.username}
           </Text>
           <Spacer />
           <Text color='gray.500' fontSize='sm'>
-            <i className='fas fa-at'></i> Email : {client?.email}
+            <i className='fas fa-at'></i>
+            <span style={{ padding: '0 4px' }} />
+            Email : {client?.email}
           </Text>
         </Box>
         <Box display={{ md: 'flex' }}>
           <Text color='gray.500' fontSize='sm'>
-            <i className='fas fa-phone-alt'></i> Phone : {client?.phone_number}
+            <i className='fas fa-phone-alt'></i>
+            <span style={{ padding: '0 4px' }} />
+            Phone : {client?.phone_number}
           </Text>
           <Spacer />
           <Text color='gray.500' fontSize='sm'>
-            <i className='fas fa-wallet'></i> Wallet Address :{' '}
-            {client?.wallet_address}
+            <i className='fas fa-wallet'></i>
+            <span style={{ padding: '0 4px' }} />
+            Wallet Address : {client?.wallet_address}
           </Text>
         </Box>
       </Box>
@@ -448,7 +455,7 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
                       </Text>
                       <Badge colorScheme='blue'>
                         <Text fontSize='xs'>
-                          {moment(hotspot?.startDate).format('YYYY-MM-DD')}
+                          {moment(hotspot?.startDate).format('DD-MM-YYYY')}
                         </Text>
                       </Badge>
                       <Text fontSize='xs' ml='2' mr='1'>
@@ -456,7 +463,7 @@ const ClientProfileScreenByAdmin = ({ client_details }) => {
                       </Text>
                       <Badge colorScheme='blue'>
                         <Text fontSize='xs'>
-                          {moment(hotspot?.endDate).format('YYYY-MM-DD')}
+                          {moment(hotspot?.endDate).format('DD-MM-YYYY')}
                         </Text>
                       </Badge>
                     </Box>

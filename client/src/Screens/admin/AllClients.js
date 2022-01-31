@@ -106,7 +106,7 @@ const AllClients = () => {
         if (response) {
           const result = response?.data?.data?.map((item) => {
             const total = item?.total;
-            const date = moment(item?.timestamp).format('YYYY-MM-DD');
+            const date = moment(item?.timestamp).format('DD-MM-YYYY');
             return { total, date };
           });
 
