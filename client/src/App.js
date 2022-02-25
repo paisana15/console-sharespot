@@ -1,3 +1,5 @@
+app.js
+
 import React from 'react';
 import './App.scss';
 import { Redirect, Route, Switch } from 'react-router';
@@ -59,7 +61,7 @@ function App() {
       ".-'  `)|  | |  |' '-'  ||  |   |   --..-'  `)| '-' '' '-' |  |  | \n" +
       "`----' `--' `--' `--`--'`--'    `----'`----' |  |-'  `---'   `--'  \n" +
       "                                             `--'   " +
-      '\n- Welcome to the Sharespot dashboard! \n- We are always very grateful and open to receive your feedback be it tips, ideas, suggestions or any other comments with us at geral@sharespot.pt \n- If you have an interest in IoT and distributed technologies and might be interested in becoming part of the team feel free to reach out at any time.'
+      '\n- Welcome to the white label solution of Sharespot Dashboard! \n- We are always very grateful and open to receive your feedback be it tips, ideas, suggestions or any other comments with us at geral@sharespot.pt \n- If you have an interest in IoT and distributed technologies and might be interested in becoming part of the team feel free to reach out at any time.'
   );
 
   return (
@@ -77,3 +79,4 @@ function App() {
 }
 
 export default App;
+
