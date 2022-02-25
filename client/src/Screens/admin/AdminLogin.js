@@ -73,10 +73,10 @@ const AdminLogin = ({ history }) => {
             />
           </FormControl>
           <Button
+            className='button-admin-login'
             type='submit'
             isLoading={loading}
             loadingText='Signing in...'
-            colorScheme='purple'
             variant='solid'
             mt='5'
           >

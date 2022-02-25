@@ -23,11 +23,11 @@ const Pagination = (props) => {
   return (
     <Flex>
       <IconButton
+        className="button-third-color"
         aria-label='paginate prev'
         icon={<ChevronLeftIcon />}
         onClick={prevButtonClick}
         variant='outline'
-        colorScheme='purple'
         disabled={dataLoading || pageNo === 1}
       />
       <Box
@@ -48,11 +48,11 @@ const Pagination = (props) => {
       ))} */}
 
       <IconButton
+        className="button-third-color"
         aria-label='paginate next'
         icon={<ChevronRightIcon />}
         onClick={nextButtonClick}
         variant='outline'
-        colorScheme='purple'
         disabled={dataLoading || pageNo === paginationTotalPage}
       />
     </Flex>

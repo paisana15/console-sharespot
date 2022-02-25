@@ -28,8 +28,8 @@ app.use(corsWithOptions);
 app.get('/', (req, res) => {
   res.end('Server running...');
 });
-app.use('/api/admin', adminRoutes);
-app.use('/api/client', clientRoutes);
+app.use('/localhost/admin', adminRoutes);
+app.use('/localhost/client', clientRoutes);
 
 // middleware
 app.use(notFound);
@@ -37,12 +37,12 @@ app.use(errorHandler);
 
 // server listening
 const PORT = process.env.PORT || 5001;
-app.listen(PORT, 'api', () => {
+app.listen(PORT, 'localhost', () => {
   console.log(`\n---Server listening on port ${PORT}---`);
   setInterval(async () => {
     try {
       const getReward = await axios.put(
-        `${process.env.PROD_SERVER}/api/admin/getRewardsByServer`
+        `${process.env.PROD_SERVER}/localhost/admin/getRewardsByServer`
       );
       if (!getReward) {
         console.log('Failed to update clients reward!');

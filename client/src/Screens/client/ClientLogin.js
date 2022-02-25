@@ -131,11 +131,11 @@ const ClientLogin = () => {
       </div>
       <a
         className='mt-4'
-        href='https://sharespot.pt'
+        href='https://hexspot.com'
         target='_blank'
         rel='noopener noreferrer'
       >
-        <span className='sharespot-bottom font-weight-bold'>sharespot.pt</span>
+        <span className='sharespot-bottom font-weight-bold'>hexspot.com</span>
       </a>
     </div>
   );

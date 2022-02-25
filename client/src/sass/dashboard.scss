@@ -1,3 +1,7 @@
+$third-color: #ceae40;
+$fourth-color: #43456d;
+$fifth-color: #00224e;
+
 .navbar-dashboard{
     background: #252332!important;
 }
@@ -32,7 +36,7 @@
 }
 
 .total-rewards{
-    border: 1px solid #4AAAE3;
+    border: 1px solid $fifth-color;
     border-radius: 13px;
     padding: 0.5rem 1.5rem;
 }
@@ -78,8 +82,8 @@
     background-color: $blue!important;
 }
 
-.bg-purple{
-    background-color: $purple!important;
+.bg-third-color{
+    background-color: $third-color!important;
 }
 
 .button-dashboard{
@@ -95,6 +99,11 @@
     margin-top: -2.2rem;
     padding:2rem;
     box-shadow: none!important;
+}
+
+.button-third-color{
+    color: $third-color!important;
+    border-color: $third-color!important;
 }
 
 .hotspot{

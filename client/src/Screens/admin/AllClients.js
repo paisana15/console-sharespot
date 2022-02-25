@@ -208,7 +208,7 @@ const AllClients = () => {
           textAlign='center'
           p='4'
           borderRadius='lg'
-          bg='red.400'
+          bg='#ceae40'
           w={{ base: '100%', md: '30%' }}
           mb={{ base: '3', sm: '3', md: '3' }}
         >
@@ -232,7 +232,7 @@ const AllClients = () => {
           textAlign='center'
           p='4'
           borderRadius='lg'
-          bg='green.400'
+          bg='#43456d'
           w={{ base: '100%', md: '30%' }}
           mb={{ base: '3', sm: '3', md: '3' }}
         >
@@ -256,7 +256,7 @@ const AllClients = () => {
           textAlign='center'
           p='4'
           borderRadius='lg'
-          bg='blue.400'
+          bg='#00224e'
           w={{ base: '100%', md: '30%' }}
           mb={{ base: '3', sm: '3', md: '3' }}
         >
@@ -289,7 +289,7 @@ const AllClients = () => {
           p='2'
           borderRadius='lg'
           border='1px'
-          borderColor='red.400'
+          borderColor='#ceae40'
           w={{ base: '100%', md: '30%' }}
           mb={{ base: '3', sm: '3', md: '3' }}
           color={colorMode === 'light' ? 'gray.600' : '#ddd'}
@@ -311,7 +311,7 @@ const AllClients = () => {
           p='2'
           borderRadius='lg'
           border='1px'
-          borderColor='green.400'
+          borderColor='#43456d'
           w={{ base: '100%', md: '30%' }}
           mb={{ base: '3', sm: '3', md: '3' }}
           color={colorMode === 'light' ? 'gray.600' : '#ddd'}
@@ -333,7 +333,7 @@ const AllClients = () => {
           p='2'
           borderRadius='lg'
           border='1px'
-          borderColor='blue.400'
+          borderColor='#00224e'
           w={{ base: '100%', md: '30%' }}
           mb={{ base: '3', sm: '3', md: '3' }}
           color={colorMode === 'light' ? 'gray.600' : '#ddd'}
@@ -389,8 +389,8 @@ const AllClients = () => {
                   {
                     label: 'Total Rewards',
                     data: chartData?.map((data) => data?.total.toFixed(2)),
-                    backgroundColor: 'rgba(153, 102, 255, 0.2)',
-                    borderColor: 'rgb(153, 102, 255)',
+                    backgroundColor: 'rgba(206,174,64, 0.2)',
+                    borderColor: 'rgb(206,174,64)',
                     borderWidth: 1,
                   },
                 ],
@@ -432,10 +432,10 @@ const AllClients = () => {
 
           <Link to={`/h/add-new-client`}>
             <Button
+              className='button-third-color'
               variant='outline'
               w={{ base: '100%', md: 'auto' }}
               size='sm'
-              colorScheme='purple'
             >
               <i className='fas fa-user-plus' style={{ marginRight: 5 }}></i>{' '}
               Add New Client
@@ -503,7 +503,7 @@ const AllClients = () => {
           w={{ base: '100%', md: 'auto' }}
           mr={{ md: 2 }}
           mt={{ base: 2, md: 0 }}
-          colorScheme='orange'
+          colorScheme='purple'
           variant='outline'
           disabled={loading || !clients?.length}
           isLoading={rewardFLoading}

@@ -55,9 +55,9 @@ const AdminNavbar = () => {
                 fontSize={{ base: 'md', sm: 'xl' }}
                 fontStyle='oblique'
                 fontWeight='bold'
-                ml='2'
+                ml='4'
               >
-                Sharespot Wallet
+                Hexspots Wallet
               </Text>
             </Flex>
             <Spacer />

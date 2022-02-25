@@ -1,5 +1,3 @@
-app.js
-
 import React from 'react';
 import './App.scss';
 import { Redirect, Route, Switch } from 'react-router';

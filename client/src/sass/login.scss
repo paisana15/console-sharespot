@@ -1,5 +1,8 @@
-$primary-color: #44BBA4;
+$primary-color: #44BBA4;//#ceae40
 $secondary-color: #707070;
+$third-color: #ceae40;
+$fourth-color: #43456d;
+$fifth-color: #00224e;
 $blue: #4AAAE3;
 $purple: #5e4aab;
 $black: #0E0C1C;
@@ -23,12 +26,11 @@ $black: #0E0C1C;
 
 .login-screen{
   min-height: 100vh;
-  background-image: url("../assets/images/bg_splash_dashboard.jpeg");
+  background-image: linear-gradient(to bottom, rgba(0,0,0,0) 70%, rgba(0,0,0,0.7)), url("../assets/images/bg_splash_dashboard.jpeg");
   background-size: cover;
   background-repeat: no-repeat;
   display: flex;
   flex-direction: column;
-
 }
 
 .login-card{
@@ -37,8 +39,8 @@ $black: #0E0C1C;
   margin: auto;
   padding: 3rem;
   border-radius: 30px;
-  -webkit-backdrop-filter: blur(25px);
-  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(55px);
+  backdrop-filter: blur(55px);
 }
 
 .border-white-left{
@@ -174,6 +176,11 @@ hr{
   bottom: 20px;
   transform: translate(-50%, -50%);
   margin: 0 auto;
+  color: white;
+}
+
+.button-admin-login{
+  background-color: $third-color!important;
   color: white;
 }
 
